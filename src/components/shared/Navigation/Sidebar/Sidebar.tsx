@@ -27,19 +27,12 @@ const Sidebar: React.FC<SidebarProps> = ({ subscribedChannels }) => {
   };
   return (
     <>
-      {sidebar?.isOpen && (
-        <div
-          className={`bg-black bg-opacity-50 h-screen w-screen fixed z-30`}
-          onClick={() => sidebar.onClose()}
-        />
-      )}
       <div
-        className={`fixed w-64 bg-stone-950 z-40 mt-2 px-6 flex flex-col h-screen overflow-scroll no-scrollbar ${
+        className={`fixed w-60 bg-white z-40 mt-14 px-6 flex flex-col h-screen overflow-scroll no-scrollbar ${
           sidebar?.isOpen ? "translate-x-0" : "-translate-x-full"
         } ease-in-out duration-300`}
       >
-        <NavigationHeader />
-        <div className="pt-6 pb-3 border-b border-b-neutral-700">
+        <div className="pt-2 pb-3 border-b bg-white">
           <MenuItem
             label="Home"
             logo={<MdOutlineHome className="h-6 w-6 mr-4" />}

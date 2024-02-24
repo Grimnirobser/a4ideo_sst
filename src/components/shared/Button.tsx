@@ -4,7 +4,7 @@ import { PropsWithChildren, useMemo } from "react";
 
 interface ButtonProps {
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
-  type: "primary" | "secondary" | "box" | "rounded" | "rounded-dark";
+  type: "primary" | "secondary" | "box" | "rounded" | "rounded-dark" | "buttonColor";
   className?: string;
 }
 
@@ -26,6 +26,9 @@ const Button: React.FC<PropsWithChildren<ButtonProps>> = ({
         return "text-stone-950 font-medium bg-zinc-300 rounded-full px-3 py-2";
       case "rounded-dark":
         return "text-white font-medium bg-neutral-800 rounded-full px-3 py-2";
+      case "buttonColor":
+        // Custom Color in tailwind.config.ts
+        return "bg-buttonColor text-white font-medium rounded-full px-3 py-2";
       default:
         return "";
     }

@@ -39,11 +39,11 @@ const Search = () => {
       <input
         type="text"
         placeholder="Search"
-        className="w-full px-4 py-2 bg-neutral-900"
+        className="w-full px-4 py-2 bg-transparent border-none focus:outline-none focus:ring-0"
         onChange={(e) => setText(e.target.value)}
         value={text}
       />
-      <button type="submit" className="px-3 bg-neutral-800 border-none">
+      <button type="submit" className="px-3 bg-white border-none">
         <MdOutlineSearch className="h-6 w-6" />
       </button>
     </form>

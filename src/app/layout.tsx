@@ -11,16 +11,15 @@ import getCurrentChannel from "@/actions/getCurrentChannel";
 import CurrentChannelProvider from "@/context/CurrentChannelContext";
 import UploadVideoModalProvider from "@/context/UploadVideoModalContext";
 import SidebarProvider from "@/context/SidebarContext";
+import { Web3provider } from "@/context/Web3Provider";
+import { constructMetadata } from "@/utils/websiteUtils";
 
 const roboto = Roboto({
   subsets: ["latin"],
   weight: ["100", "300", "400", "500", "700", "900"],
 });
 
-export const metadata: Metadata = {
-  title: "YouTube",
-  description: "Broadcast Yourself",
-};
+export const metadata = constructMetadata();
 
 export default async function RootLayout({
   children,
@@ -37,6 +36,7 @@ export default async function RootLayout({
           <Toaster toastOptions={{ position: "bottom-left" }} />
           <CreateChannelModal />
           <CurrentUserProvider user={currentUser}>
+            <Web3provider>
             <CurrentChannelProvider channel={currentChannel}>
               <UploadVideoModalProvider>
                 <SidebarProvider>
@@ -45,6 +45,7 @@ export default async function RootLayout({
                 </SidebarProvider>
               </UploadVideoModalProvider>
             </CurrentChannelProvider>
+            </Web3provider>
           </CurrentUserProvider>
         </CreateChannelModalProvider>
       </body>

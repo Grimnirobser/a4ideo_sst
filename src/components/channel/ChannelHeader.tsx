@@ -37,7 +37,7 @@ const ChannelHeader: React.FC<ChannelHeaderProps> = ({
       </div>
       {channel.userId === currentUser?.id ? (
         <Link href="/studio">
-          <Button type="rounded-dark">Manage Videos</Button>
+          <Button type="buttonColor">Manage Videos</Button>
         </Link>
       ) : (
         <SubscribeButton channelId={channel.id} />

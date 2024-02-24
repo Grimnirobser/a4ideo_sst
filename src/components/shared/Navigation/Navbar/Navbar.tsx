@@ -5,7 +5,7 @@ import UserOptions from "./UserOptions/UserOptions";
 
 const Navbar = () => {
   return (
-    <div className="fixed w-full bg-stone-950 z-20 h-16 px-2 flex flex-row justify-between items-center">
+    <div className="fixed w-full bg-white z-20 h-16 px-2 flex flex-row justify-between items-center">
       <NavigationHeader />
       <Search />
       <UserOptions />

@@ -1,18 +1,12 @@
 "use client";
 
-import Image from "next/image";
-import Link from "next/link";
+import Link from "next/link";   
+import { Icons } from './Icons';
 
 const Logo = () => {
   return (
     <Link href="/">
-      <Image
-        alt="Logo"
-        className="hidden cursor-pointer mx-4 sm:block"
-        height="20"
-        width="90"
-        src="/images/logo.svg"
-      />
+      <Icons.title className='h-9 w-auto ml-1' />
     </Link>
   );
 };

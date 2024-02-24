@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Created with Vectornator (http://vectornator.io/) -->
+<svg height="149.99999999999997mm" stroke-miterlimit="10" style="fill-rule:nonzero;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;" version="1.1" viewBox="0 0 1967.59 425.25" width="694.0343387418865mm" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<defs/>
+<path d="M0 0L1967.59 0L1967.59 425.25L0 425.25L0 0Z" fill="#ff0000" fill-opacity="0" fill-rule="nonzero" opacity="1" stroke="none"/>
+<g id="layer-1">
+<path d="M2.62901e-13 207.562L210.704 207.562L210.704 420.187L6.75016e-14 420.187L2.62901e-13 207.562Z" fill="#ff0000" fill-rule="nonzero" opacity="1" stroke="none"/>
+<path d="M421.408 2.13163e-13L632.112 2.13163e-13L632.112 212.625L421.408 212.625L421.408 2.13163e-13Z" fill="#0000ff" fill-rule="nonzero" opacity="1" stroke="none"/>
+<path d="M210.704 212.625L210.704 0C94.3353-4.66087e-05 6.75016e-14 95.1953 6.75016e-14 212.625L210.704 212.625Z" fill="#ff0000" fill-rule="nonzero" opacity="1" stroke="none"/>
+<path d="M421.408 212.625L421.408 425.25C537.776 425.25 632.112 330.055 632.112 212.625L421.408 212.625Z" fill="#0000ff" fill-rule="nonzero" opacity="1" stroke="none"/>
+<path d="M421.408 212.625L421.408 425.25C305.039 425.25 210.704 330.055 210.704 212.625L421.408 212.625Z" fill="#00ffff" fill-rule="nonzero" opacity="1" stroke="none"/>
+<path d="M210.704 212.625L210.704 0C327.073-4.66087e-05 421.408 95.1953 421.408 212.625L210.704 212.625Z" fill="#ffff00" fill-rule="nonzero" opacity="1" stroke="none"/>
+<text fill="#ff0000" font-family="AdobeDevanagari-Bold" font-size="400" opacity="1" stroke="none" text-anchor="start" transform="matrix(1 0 0 1 662.006 54.3271)" x="0" y="0">
+<tspan textLength="255.664" x="0" y="288">A</tspan>
+<tspan fill="#00ff00" textLength="133.203" x="255.664" y="288">I</tspan>
+<tspan fill="#0000ff" textLength="259.57" x="388.867" y="288">V</tspan>
+<tspan fill="#000000" textLength="657.617" x="634.766" y="288">ideo</tspan>
+</text>
+</g>
+</svg>
