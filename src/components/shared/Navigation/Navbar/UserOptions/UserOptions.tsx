@@ -71,21 +71,18 @@ const UserOptions = () => {
         <DropdownMenuItem asChild className='cursor-pointer'>
           <w3m-button/>
         </DropdownMenuItem>
-    
-        
-        <DropdownMenuSeparator />
-          <DropdownMenuItem className='cursor-pointer text-base '
+
+        <DropdownMenuItem className='cursor-pointer text-base'
             onClick={() => {
               if (!currentChannel) {
-
                 createChannelModal?.onOpen();
               } else {
-                router.push(`/channel/${currentChannel.id}`);
+                router.push(`/studio`);
               }
             }}>
-          Channel
-        </DropdownMenuItem>
-    
+              Preference
+        </DropdownMenuItem>    
+
           <DropdownMenuItem className='cursor-pointer text-base'
             onClick={() => {
               if (!currentChannel) {

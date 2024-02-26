@@ -11,23 +11,32 @@ datasource db {
 }
 
 model User {
-  id                   String    @id @default(uuid())
-  name                 String?
-  email                String?   @unique
-  emailVerified        DateTime?
-  image                String?
-  balance              Float     @default(0.000)
-  createdAt            DateTime  @default(now())
-  subscribedChannelIds String[]
-  likedVideoIds        Int[]
-  dislikedVideoIds     Int[]
+  id                String    @id @default(nanoid())
+  username          String?
+  email             String?   @unique
+  emailVerified     DateTime?
+  password          String?
+  image             String?
+  balance           Float     @default(0.000)
+  createdAt         DateTime  @default(now())
+  subscribedUserIds String[]
+  likedVideoIds     String[]
+  dislikedVideoIds  String[]
+  admin             Boolean   @default(false)
 
-  account Account?
-  channel Channel?
+  createdVideos      Video[]
+  approvedVideos     Video[]      @relation("Auditor")
+  createdProblemsets Problemset[]
+  createdAttempts    Attempt[]
+  Comment            Comment[]
+  fromTransfers      Transfer[]   @relation("TransferFrom")
+  toTransfers        Transfer[]   @relation("TransferTo")
+  createdAips        Aip[]
+  account            Account?
 }
 
 model Account {
-  id                String  @id @default(uuid())
+  id                String  @id @default(nanoid())
   userId            String  @unique
   type              String
   provider          String
@@ -45,62 +54,93 @@ model Account {
   @@unique([provider, providerAccountId])
 }
 
-model Channel {
-  id              String   @id @default(uuid())
-  userId          String   @unique
-  name            String
-  handle          String
-  imageSrc        String
-  createdAt       DateTime @default(now())
-  subscriberCount Int      @default(0)
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  comments Comment[]
-  videos   Video[]
-}
-
 model Video {
-  id           Int      @id @default(autoincrement())
-  channelId    String
+  id           String   @id @default(nanoid())
+  userId       String
   title        String
   description  String
   likeCount    Int      @default(0)
   dislikeCount Int      @default(0)
   viewCount    Int      @default(0)
   createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
   thumbnailSrc String
-  videoSrc     String
+  youtubeId    String
+  approved     Boolean  @default(false)
+  approvedBy   String?
+  suspended    Boolean  @default(false)
 
-  channel  Channel   @relation(fields: [channelId], references: [id], onDelete: Cascade)
+  author  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  auditor User? @relation("Auditor", fields: [approvedBy], references: [id], onDelete: Cascade)
+
+  problems Problemset[]
   comments Comment[]
 }
 
-model ProblemSet {
-  id           Int      @id @default(autoincrement())
-  videoId      Int
-  channelId    String
-  type         String
-  question     String
-  answer       String
-  likeCount    Int      @default(0)
-  dislikeCount Int      @default(0)
-  createdAt    DateTime @default(now())
-}
-
 model Comment {
-  id        Int      @id @default(autoincrement())
-  videoId   Int
-  channelId String
+  id        String   @id @default(nanoid())
+  userId    String
+  videoId   String
   text      String
   createdAt DateTime @default(now())
 
-  video   Video   @relation(fields: [videoId], references: [id], onDelete: Cascade)
-  channel Channel @relation(fields: [channelId], references: [id], onDelete: Cascade)
+  createdBy User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  video     Video @relation(fields: [videoId], references: [id], onDelete: Cascade)
+}
+
+model Problemset {
+  id           String   @id @default(nanoid())
+  userId       String
+  videoId      String
+  likeCount    Int      @default(0)
+  dislikeCount Int      @default(0)
+  createdAt    DateTime @default(now())
+  approved     Boolean  @default(false)
+  suspended    Boolean  @default(false)
+
+  user     User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  video    Video               @relation(fields: [videoId], references: [id], onDelete: Cascade)
+  problems QuestionAndAnswer[]
+}
+
+model QuestionAndAnswer {
+  id        String   @id @default(nanoid())
+  problemId String
+  type      String
+  question  String
+  answer    String
+  createdAt DateTime @default(now())
+
+  problem Problemset @relation(fields: [problemId], references: [id], onDelete: Cascade)
 }
 
 model Attempt {
-  id        Int      @id @default(autoincrement())
-  videoId   Int
+  id           String   @id @default(nanoid())
+  userId       String
+  problemsetId String
+  createdAt    DateTime @default(now())
+  correct      Boolean  @default(false)
+  score        Float    @default(0.00)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Transfer {
+  id        String   @id @default(nanoid())
+  from      String
+  to        String
+  amount    Float
   createdAt DateTime @default(now())
+
+  fromUser User @relation("TransferFrom", fields: [from], references: [id], onDelete: Cascade)
+  toUser   User @relation("TransferTo", fields: [to], references: [id], onDelete: Cascade)
+}
+
+model Aip {
+  id        Int      @id @default(autoincrement())
+  userId    String
+  text      String
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

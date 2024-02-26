@@ -35,6 +35,8 @@ export const useLikeDislike = ({ videoId }: UseLikeDislikeProps) => {
     }
   }, [currentUser, videoId]);
 
+
+  
   const toggleLikeDislike = useCallback(
     async (action: "like" | "dislike") => {
       if (!currentUser) {

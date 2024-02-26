@@ -28,7 +28,7 @@ const TextArea: React.FC<TextAreaProps> = ({
         disabled={disabled}
         {...register(id, { required })}
         placeholder=" "
-        className={`peer w-full px-4 pt-8 pb-2 min-h-[100px] rounded-md outline-none border-[1px] bg-stone-950 transition ${
+        className={`peer w-full px-4 pt-8 pb-2 min-h-[100px] rounded-md outline-none border-[1px] bg-slate-100 transition ${
           errors[id]
             ? "border-red-500 focus:border-red-500"
             : "border-zinc-500 focus:border-blue-400"
@@ -36,7 +36,7 @@ const TextArea: React.FC<TextAreaProps> = ({
       />
       <label
         htmlFor={id}
-        className={`absolute bg-stone-950 px-1 top-2 left-4 z-[1] ${
+        className={`absolute bg-slate-100 px-1 top-2 left-4 z-[1] ${
           errors[id] ? "text-red-500" : "text-zinc-500"
         }`}
       >

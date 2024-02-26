@@ -42,7 +42,7 @@ const VideoUploadForm: React.FC<VideoUploadFormProps> = ({
         required
       />
       <div>
-        <label className="block mb-2">Thumbnail</label>
+        <label className="block mb-2 text-zinc-500">Thumbnail</label>
         <MediaUpload
           onChange={(value) => !isLoading && changeValue("thumbnailSrc", value)}
         >
@@ -60,7 +60,7 @@ const VideoUploadForm: React.FC<VideoUploadFormProps> = ({
             <div
               id="thumbnailSrc"
               {...register("thumbnailSrc", { required: true })}
-              className={`h-28 w-48 bg-zinc-800 rounded-md flex items-center justify-center cursor-pointer border-[1px] ${
+              className={`h-28 w-48 bg-slate-100 rounded-md flex items-center justify-center cursor-pointer border-[1px] ${
                 errors["thumbnailSrc"] ? "border-red-500" : "border-zinc-500"
               }`}
             >

@@ -5,7 +5,7 @@ import { Channel } from "@prisma/client";
 import { useContext } from "react";
 import NavigationHeader from "../NavigationHeader";
 import MenuItem from "../Navbar/UserOptions/MenuItem";
-import { MdOutlineHome, MdOutlineSubscriptions } from "react-icons/md";
+import { MdOutlineHome, MdOutlineSubscriptions, MdOutlineFolderShared, MdOutlineRocket, MdOutlineModeComment } from "react-icons/md";
 import { useRouter } from "next/navigation";
 import { CurrentUserContext } from "@/context/CurrentUserContext";
 import Avatar, { AvatarSize } from "../../Avatar";
@@ -39,6 +39,21 @@ const Sidebar: React.FC<SidebarProps> = ({ subscribedChannels }) => {
             round
             onClick={() => handleItemClick(() => router.push("/"))}
           />
+
+          <MenuItem
+            label="AIPs"
+            logo={<MdOutlineModeComment className="h-6 w-6 mr-4" />}
+            round
+            onClick={() => handleItemClick(() => router.push("/aips"))}
+          />
+
+          <MenuItem
+            label="Leaderboard"
+            logo={<MdOutlineRocket className="h-6 w-6 mr-4" />}
+            round
+            onClick={() => handleItemClick(() => router.push("/"))}
+          />
+
           {currentUser ? (
             <MenuItem
               label="Subscriptions"

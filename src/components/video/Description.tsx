@@ -3,8 +3,9 @@
 import { compactNumberFormat } from "@/utils/numUtils";
 import { Video } from "@prisma/client";
 import { useState } from "react";
-
 import dayjs from "@/vendor/dayjs";
+import { cn } from "@/lib/utils"
+
 
 interface DescriptionProps {
   video: Video;
@@ -15,11 +16,11 @@ const Description: React.FC<DescriptionProps> = ({ video }) => {
 
   return (
     <div
-      className={`bg-neutral-800 rounded-xl p-3 overflow-hidden ${
+      className={`bg-gray-100	 rounded-xl p-3 overflow-hidden${
         isExpanded ? "h-fit" : "line-clamp-2 max-h-28"
       }`}
     >
-      <div className="flex gap-2 text-neutral-200 font-medium">
+      <div className="flex gap-2 text-black font-medium">
         <p>{compactNumberFormat(video.viewCount)} views</p>
         <p>{dayjs(video.createdAt).format("MMM D, YYYY")}</p>
       </div>

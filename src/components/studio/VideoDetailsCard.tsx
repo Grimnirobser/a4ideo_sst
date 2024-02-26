@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import dayjs from "@/vendor/dayjs";
 import { compactNumberFormat } from "@/utils/numUtils";
-import { MdDelete } from "react-icons/md";
+import { MdDelete, MdEdit } from "react-icons/md";
 import { useCallback } from "react";
 import axios from "axios";
 import { toast } from "react-hot-toast";
@@ -19,6 +19,22 @@ const VideoDetailsCard: React.FC<VideoDetailsCardProps> = ({ video }) => {
   const router = useRouter();
 
   const likeFraction = video.likeCount / (video.likeCount + video.dislikeCount);
+
+  
+  //   TODO: Add edit description functionality
+  // const handleEditDescription = useCallback(() => {
+  //   if (confirm("Are you sure you want to delete this video?")) {
+  //     axios
+  //       .delete(`/api/videos/${video.id}`)
+  //       .then(() => {
+  //         toast.success("Video deleted");
+  //         router.refresh();
+  //       })
+  //       .catch(() => toast.error("Video could not be deleted"));
+  //   }
+  // }, [video.id]);
+
+
 
   const handleDeleteVideo = useCallback(() => {
     if (confirm("Are you sure you want to delete this video?")) {
@@ -35,7 +51,7 @@ const VideoDetailsCard: React.FC<VideoDetailsCardProps> = ({ video }) => {
   return (
     <div
       key={video.id}
-      className="flex gap-6 justify-between items-center bg-neutral-800 p-4 rounded-lg"
+      className="flex gap-6 justify-between items-center bg-slate-200 p-4 rounded-lg"
     >
       <Link href={`video/${video.id}`}>
         <Image
@@ -54,6 +70,8 @@ const VideoDetailsCard: React.FC<VideoDetailsCardProps> = ({ video }) => {
         </p>
       </div>
 
+      {/* TODO: change video.createdAt to video.updatedAt */}
+
       <div className="flex flex-col">
         <p>{dayjs(video.createdAt).format("MMM D, YYYY")}</p>
         <p className="text-sm text-neutral-400">Published</p>
@@ -68,6 +86,17 @@ const VideoDetailsCard: React.FC<VideoDetailsCardProps> = ({ video }) => {
         <p>{likeFraction ? `${likeFraction * 100} %` : "-"}</p>
         <p className="text-sm text-neutral-400">{video.likeCount} Likes</p>
       </div>
+
+      
+      {/* TODO: Add video status "approved | processing | disapproved | suspended" */}
+      {/* <div className="flex flex-col">
+        <p>{video.viewCount}</p>
+      </div> */}
+
+      <MdEdit
+        className="h-6 w-6 cursor-pointer"
+        onClick={() => { }}
+      />
 
       <MdDelete
         className="h-6 w-6 cursor-pointer"
