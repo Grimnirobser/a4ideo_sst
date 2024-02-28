@@ -9,11 +9,11 @@ export async function POST(request: Request) {
     return NextResponse.error();
   }
 
-  const { name, handle, imageSrc } = await request.json();
+  const { username, handle, imageSrc } = await request.json();
 
   const channel = await prisma.channel.create({
     data: {
-      name,
+      username,
       handle,
       imageSrc,
       userId: currentUser.id,

@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/form"
 
 import { Textarea } from "@/components/ui/textarea"
-import LikeDislikeQuestionButton from "./ProblemsetSection/LikeDislikeQuestionButton"
+import LikeDislikeQuestionButton from "./LikeDislikeQuestionButton"
 
  
 const FormSchema = z.object({

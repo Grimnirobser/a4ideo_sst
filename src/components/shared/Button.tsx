@@ -21,7 +21,7 @@ const Button: React.FC<PropsWithChildren<ButtonProps>> = ({
       case "secondary":
         return "text-neutral-400 uppercase text-sm";
       case "box":
-        return "text-neutral-900 uppercase font-medium bg-sky-500 rounded-sm px-4 py-2";
+        return "text-white uppercase font-medium bg-sky-500 rounded-sm px-4 py-2";
       case "rounded":
         return "text-stone-950 font-medium bg-zinc-300 rounded-full px-3 py-2";
       case "rounded-dark":

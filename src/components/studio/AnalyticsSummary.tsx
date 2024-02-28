@@ -32,7 +32,7 @@ const AnalyticsSummary: React.FC<AnalyticsSummaryProps> = ({ videos }) => {
       />
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <AnalyticsSummaryItem
-          value={currentChannel?.name}
+          value={currentChannel?.username}
           subtitle={`@${currentChannel?.handle}`}
         />
         <AnalyticsSummaryItem

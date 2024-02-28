@@ -53,14 +53,14 @@ export async function POST(request: Request) {
     return NextResponse.error();
   }
 
-  const { id, title, description, videoSrc, thumbnailSrc } =
+  const { id, title, description, youtubeId, thumbnailSrc } =
     await request.json();
 
   const video = await prisma.video.create({
     data: {
       title,
       description,
-      videoSrc,
+      youtubeId,
       thumbnailSrc,
       id,
       channelId: currentChannel?.id,

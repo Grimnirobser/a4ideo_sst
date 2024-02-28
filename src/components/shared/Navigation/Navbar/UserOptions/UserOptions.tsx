@@ -27,13 +27,14 @@ const UserOptions = () => {
   const createChannelModal = useContext(CreateChannelModalContext);
 
   const router = useRouter();
-
   const handleUploadClick = () => {
     if (!currentChannel) createChannelModal?.onOpen();
     else router.push("/studio/upload");
   };
 
-  return currentUser ? (
+  if (currentUser && currentChannel) {
+    createChannelModal?.onClose();
+    return ( 
     <>
       <div className="flex items-center gap-4 mr-4">
         <IconButton onClick={handleUploadClick} className="mr-4">
@@ -45,23 +46,22 @@ const UserOptions = () => {
             <div>
             <Avatar onClick={() => {}}
               size={AvatarSize.small}
-              imageSrc={currentUser.image}
+              imageSrc={currentChannel.imageSrc}
               />
             </div>
           </DropdownMenuTrigger>
+      
       <DropdownMenuContent
         className='bg-white w-70'
         align='end'>
         <div className='flex items-center justify-start gap-2 p-2'>
           <div className='flex flex-col space-y-0.5 leading-none'>
             <p className='font-medium text-base text-black'>
-              {currentUser.name}
+              {currentChannel.username}
             </p>
+
             <p className='font-medium text-base text-black'>
-              {currentUser.email}
-            </p>
-            <p className='font-medium text-base text-black'>
-              {currentUser.balance} AIV coin
+              {currentChannel.balance} AIV coin
             </p>
           </div>
         </div>
@@ -74,22 +74,15 @@ const UserOptions = () => {
 
         <DropdownMenuItem className='cursor-pointer text-base'
             onClick={() => {
-              if (!currentChannel) {
-                createChannelModal?.onOpen();
-              } else {
-                router.push(`/studio`);
-              }
+              router.push(`/studio`);
+              
             }}>
               Preference
         </DropdownMenuItem>    
 
           <DropdownMenuItem className='cursor-pointer text-base'
             onClick={() => {
-              if (!currentChannel) {
-                createChannelModal?.onOpen();
-              } else {
                 router.push(`/studio`);
-              }
             }}>
           Studio
         </DropdownMenuItem>
@@ -105,11 +98,16 @@ const UserOptions = () => {
         </DropdownMenu>
      
       </div>
-      
-    </>
-  ) : (
-    <SignInButton />
-  );
+    </>)
+  }else if (!currentUser){
+    createChannelModal?.onClose();
+    return ( <SignInButton />
+    )
+  }else{
+    createChannelModal?.onOpen();
+    return <SignInButton />
+  }
+
 };
 
 export default UserOptions;

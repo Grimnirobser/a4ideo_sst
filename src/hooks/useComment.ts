@@ -1,6 +1,5 @@
 import { CreateChannelModalContext } from "@/context/CreateChannelModalContext";
 import { CurrentChannelContext } from "@/context/CurrentChannelContext";
-import { CurrentUserContext } from "@/context/CurrentUserContext";
 import { useCallback, useContext, useState } from "react";
 import { toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
@@ -12,7 +11,6 @@ interface UseCommentProps {
 
 export const useComment = ({ videoId }: UseCommentProps) => {
   const currentChannel = useContext(CurrentChannelContext);
-  const currentUser = useContext(CurrentUserContext);
 
   const createChannelModal = useContext(CreateChannelModalContext);
 
@@ -21,7 +19,7 @@ export const useComment = ({ videoId }: UseCommentProps) => {
   const [text, setText] = useState("");
 
   const submitComment = useCallback(async () => {
-    if (!currentUser) {
+    if (!currentChannel) {
       alert("Please sign in to comment");
       return;
     }
@@ -52,7 +50,6 @@ export const useComment = ({ videoId }: UseCommentProps) => {
     }
   }, [
     createChannelModal,
-    currentUser,
     currentChannel,
     videoId,
     text,

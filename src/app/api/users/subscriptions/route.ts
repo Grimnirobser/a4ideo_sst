@@ -1,11 +1,13 @@
-import getCurrentUser from "@/actions/getCurrentUser";
+import getCurrentChannel from "@/actions/getCurrentChannel";
 import prisma from "@/vendor/db";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
-  const currentUser = await getCurrentUser();
 
-  if (!currentUser) {
+  const currentChannel = await getCurrentChannel();
+
+
+  if (!currentChannel) {
     return NextResponse.error();
   }
 
@@ -20,26 +22,26 @@ export async function POST(request: Request) {
     },
   });
 
-  const subscribedChannelIds = currentUser.subscribedChannelIds;
+  const subscribedChannelIds = currentChannel.subscribedChannelIds;
 
   subscribedChannelIds.push(channelId);
 
-  const updatedUser = await prisma.user.update({
+  const updatedChannel = await prisma.channel.update({
     where: {
-      id: currentUser.id,
+      id: currentChannel.id,
     },
     data: {
       subscribedChannelIds,
     },
   });
 
-  return NextResponse.json(updatedUser);
+  return NextResponse.json(updatedChannel);
 }
 
 export async function DELETE(request: Request) {
-  const currentUser = await getCurrentUser();
+  const currentChannel = await getCurrentChannel();
 
-  if (!currentUser) {
+  if (!currentChannel) {
     return NextResponse.error();
   }
 
@@ -54,18 +56,18 @@ export async function DELETE(request: Request) {
     },
   });
 
-  const subscribedChannelIds = currentUser.subscribedChannelIds.filter(
+  const subscribedChannelIds = currentChannel.subscribedChannelIds.filter(
     (subscribedChannelId) => subscribedChannelId !== channelId
   );
 
-  const updatedUser = await prisma.user.update({
+  const updatedChannel = await prisma.channel.update({
     where: {
-      id: currentUser.id,
+      id: currentChannel.id,
     },
     data: {
       subscribedChannelIds,
     },
   });
 
-  return NextResponse.json(updatedUser);
+  return NextResponse.json(updatedChannel);
 }

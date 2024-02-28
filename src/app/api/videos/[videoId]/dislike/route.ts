@@ -1,4 +1,4 @@
-import getCurrentUser from "@/actions/getCurrentUser";
+import getCurrentChannel from "@/actions/getCurrentChannel";
 import prisma from "@/vendor/db";
 import { NextResponse } from "next/server";
 
@@ -7,15 +7,16 @@ interface IParams {
 }
 
 export async function POST(_: Request, { params }: { params: IParams }) {
-  const currentUser = await getCurrentUser();
+  const currentChannel = await getCurrentChannel();
+
 
   const { videoId } = params;
 
-  if (!currentUser || !videoId) {
+  if (!currentChannel || !videoId) {
     return NextResponse.error();
   }
 
-  let dislikedVideoIds = currentUser.dislikedVideoIds;
+  let dislikedVideoIds = currentChannel.dislikedVideoIds;
 
   dislikedVideoIds.push(videoId);
 
@@ -30,28 +31,28 @@ export async function POST(_: Request, { params }: { params: IParams }) {
     },
   });
 
-  const user = await prisma.user.update({
+  const channel = await prisma.channel.update({
     where: {
-      id: currentUser.id,
+      id: currentChannel.id,
     },
     data: {
       dislikedVideoIds,
     },
   });
 
-  return NextResponse.json({ user, video });
+  return NextResponse.json({ channel, video });
 }
 
 export async function DELETE(_: Request, { params }: { params: IParams }) {
-  const currentUser = await getCurrentUser();
+  const currentChannel = await getCurrentChannel();
 
   const { videoId } = params;
 
-  if (!currentUser || !videoId) {
+  if (!currentChannel || !videoId) {
     return NextResponse.error();
   }
 
-  let dislikedVideoIds = currentUser.dislikedVideoIds.filter(
+  let dislikedVideoIds = currentChannel.dislikedVideoIds.filter(
     (dislikedVideoId) => dislikedVideoId !== videoId
   );
 
@@ -66,14 +67,14 @@ export async function DELETE(_: Request, { params }: { params: IParams }) {
     },
   });
 
-  const user = await prisma.user.update({
+  const channel = await prisma.channel.update({
     where: {
-      id: currentUser.id,
+      id: currentChannel.id,
     },
     data: {
       dislikedVideoIds,
     },
   });
 
-  return NextResponse.json({ user, video });
+  return NextResponse.json({ channel, video });
 }

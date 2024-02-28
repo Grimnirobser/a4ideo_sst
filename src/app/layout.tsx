@@ -38,12 +38,12 @@ export default async function RootLayout({
           <CurrentUserProvider user={currentUser}>
             <Web3provider>
             <CurrentChannelProvider channel={currentChannel}>
-              <UploadVideoModalProvider>
+              {/* <UploadVideoModalProvider> */}
                 <SidebarProvider>
                   <Navigation />
                   <div className="pt-16">{children}</div>
                 </SidebarProvider>
-              </UploadVideoModalProvider>
+              {/* </UploadVideoModalProvider> */}
             </CurrentChannelProvider>
             </Web3provider>
           </CurrentUserProvider>

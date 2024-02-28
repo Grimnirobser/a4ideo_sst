@@ -72,7 +72,7 @@ const Sidebar: React.FC<SidebarProps> = ({ subscribedChannels }) => {
               return (
                 <MenuItem
                   key={subscribedChannel.id}
-                  label={subscribedChannel.name}
+                  label={subscribedChannel.username}
                   logo={
                     <Avatar
                       imageSrc={subscribedChannel.imageSrc}

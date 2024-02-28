@@ -43,7 +43,7 @@ createWeb3Modal({
     enableAnalytics: true, // Optional - defaults to your Cloud configuration
     themeVariables: {
       '--w3m-font-size-master': '10px',
-      '--w3m-accent': '#0349fc',
+      '--w3m-accent': '#0ea5e9',
       '--w3m-border-radius-master': '0.1rem',
     }
   })

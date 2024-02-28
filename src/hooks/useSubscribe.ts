@@ -1,4 +1,4 @@
-import { CurrentUserContext } from "@/context/CurrentUserContext";
+import { CurrentChannelContext } from "@/context/CurrentChannelContext";
 import { useRouter } from "next/navigation";
 import { useCallback, useContext, useMemo } from "react";
 import { toast } from "react-hot-toast";
@@ -9,20 +9,21 @@ interface UseSubscribeProps {
 }
 
 export const useSubscribe = ({ channelId }: UseSubscribeProps) => {
-  const currentUser = useContext(CurrentUserContext);
+  const currentChannel = useContext(CurrentChannelContext);
+
 
   const router = useRouter();
 
   const hasSubscribed = useMemo(() => {
-    if (!currentUser) return false;
+    if (!currentChannel) return false;
 
-    const subscriptions = currentUser.subscribedChannelIds || [];
+    const subscriptions = currentChannel.subscribedChannelIds || [];
 
     return subscriptions.includes(channelId);
-  }, [currentUser, channelId]);
+  }, [currentChannel, channelId]);
 
   const toggleSubscribed = useCallback(async () => {
-    if (!currentUser) {
+    if (!currentChannel) {
       alert("Please sign in to subscribe");
       return;
     }
@@ -49,7 +50,7 @@ export const useSubscribe = ({ channelId }: UseSubscribeProps) => {
         hasSubscribed ? "Could not unsubscribe" : "Could not subscribe"
       );
     }
-  }, [currentUser, channelId, hasSubscribed, router]);
+  }, [currentChannel, channelId, hasSubscribed, router]);
 
   return {
     hasSubscribed,

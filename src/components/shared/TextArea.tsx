@@ -32,7 +32,7 @@ const TextArea: React.FC<TextAreaProps> = ({
           errors[id]
             ? "border-red-500 focus:border-red-500"
             : "border-zinc-500 focus:border-blue-400"
-        } disabled:opacity-70 disabled:cursor-not-allowed`}
+        } disabled:opacity-70 disabled:cursor-not-allowed text-xl font-sans antialiased`}
       />
       <label
         htmlFor={id}

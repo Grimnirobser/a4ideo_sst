@@ -1,7 +1,8 @@
-import { CurrentUserContext } from "@/context/CurrentUserContext";
 import { useRouter } from "next/navigation";
 import { useCallback, useContext, useMemo } from "react";
 import { toast } from "react-hot-toast";
+import { CurrentChannelContext } from "@/context/CurrentChannelContext";
+
 
 import axios from "axios";
 
@@ -16,15 +17,17 @@ export enum LikeDislikeStatus {
 }
 
 export const useLikeDislike = ({ videoId }: UseLikeDislikeProps) => {
-  const currentUser = useContext(CurrentUserContext);
+
+  const currentChannel = useContext(CurrentChannelContext);
+
 
   const router = useRouter();
 
   const likeDislikeStatus = useMemo(() => {
-    if (!currentUser || !videoId) return false;
+    if (!currentChannel || !videoId) return false;
 
-    const likedVideoIds = currentUser.likedVideoIds;
-    const dislikedVideoIds = currentUser.dislikedVideoIds;
+    const likedVideoIds = currentChannel.likedVideoIds;
+    const dislikedVideoIds = currentChannel.dislikedVideoIds;
 
     if (likedVideoIds.includes(videoId)) {
       return LikeDislikeStatus.Liked;
@@ -33,13 +36,13 @@ export const useLikeDislike = ({ videoId }: UseLikeDislikeProps) => {
     } else {
       return LikeDislikeStatus.None;
     }
-  }, [currentUser, videoId]);
+  }, [currentChannel, videoId]);
 
 
   
   const toggleLikeDislike = useCallback(
     async (action: "like" | "dislike") => {
-      if (!currentUser) {
+      if (!currentChannel) {
         alert("Please sign in to like/dislike");
         return;
       } else if (!videoId) return;
@@ -81,7 +84,7 @@ export const useLikeDislike = ({ videoId }: UseLikeDislikeProps) => {
         toast.error("There was an error");
       }
     },
-    [currentUser, videoId, likeDislikeStatus, router]
+    [currentChannel, videoId, likeDislikeStatus, router]
   );
 
   return {

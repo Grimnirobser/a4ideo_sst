@@ -63,7 +63,7 @@ const VideoCard: React.FC<VideoCardProps> = ({
                   />
                 ) : null}
                 <p className="text-neutral-400 text-sm whitespace-nowrap">
-                  {channel.name}
+                  {channel.username}
                 </p>
               </div>
             ) : null}
