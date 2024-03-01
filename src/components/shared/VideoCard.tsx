@@ -34,7 +34,8 @@ const VideoCard: React.FC<VideoCardProps> = ({
             className="object-cover rounded-lg"
             src={video.thumbnailSrc}
             alt={`Thumbnail for ${video.title}`}
-            layout="fill"
+            sizes="100%"
+            fill
           />
         </div>
         <div

@@ -23,21 +23,15 @@ import { signOut } from "next-auth/react";
 const UserOptions = () => {
   const currentUser = useContext(CurrentUserContext);
   const currentChannel = useContext(CurrentChannelContext);
-
   const createChannelModal = useContext(CreateChannelModalContext);
-
   const router = useRouter();
-  const handleUploadClick = () => {
-    if (!currentChannel) createChannelModal?.onOpen();
-    else router.push("/studio/upload");
-  };
 
   if (currentUser && currentChannel) {
     createChannelModal?.onClose();
     return ( 
     <>
       <div className="flex items-center gap-4 mr-4">
-        <IconButton onClick={handleUploadClick} className="mr-4">
+        <IconButton onClick={() => router.push("/studio/upload")} className="mr-4">
           <MdOutlineVideoCall className="h-7 w-7" />
         </IconButton>
         
@@ -72,13 +66,13 @@ const UserOptions = () => {
           <w3m-button/>
         </DropdownMenuItem>
 
-        <DropdownMenuItem className='cursor-pointer text-base'
+        {/* <DropdownMenuItem className='cursor-pointer text-base'
             onClick={() => {
               router.push(`/studio`);
               
             }}>
               Preference
-        </DropdownMenuItem>    
+        </DropdownMenuItem>     */}
 
           <DropdownMenuItem className='cursor-pointer text-base'
             onClick={() => {

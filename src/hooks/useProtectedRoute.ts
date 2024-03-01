@@ -10,6 +10,7 @@ interface UseProtectedRouteProps {
 export const useProtectedRoute = ({
   checkChannel = true,
 }: UseProtectedRouteProps = {}) => {
+  
   const currentUser = useContext(CurrentUserContext);
   const currentChannel = useContext(CurrentChannelContext);
 

@@ -1,17 +1,13 @@
 
 
 
-const Page = () => {
+const Page = () =>  {
+
+
     return (    
         <>
         <title>AIPs</title>
-        
-        
-        
-        
-        
-        
-        
+
         </>
     )
 }

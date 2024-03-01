@@ -3,22 +3,13 @@ import TextArea from "@/components/shared/TextArea";
 import { FieldErrors, FieldValues, UseFormRegister, Controller, Control } from "react-hook-form";
 import { Trash2 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
+
 import { ChevronDown } from 'lucide-react';
 
 
-interface ProblemUploadFormProps {
+interface AttemptUploadFormProps {
   index: number;
   totalProblems: number;
-  control: Control<FieldValues, any, FieldValues>;
   register: UseFormRegister<FieldValues>;
   errors: FieldErrors<FieldValues>;
   changeValue: (id: string, value: string) => void;
@@ -33,10 +24,9 @@ interface OptionType {
 };
 
 
-const ProblemUploadForm: React.FC<ProblemUploadFormProps> = ({
+const AttemptUploadForm: React.FC<AttemptUploadFormProps> = ({
   index,
   totalProblems,
-  control,
   register,
   errors,
   changeValue,
@@ -44,11 +34,6 @@ const ProblemUploadForm: React.FC<ProblemUploadFormProps> = ({
   removeFunction,
   decrement
 }) => {
-
-  const options: OptionType[] = [
-    { value: 'step', label: 'step'},
-    { value: 'reason', label: 'reason'},
-   ];
 
 
   if (totalProblems <= 1) {
@@ -76,22 +61,6 @@ const ProblemUploadForm: React.FC<ProblemUploadFormProps> = ({
                     Question Type
                     <ChevronDown className="h-6 w-6"/>
                   </div>
-            <Controller 
-                  control={control}
-                  name={`problems.${index}.type`}
-                  defaultValue={options[0].value}
-                  render={({ field }) => (
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                          <SelectTrigger className="flex h-auto text-2xl font-sans subpixel-antialiased">
-                            <SelectValue />
-                          </SelectTrigger>
-                        <SelectContent >
-                          <SelectItem className="text-2xl font-sans subpixel-antialiased" value={options[0].value}>{options[0].label}</SelectItem>
-                          <SelectItem className="text-2xl font-sans subpixel-antialiased" value={options[1].value}>{options[1].label}</SelectItem>
-                        </SelectContent>
-                      </Select>
-                  )}
-              />
           </div>
         </div>
         <TextArea
@@ -134,22 +103,7 @@ const ProblemUploadForm: React.FC<ProblemUploadFormProps> = ({
                     Question Type
                     <ChevronDown className="h-6 w-6"/>
                   </div>
-          <Controller
-                control={control}
-                name={`problems.${index}.type`}
-                defaultValue={options[0].value}
-                render={({ field }) => (
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
-                        <SelectTrigger className="flex h-auto text-2xl font-sans subpixel-antialiased">
-                          <SelectValue />
-                        </SelectTrigger>
-                      <SelectContent >
-                        <SelectItem className="text-2xl font-sans subpixel-antialiased" value={options[0].value}>{options[0].label}</SelectItem>
-                        <SelectItem className="text-2xl font-sans subpixel-antialiased" value={options[1].value}>{options[1].label}</SelectItem>
-                      </SelectContent>
-                    </Select>
-                )}
-            />
+          
           </div>
         </div>
         <TextArea
@@ -175,4 +129,4 @@ const ProblemUploadForm: React.FC<ProblemUploadFormProps> = ({
   
 };
 
-export default ProblemUploadForm;
+export default AttemptUploadForm;

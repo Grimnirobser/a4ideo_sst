@@ -13,6 +13,8 @@ import UploadVideoModalProvider from "@/context/UploadVideoModalContext";
 import SidebarProvider from "@/context/SidebarContext";
 import { Web3provider } from "@/context/Web3Provider";
 import { constructMetadata } from "@/utils/websiteUtils";
+import Provider from "@/context/Provider";
+
 
 const roboto = Roboto({
   subsets: ["latin"],
@@ -29,25 +31,28 @@ export default async function RootLayout({
   const currentUser = await getCurrentUser();
   const currentChannel = await getCurrentChannel();
 
+
   return (
     <html lang="en">
       <body className={roboto.className}>
-        <CreateChannelModalProvider>
-          <Toaster toastOptions={{ position: "bottom-left" }} />
-          <CreateChannelModal />
-          <CurrentUserProvider user={currentUser}>
-            <Web3provider>
-            <CurrentChannelProvider channel={currentChannel}>
-              {/* <UploadVideoModalProvider> */}
-                <SidebarProvider>
-                  <Navigation />
-                  <div className="pt-16">{children}</div>
-                </SidebarProvider>
-              {/* </UploadVideoModalProvider> */}
-            </CurrentChannelProvider>
-            </Web3provider>
-          </CurrentUserProvider>
-        </CreateChannelModalProvider>
+        <Provider> 
+          <CreateChannelModalProvider>
+            <Toaster toastOptions={{ position: "bottom-left" }} />
+            <CreateChannelModal />
+            <CurrentUserProvider user={currentUser}>
+              <Web3provider>
+              <CurrentChannelProvider channel={currentChannel}>
+                {/* <UploadVideoModalProvider> */}
+                  <SidebarProvider>
+                    <Navigation />
+                    <div className="pt-16">{children}</div>
+                  </SidebarProvider>
+                {/* </UploadVideoModalProvider> */}
+              </CurrentChannelProvider>
+              </Web3provider>
+            </CurrentUserProvider>
+          </CreateChannelModalProvider>
+        </Provider>
       </body>
     </html>
   );

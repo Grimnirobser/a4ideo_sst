@@ -1,6 +1,5 @@
 "use client";
 
-import { FileQuestion } from 'lucide-react';
 import {
     Pagination,
     PaginationContent,
@@ -10,7 +9,6 @@ import {
     PaginationNext,
     PaginationPrevious,
   } from "@/components/ui/pagination"
-  
 
 interface ProblemPaginationProps {
     end: number;
@@ -53,7 +51,6 @@ const ProblemPagination: React.FC<ProblemPaginationProps> = ({
           </PaginationItem>
         </PaginationContent>
       </Pagination>
-      <FileQuestion  className='cursor-pointer w-10 h-10 hover:bg-slate-200 rounded-lg' />
       </div>
     
         </>)
@@ -85,7 +82,6 @@ const ProblemPagination: React.FC<ProblemPaginationProps> = ({
           </PaginationItem>
         </PaginationContent>
       </Pagination>
-      <FileQuestion  className='cursor-pointer w-10 h-10 hover:bg-slate-200 rounded-lg' />
       </div>
     
         </>)
@@ -117,7 +113,6 @@ const ProblemPagination: React.FC<ProblemPaginationProps> = ({
           </PaginationItem>
         </PaginationContent>
       </Pagination>
-      <FileQuestion  className='cursor-pointer w-10 h-10 hover:bg-slate-200 rounded-lg' />
       </div>
           
           </>)
@@ -149,7 +144,6 @@ const ProblemPagination: React.FC<ProblemPaginationProps> = ({
           </PaginationItem>
         </PaginationContent>
       </Pagination>
-      <FileQuestion  className='cursor-pointer w-10 h-10 hover:bg-slate-200 rounded-lg' />
       </div>
         
         </>)

@@ -23,11 +23,10 @@ model User {
 }
 
 model Admin {
-  id        String   @id @default(nanoid())
-  username  String   @unique
-  password  String
-  createdAt DateTime @default(now())
-
+  id                 String       @id @default(nanoid())
+  username           String       @unique
+  password           String
+  createdAt          DateTime     @default(now())
   aduitedVideos      Video[]
   aduitedProblemsets Problemset[]
 }
@@ -52,15 +51,14 @@ model Account {
 }
 
 model Channel {
-  id              String   @id @default(nanoid())
-  userId          String   @unique
-  username        String
-  handle          String
-  imageSrc        String
-  createdAt       DateTime @default(now())
-  subscriberCount Int      @default(0)
-  balance         Float    @default(0.000)
-
+  id                    String   @id @default(nanoid())
+  userId                String   @unique
+  username              String
+  handle                String
+  imageSrc              String
+  createdAt             DateTime @default(now())
+  subscriberCount       Int      @default(0)
+  balance               Float    @default(0.000)
   subscribedChannelIds  String[]
   likedVideoIds         String[]
   dislikedVideoIds      String[]
@@ -114,32 +112,31 @@ model Comment {
 }
 
 model Problemset {
-  id           String   @id @default(nanoid())
+  id           String              @id @default(nanoid())
   channelId    String
   videoId      String
   auditedBy    String?
-  likeCount    Int      @default(0)
-  dislikeCount Int      @default(0)
-  createdAt    DateTime @default(now())
-  approved     Boolean  @default(false)
-  suspended    Boolean  @default(false)
-  passedScore  Float    @default(0.50)
-
-  channel  Channel             @relation(fields: [channelId], references: [id], onDelete: Cascade)
-  video    Video               @relation(fields: [videoId], references: [id], onDelete: Cascade)
-  audited  Admin?              @relation(fields: [auditedBy], references: [id], onDelete: Cascade)
-  problems QuestionAndAnswer[]
+  likeCount    Int                 @default(0)
+  dislikeCount Int                 @default(0)
+  createdAt    DateTime            @default(now())
+  approved     Boolean             @default(false)
+  suspended    Boolean             @default(false)
+  passedScore  Float               @default(0.50)
+  problems     QuestionAndAnswer[]
+  channel      Channel             @relation(fields: [channelId], references: [id], onDelete: Cascade)
+  video        Video               @relation(fields: [videoId], references: [id], onDelete: Cascade)
+  audited      Admin?              @relation(fields: [auditedBy], references: [id], onDelete: Cascade)
 }
 
 model QuestionAndAnswer {
-  id        String   @id @default(nanoid())
-  problemId String
-  type      String
-  question  String
-  answer    String
-  createdAt DateTime @default(now())
+  id           String   @id @default(nanoid())
+  problemsetId String
+  type         String
+  question     String
+  answer       String
+  createdAt    DateTime @default(now())
 
-  problem Problemset @relation(fields: [problemId], references: [id], onDelete: Cascade)
+  problemset Problemset @relation(fields: [problemsetId], references: [id], onDelete: Cascade)
 }
 
 model Attempt {

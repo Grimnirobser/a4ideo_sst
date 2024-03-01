@@ -12,11 +12,11 @@ import { useForm, FieldValues, SubmitHandler, useFieldArray } from "react-hook-f
 
 import { toast } from "react-hot-toast";
 import TextArea from "@/components/shared/TextArea";
-
 import axios from "axios";
-
 import { v4 as uuid } from "uuid";
 import { useProtectedRoute } from "@/hooks/useProtectedRoute";
+import { useMutation } from "@tanstack/react-query"
+import { on } from "events";
 
 
 export default function UploadPage() {
@@ -26,13 +26,6 @@ export default function UploadPage() {
   // useEffect(() => uploadVideoModal?.onOpen(), []);
 
   const router = useRouter();
-
-  const [isLoading, setIsLoading] = useState(false);
-
-  const videoId = useMemo(() => {
-    const buffer = Buffer.alloc(12);
-    return uuid({}, buffer).toString("hex");
-  }, []);
 
   const {
     control,
@@ -47,11 +40,9 @@ export default function UploadPage() {
       description: "",
       thumbnailSrc: "",
       youtubeId: "",
-      problems: [{question: "", type:"reason" ,answer: ""}],
+      problems: [{question: "", type:"step" ,answer: ""}],
     },
   });
-
-
 
   const { fields, append, remove } = useFieldArray({
     control, // control props comes from useForm (optional: if you are using FormContext)
@@ -74,25 +65,31 @@ export default function UploadPage() {
   let incrementTotalProblems = () => setTotalProblems(totalProblems + 1);
   let decrementTotalProblems = () => (totalProblems === 1) ? {} : setTotalProblems(totalProblems - 1);
 
-  const onSubmit: SubmitHandler<FieldValues> = (data) => {
-    setIsLoading(true);
-
-
-    console.log(data);
-
+  
+  const { mutate, mutateAsync, isPending } = useMutation({
+    mutationKey: ["uploadVideo"],
+    mutationFn: async(data) => await fetch(process.env.NEXT_PUBLIC_SERVER_URL + "/api/videos", {
+      method: "POST",
+      body: JSON.stringify(data),
+      headers: {
+        'Accept': 'application/json',
+        "Content-Type": "application/json",
+      },
     
+    }),
 
+    onSuccess: () => {
+      toast.success("Video published successfully");
+      router.push("/studio");
+      router.refresh();
+    },
 
-    // axios
-    //   .post("/api/videos", data)
-    //   .then(() => {
-    //     toast.success("Video published successfully");
-    //     router.push("/studio");
-    //   })
-    //   .catch(() => toast.error("Could not publish video"))
-    //   .finally(() => setIsLoading(false));
-  };
+    onError: () => toast.error("Could not publish video")
+  })
 
+  const onSubmit: SubmitHandler<FieldValues> = async (data) => {
+    mutateAsync(data);
+  }
 
 
   return (
@@ -124,9 +121,8 @@ export default function UploadPage() {
             errors={errors}
             changeValue={changeValue}
             thumbnailSrc={thumbnailSrc}
-            isLoading={isLoading}
+            isLoading={isPending}
           />
-
           
           <div className="w-2/6 space-y-2">
 
@@ -139,7 +135,7 @@ export default function UploadPage() {
                     register={register}
                     errors={errors}
                     changeValue={changeValue}
-                    isLoading={isLoading}
+                    isLoading={isPending}
                     removeFunction={remove}
                     decrement={decrementTotalProblems}
                   />
@@ -148,7 +144,7 @@ export default function UploadPage() {
                 ))}
 
             <div className="relative w-26 h-10 mb-2 mt-2">
-            <Button className="absolute inset-y-0 left-0 h-full" type="box" onClick={() => {append({question: "", type:"reason" ,answer: ""});incrementTotalProblems()}}>
+            <Button className="absolute inset-y-0 left-0 h-full" type="box" onClick={() => {append({question: "", type:"step" ,answer: ""});incrementTotalProblems()}}>
                 Add Question
             </Button>   
           </div>
