@@ -9,7 +9,7 @@ import React, { ReactNode } from 'react'
 
 
 const Providers = ({ children }: PropsWithChildren) => {
-  const queryClient =  new QueryClient()
+  const [queryClient] =  useState(() => new QueryClient())
 
 
   return (

@@ -1,12 +1,11 @@
 import { Button } from "@/components/ui/button"
 
-
 interface StatusBasedTagProps {
     status: Boolean | undefined;
   }
    
 export const StatusBasedTag:React.FC<StatusBasedTagProps> = ({
-    status
+    status,
   }) => {
 
     return status ? (

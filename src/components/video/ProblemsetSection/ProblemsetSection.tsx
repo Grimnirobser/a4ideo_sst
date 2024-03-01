@@ -9,7 +9,6 @@ import {StatusBasedTag} from "./StatusBasedTag"
 import { CurrentChannelContext } from "@/context/CurrentChannelContext";
 import { useContext } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query"
-import { zodResolver } from "@hookform/resolvers/zod"
 import { Button } from "@/components/ui/button"
 import {
   Form,
@@ -25,30 +24,28 @@ import { FileQuestion } from 'lucide-react';
 import { useRouter } from "next/navigation";
 import { useSearchParams } from 'next/navigation'
 import { useForm, FieldValues, SubmitHandler, useFieldArray } from "react-hook-form";
-
+import { Skeleton } from "@/components/ui/skeleton"
+import getProblemsByProblemsetId  from "@/actions/getProblemsByProblemsetId"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { z } from "zod"
+import { toast } from "react-hot-toast";
+import { Loader2 } from 'lucide-react'
 
 
 interface ProblemsetSectionProps {
   problemsets: (ProblemsetType & { channel: Channel })[];
-  problems: (Problem[] | null)[]
-  videoId: string
+  videoId: string,
 }
 
 const ProblemsetSection: React.FC<ProblemsetSectionProps> = ({
   problemsets,
-  problems,
   videoId,
 }) => {
   const router = useRouter();
-  const searchParams = useSearchParams()
-  const ps = searchParams.get('ps')
   const [problemsetNum, setProblemsetNum] = useState(1);
+
   const totalProblemset = problemsets.length;
 
-
-  if (ps && 1 <= parseInt(ps) && parseInt(ps) <= totalProblemset) {
-    setProblemsetNum(parseInt(ps));
-  }
 
   let incrementProblemNum = () => setProblemsetNum(problemsetNum + 1);
   let decrementProblemNum = () => setProblemsetNum(problemsetNum - 1);
@@ -59,49 +56,113 @@ const ProblemsetSection: React.FC<ProblemsetSectionProps> = ({
     incrementProblemNum = () => setProblemsetNum(totalProblemset);
   }
 
+  
+  // const searchParams = useSearchParams()
+  // const ps = searchParams.get('ps')
+  // if (ps && 1 <= parseInt(ps) && parseInt(ps) <= totalProblemset) {
+  //   setProblemsetNum(parseInt(ps));
+  // }
+
   const currentChannel = useContext(CurrentChannelContext);
 
-
-  const {
-      control,
-      register,
-      handleSubmit,
-      formState: { errors },
-      watch,
-      setValue,
-    } = useForm<FieldValues>({
-      defaultValues: {
-        problemsetId: `${problemsets[problemsetNum-1].id}`,
-        attempts: [{attempt: ""}],
-      },
-    });
-
-    const { fields, append, remove } = useFieldArray({
-      control, // control props comes from useForm (optional: if you are using FormContext)
-      name: "attempts", // unique name for your Field Array
-    });
-
-
-    
-    
-
-    const changeValue = (id: string, value: string) => {
-      setValue(id, value, {
-        shouldDirty: true,
-        shouldTouch: true,
-        shouldValidate: true,
-      });
-    };
- 
-
-  const {data: attemptStatus, isLoading: LoadingStatus} = useQuery({
-    queryKey: ['attemptStatus'],
-    queryFn: () => getAttemptByChannelId({ problemsetId: problemsets[problemsetNum-1].id, channelId: currentChannel?.id}),
+  const {data: problems, isLoading: LoadingProblems} = useQuery({
+    queryKey: ['queryProblemsByProblemsetId', problemsets[problemsetNum-1].id],
+    queryFn: () => getProblemsByProblemsetId(problemsets[problemsetNum-1].id),
     staleTime: 1000 * 60,
   });
 
+  const {data: attemptStatus, isLoading: LoadingStatus, isFetching, refetch} = useQuery({
+    queryKey: ['attemptStatus'],
+    queryFn: () => getAttemptByChannelId({ problemsetId: problemsets[problemsetNum-1].id, channelId: currentChannel?.id}),
+    refetchOnWindowFocus: true,
+    staleTime: 0,
+    refetchInterval: 0,
+  });
+  
 
-  if (!problems || problems[problemsetNum-1] === undefined) {return <div>Loading...</div>}
+  const attemptSchema = z.object({
+    attempt: z.string()
+          .min(1, {
+            message: "At least 1 character to answer the question.",
+          })
+          .max(200, {
+            message: "Answer cannot exceed 200 characters.",
+          }),
+  })
+
+  const attemptsetSchema = z.object({
+    attempts: z.array(attemptSchema)
+  })
+  
+
+  const form = useForm<z.infer<typeof attemptsetSchema>>({
+    resolver: zodResolver(attemptsetSchema),
+    defaultValues: {
+      attempts: [{attempt: ""}],
+    },
+  })
+
+
+  const { mutate, mutateAsync, isPending } = useMutation({
+    mutationKey: ["attemptProblemset"],
+    mutationFn: async(readyData) => await fetch(process.env.NEXT_PUBLIC_SERVER_URL + `/api/attempts/${problemsets[problemsetNum-1].id}`, {
+      method: "POST",
+      body: JSON.stringify(readyData),
+      headers: {
+        'Accept': 'application/json',
+        "Content-Type": "application/json",
+      },
+    
+    }),
+
+    onSuccess: () => {
+      toast.success("Attempt submitted successfully.");
+      refetch();
+      router.refresh();
+    },
+
+    onError: () => toast.error("Could not submit attempt.")
+  })
+
+
+  const onSubmit: SubmitHandler<FieldValues> = async (data) => {
+    if (!currentChannel) {
+      alert("Please sign in to comment");
+      return;
+    }
+
+    if (attemptStatus === true){
+      alert("Note that your PASSED status will be overwritten by this submission.");
+    }
+
+    const readyData = {
+      channelId: currentChannel.id,
+      problemsetId: problemsets[problemsetNum-1].id,
+      attempts: data.attempts,
+    }
+    mutateAsync(readyData);
+  };
+
+
+
+  if (!problems || problems[problemsetNum-1] === undefined || LoadingProblems || LoadingStatus || isFetching) {
+    return (
+        <>
+        <ProblemPagination
+        end = {totalProblemset}
+        current = {problemsetNum}
+        increment = {incrementProblemNum}
+        decrement = {decrementProblemNum}
+        />
+        <div className="flex flex-col space-y-3 mt-2">
+          <div className="space-y-2">
+            <Skeleton className="h-4 w-2/3" />
+            <Skeleton className="h-4 w-full" />
+          </div>
+          <Skeleton className="h-[225px] w-full rounded-xl" />
+        </div>
+        </>
+    )}
   else{
 
   return (
@@ -113,11 +174,13 @@ const ProblemsetSection: React.FC<ProblemsetSectionProps> = ({
       decrement = {decrementProblemNum}
     />
 
-        {problems[problemsetNum-1]!.map((problem, index) => (
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        {problems!.map((problem, index) => (
           <FormField
             key={index}
-            control={control}
-            name="perspective"
+            control={form.control}
+            name={`attempts.${index}.attempt`}
             render={({ field }) => (
             <FormItem>
                 {/* <FormLabel>Question(s):</FormLabel> */}
@@ -140,8 +203,11 @@ const ProblemsetSection: React.FC<ProblemsetSectionProps> = ({
 
           
           <div className="flex flex-row gap-2">
-            <Button type="submit">Submit</Button>
-            <StatusBasedTag status={attemptStatus} />
+            <Button type="submit" disabled={isPending}>
+              {isPending && (
+                    <Loader2 className='mr-2 h-4 w-4 animate-spin' />
+              )}Submit</Button>
+            <StatusBasedTag status={attemptStatus}/>
             <FileQuestion className='cursor-pointer w-10 h-10 hover:bg-slate-200 rounded-lg' onClick={() => {router.push(`/upload-new-problemset/${videoId}`);}}/>
 
           </div>
@@ -151,6 +217,10 @@ const ProblemsetSection: React.FC<ProblemsetSectionProps> = ({
       If you are unsatisfied to those questions, you can click the button next to PASS/UNPASSED tag to upload a new problemset.
       </div>
     </div>
+
+
+      </form> 
+    </Form>
     </>
   )}
 };

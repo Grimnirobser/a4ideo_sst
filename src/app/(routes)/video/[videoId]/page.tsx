@@ -8,9 +8,7 @@ import VideoPlayer from "@/components/video/VideoPlayer";
 import YoutubePlayer from "@/components/video/YoutubePlayer";
 import getProblemsetsByVideoId from "@/actions/getProblemsetsByVideoId";
 import ProblemsetSection from "@/components/video/ProblemsetSection/ProblemsetSection";
-import getProblemsByProblemsetId from "@/actions/getProblemsByProblemsetId";
-import { QuestionAndAnswer as Problem } from "@prisma/client";
-import { Problemset } from "@prisma/client";
+
 
 interface VideoPageParams {
   videoId?: string;
@@ -22,15 +20,11 @@ export default async function VideoPage({
   params: VideoPageParams;
 }) {
   const { videoId } = params;
-
-  const problemsets = await getProblemsetsByVideoId({ videoId });
-  const problems: (Problem[] | null)[] = [];
-  problemsets!.map(async (problemset: Problemset) => {problems.push(await getProblemsByProblemsetId(problemset.id))});
-
   
   const video = await increaseVideoViewCount({ videoId });
   const channel = await getChannelById({ channelId: video?.channelId });
   const comments = await getCommentsByVideoId({ videoId,});
+  const problemsets = await getProblemsetsByVideoId({ videoId });
 
 
   return video && channel && comments ? (
@@ -45,7 +39,7 @@ export default async function VideoPage({
       </div>
 
       <div className="w-full lg:w-2/6 max-h-screen">
-        <ProblemsetSection problemsets={problemsets!} problems={problems} videoId={video.id} />
+        <ProblemsetSection problemsets={problemsets!} videoId={video.id} />
       </div>
 
       
