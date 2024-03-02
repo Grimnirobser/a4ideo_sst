@@ -1,9 +1,8 @@
 import { Metadata } from 'next'
 
-
 export function constructMetadata({
-    title = 'A4ideo - the gathering of next generation fragment learning.',
-    description = 'A4ideo is an interactive fragment learning gathering.',
+    title = 'A4ideo - Explore widely, focus deeply.',
+    description = 'A4ideo - the gathering of next generation fragment learning.',
     image = '/a4ideo_title.png',
     icons = '/a4ideo_logo.ico',
     noIndex = false,
@@ -34,7 +33,7 @@ export function constructMetadata({
         creator: '@a4ideo',
       },
       icons,
-      metadataBase: new URL('https://digitalhippo.up.railway.app'),
+      metadataBase: new URL('https://a4ideo.com/'),
       ...(noIndex && {
         robots: {
           index: false,

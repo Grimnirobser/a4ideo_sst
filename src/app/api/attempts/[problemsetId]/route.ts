@@ -11,11 +11,11 @@ interface attemptProps {
   
 async function query(data:any) {
     const response = await fetch(
-        "https://kzqov4pidle051dc.us-east-1.aws.endpoints.huggingface.cloud",
+        process.env.HUGGINGFACE_INFERENCE_ENDPOINT!,
         {
             headers: { 
                 "Accept" : "application/json",
-                "Authorization": "Bearer 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",
+                "Authorization": "Bearer " + process.env.HUGGINGFACE_ACCESS_TOKEN,
                 "Content-Type": "application/json" 
             },
             method: "POST",
