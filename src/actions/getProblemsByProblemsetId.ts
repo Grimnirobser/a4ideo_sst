@@ -1,5 +1,4 @@
-'use server'
-
+'use server';
 import prisma from "@/vendor/db";
 import { QuestionAndAnswer as Problem } from "@prisma/client";
 

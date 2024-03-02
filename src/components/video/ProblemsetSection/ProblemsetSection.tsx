@@ -22,7 +22,6 @@ import {
 import { Textarea } from "@/components/ui/textarea"
 import { FileQuestion } from 'lucide-react';
 import { useRouter } from "next/navigation";
-import { useSearchParams } from 'next/navigation'
 import { useForm, FieldValues, SubmitHandler, useFieldArray } from "react-hook-form";
 import { Skeleton } from "@/components/ui/skeleton"
 import getProblemsByProblemsetId  from "@/actions/getProblemsByProblemsetId"
@@ -30,11 +29,17 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 import { toast } from "react-hot-toast";
 import { Loader2 } from 'lucide-react'
-
+import { compliment, insult } from "@/lib/words";
 
 interface ProblemsetSectionProps {
   problemsets: (ProblemsetType & { channel: Channel })[];
   videoId: string,
+}
+
+interface readyDataType{
+  channelId: string,
+  problemsetId: string,
+  attempts: {attempt: string}[]
 }
 
 const ProblemsetSection: React.FC<ProblemsetSectionProps> = ({
@@ -42,10 +47,9 @@ const ProblemsetSection: React.FC<ProblemsetSectionProps> = ({
   videoId,
 }) => {
   const router = useRouter();
+
   const [problemsetNum, setProblemsetNum] = useState(1);
-
   const totalProblemset = problemsets.length;
-
 
   let incrementProblemNum = () => setProblemsetNum(problemsetNum + 1);
   let decrementProblemNum = () => setProblemsetNum(problemsetNum - 1);
@@ -56,12 +60,7 @@ const ProblemsetSection: React.FC<ProblemsetSectionProps> = ({
     incrementProblemNum = () => setProblemsetNum(totalProblemset);
   }
 
-  
-  // const searchParams = useSearchParams()
-  // const ps = searchParams.get('ps')
-  // if (ps && 1 <= parseInt(ps) && parseInt(ps) <= totalProblemset) {
-  //   setProblemsetNum(parseInt(ps));
-  // }
+
 
   const currentChannel = useContext(CurrentChannelContext);
 
@@ -71,7 +70,7 @@ const ProblemsetSection: React.FC<ProblemsetSectionProps> = ({
     staleTime: 1000 * 60,
   });
 
-  const {data: attemptStatus, isLoading: LoadingStatus, isFetching, refetch} = useQuery({
+  const {data: attemptStatus, isLoading: LoadingStatus, refetch} = useQuery({
     queryKey: ['attemptStatus'],
     queryFn: () => getAttemptByChannelId({ problemsetId: problemsets[problemsetNum-1].id, channelId: currentChannel?.id}),
     refetchOnWindowFocus: true,
@@ -105,7 +104,7 @@ const ProblemsetSection: React.FC<ProblemsetSectionProps> = ({
 
   const { mutate, mutateAsync, isPending } = useMutation({
     mutationKey: ["attemptProblemset"],
-    mutationFn: async(readyData) => await fetch(process.env.NEXT_PUBLIC_SERVER_URL + `/api/attempts/${problemsets[problemsetNum-1].id}`, {
+    mutationFn: async(readyData: readyDataType) => await fetch(process.env.NEXT_PUBLIC_SERVER_URL + `/api/attempts/${problemsets[problemsetNum-1].id}`, {
       method: "POST",
       body: JSON.stringify(readyData),
       headers: {
@@ -116,12 +115,23 @@ const ProblemsetSection: React.FC<ProblemsetSectionProps> = ({
     }),
 
     onSuccess: () => {
-      toast.success("Attempt submitted successfully.");
-      refetch();
+      const min = 1;
+      const max = 10;
+      const rand = Math.floor(Math.random() * (max - min + 1) ) + min;
+      refetch().then((response) => {
+          if (response.data === true){
+            toast.success(compliment[rand]);
+          }else if (response.data === false){
+            toast.error(insult[rand]);
+          }
+          else{
+            toast.error("Something went wrong. Please try again.");
+          }
+      });
       router.refresh();
     },
 
-    onError: () => toast.error("Could not submit attempt.")
+    onError: () => toast.error("Could not submit you answer.")
   })
 
 
@@ -130,7 +140,6 @@ const ProblemsetSection: React.FC<ProblemsetSectionProps> = ({
       alert("Please sign in to comment");
       return;
     }
-
     if (attemptStatus === true){
       alert("Note that your PASSED status will be overwritten by this submission.");
     }
@@ -145,7 +154,7 @@ const ProblemsetSection: React.FC<ProblemsetSectionProps> = ({
 
 
 
-  if (!problems || problems[problemsetNum-1] === undefined || LoadingProblems || LoadingStatus || isFetching) {
+  if (!problems || problems[problemsetNum-1] === undefined || LoadingProblems || LoadingStatus) {
     return (
         <>
         <ProblemPagination
@@ -184,13 +193,13 @@ const ProblemsetSection: React.FC<ProblemsetSectionProps> = ({
             render={({ field }) => (
             <FormItem>
                 {/* <FormLabel>Question(s):</FormLabel> */}
-                <FormDescription>
+                <FormDescription className="text-lg">
                   {problem.question}
                 </FormDescription>
                 <FormControl>
                   <Textarea
                     placeholder="Your perspective"
-                    className="resize-none h-52"
+                    className="resize-none h-52 text-lg"
                     {...field}
                   />
                 </FormControl>

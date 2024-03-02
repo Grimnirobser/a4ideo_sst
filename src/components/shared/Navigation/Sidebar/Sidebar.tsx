@@ -8,6 +8,7 @@ import MenuItem from "../Navbar/UserOptions/MenuItem";
 import { MdOutlineHome, MdOutlineSubscriptions, MdOutlineFolderShared, MdOutlineRocket, MdOutlineModeComment } from "react-icons/md";
 import { useRouter } from "next/navigation";
 import { CurrentUserContext } from "@/context/CurrentUserContext";
+import { CurrentChannelContext } from "@/context/CurrentChannelContext";
 import Avatar, { AvatarSize } from "../../Avatar";
 
 interface SidebarProps {
@@ -17,7 +18,7 @@ interface SidebarProps {
 const Sidebar: React.FC<SidebarProps> = ({ subscribedChannels }) => {
   const sidebar = useContext(SidebarContext);
 
-  const currentUser = useContext(CurrentUserContext);
+  const currentChannel = useContext(CurrentChannelContext);
 
   const router = useRouter();
 
@@ -54,7 +55,7 @@ const Sidebar: React.FC<SidebarProps> = ({ subscribedChannels }) => {
             onClick={() => handleItemClick(() => router.push("/"))}
           />
 
-          {currentUser ? (
+          {currentChannel ? (
             <MenuItem
               label="Subscriptions"
               logo={<MdOutlineSubscriptions className="h-6 w-6 mr-4" />}
@@ -65,7 +66,7 @@ const Sidebar: React.FC<SidebarProps> = ({ subscribedChannels }) => {
             />
           ) : null}
         </div>
-        {currentUser ? (
+        {currentChannel ? (
           <div className="pt-3">
             <h2 className="font-medium mb-2">Subscriptions</h2>
             {subscribedChannels.map((subscribedChannel) => {

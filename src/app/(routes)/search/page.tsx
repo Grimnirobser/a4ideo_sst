@@ -1,43 +1,56 @@
 "use client";
 
-import { Channel, Video } from "@prisma/client";
-import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
-import axios from "axios";
-import { toast } from "react-hot-toast";
 import VideoCard from "@/components/shared/VideoCard";
+import { useQuery } from "@tanstack/react-query"
+import  getSearchResults from "@/actions/getSearchResults";
+import { Skeleton } from "@/components/ui/skeleton"
 
-export default function SearchPage() {
-  const params = useSearchParams();
-  const searchQuery = params.get("searchQuery");
+interface PageProps {
+  searchParams: {
+    [key: string]: string | string[] | undefined
+  }
+}
 
-  const [videos, setVideos] = useState<(Video & { channel: Channel })[]>([]);
+export default function SearchPage({ searchParams }: PageProps) {
 
-  useEffect(() => {
-    axios
-      .get("/api/videos", { params: { searchQuery } })
-      .then((data) => {
-        setVideos(data.data as unknown as (Video & { channel: Channel })[]);
-      })
-      .catch(() => toast.error("Could not fetch videos"));
-  }, [searchQuery]);
+  const searchQuery  = searchParams.searchQuery as string;
+  const {data: videos, isLoading} = useQuery({
+    queryKey: ['searchVideo'],
+    queryFn: async() => await getSearchResults({searchQuery}),
+    staleTime: 1000 * 60 * 5,
+  });
 
-  return (
-    <div className="w-4/5 mx-auto flex flex-col gap-4 items-center pb-4">
-      {videos.length
-        ? videos.map((video) => {
-            return (
-              <VideoCard
-                key={video.id}
-                isVertical={false}
-                video={video}
-                channel={video.channel}
-                includeDescription
-                channelAvatar
-              />
-            );
-          })
-        : "No videos found"}
-    </div>
-  );
+
+  if (isLoading) {
+    return (
+      <div className="w-4/5 mx-auto flex flex-col gap-4 items-center pb-4">
+        <Skeleton className="h-4 w-full"/>
+        <Skeleton className="h-4 w-full"/>
+        <Skeleton className="h-4 w-full"/>
+        <Skeleton className="h-4 w-full"/>
+        <Skeleton className="h-4 w-full"/>
+      </div>
+    );
+  }
+  else{
+    return (
+      <div className="w-4/5 mx-auto flex flex-col gap-4 items-center pb-4">
+        {videos
+          ? videos.map((video) => {
+              return (
+                <VideoCard
+                  key={video.id}
+                  isVertical={false}
+                  video={video}
+                  channel={video.channel}
+                  includeDescription
+                  channelAvatar
+                />
+              );
+            })
+          : "No videos found"}
+      </div>
+    );
+
+  }
 }

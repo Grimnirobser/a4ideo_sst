@@ -1,6 +1,5 @@
 import prisma from "@/vendor/db";
 import { NextRequest, NextResponse } from "next/server";
-import { useRouter } from 'next/router'
 
 
 interface problemProps {
@@ -16,27 +15,6 @@ interface problemWithProblemsetIdProps{
   problemsetId: string;
 
 }
-
-
-export async function GET(request: Request) {
-
-  const router = useRouter()
-  const videoId = router.query.videoId as string;
-
-  const problemsets = await prisma.problemset.findMany({
-    where: {
-      videoId,
-    },
-    include: {
-      problems: true,
-    },
-  });
-
-  return NextResponse.json(problemsets);
-
-
-}
-
 
 
 
@@ -67,8 +45,6 @@ export async function POST(request: Request) {
         },
       },
     });
-
-    console.log(createdProblems);
   
     return NextResponse.json(resultProblemset);
   }

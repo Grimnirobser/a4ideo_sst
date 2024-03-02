@@ -25,8 +25,6 @@ async function query(data:any) {
     const result = await response.json();
     return result[0].result;
 }
-
-
 function check_PASSED(content: string){
     return content == "PASSED";
 }
@@ -56,7 +54,7 @@ export async function POST(request: Request) {
 
 
     if (!existedAttempt) {
-      const updatedAttempt = await prisma.attempt.create({
+      const createdAttempt = await prisma.attempt.create({
         data: {
             channelId: channelId,
             problemsetId: problemsetId,

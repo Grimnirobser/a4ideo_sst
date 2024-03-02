@@ -1,3 +1,4 @@
+'use server';
 import prisma from "@/vendor/db";
 import { Channel, Comment } from "@prisma/client";
 

@@ -1,3 +1,4 @@
+'use server';
 import { Channel } from "@prisma/client";
 import getCurrentUser from "./getCurrentUser";
 import prisma from "@/vendor/db";

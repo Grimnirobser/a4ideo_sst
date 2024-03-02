@@ -1,19 +1,16 @@
 import Navigation from "@/components/shared/Navigation/Navigation";
 import "./globals.css";
-import type { Metadata } from "next";
 import { Roboto } from "next/font/google";
 import CurrentUserProvider from "@/context/CurrentUserContext";
 import getCurrentUser from "@/actions/getCurrentUser";
-import CreateChannelModalProvider from "@/context/CreateChannelModalContext";
-import CreateChannelModal from "@/components/shared/Modal/CreateChannelModal";
 import { Toaster } from "react-hot-toast";
 import getCurrentChannel from "@/actions/getCurrentChannel";
 import CurrentChannelProvider from "@/context/CurrentChannelContext";
-import UploadVideoModalProvider from "@/context/UploadVideoModalContext";
 import SidebarProvider from "@/context/SidebarContext";
 import { Web3provider } from "@/context/Web3Provider";
 import { constructMetadata } from "@/utils/websiteUtils";
 import Provider from "@/context/Provider";
+import ProgressBarProvider from "@/context/ProgressBarProvider";
 
 
 const roboto = Roboto({
@@ -31,27 +28,27 @@ export default async function RootLayout({
   const currentUser = await getCurrentUser();
   const currentChannel = await getCurrentChannel();
 
-
   return (
     <html lang="en">
       <body className={roboto.className}>
         <Provider> 
-          <CreateChannelModalProvider>
-            <Toaster toastOptions={{ position: "bottom-left" }} />
-            <CreateChannelModal />
+          <Web3provider>
+            <Toaster toastOptions={{ position: "bottom-right" }} />
             <CurrentUserProvider user={currentUser}>
-              <Web3provider>
               <CurrentChannelProvider channel={currentChannel}>
                 {/* <UploadVideoModalProvider> */}
-                  <SidebarProvider>
-                    <Navigation />
-                    <div className="pt-16">{children}</div>
-                  </SidebarProvider>
+                   <ProgressBarProvider>
+                      <SidebarProvider>
+                        <Navigation />
+                        <div className="pt-16">
+                          {children}
+                        </div>
+                      </SidebarProvider>
+                  </ProgressBarProvider>
                 {/* </UploadVideoModalProvider> */}
               </CurrentChannelProvider>
-              </Web3provider>
             </CurrentUserProvider>
-          </CreateChannelModalProvider>
+            </Web3provider>
         </Provider>
       </body>
     </html>

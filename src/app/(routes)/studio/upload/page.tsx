@@ -68,7 +68,7 @@ export default function UploadPage() {
   
   const { mutate, mutateAsync, isPending } = useMutation({
     mutationKey: ["uploadVideo"],
-    mutationFn: async(data) => await fetch(process.env.NEXT_PUBLIC_SERVER_URL + "/api/videos", {
+    mutationFn: async(data: FieldValues) => await fetch(process.env.NEXT_PUBLIC_SERVER_URL + "/api/videos", {
       method: "POST",
       body: JSON.stringify(data),
       headers: {

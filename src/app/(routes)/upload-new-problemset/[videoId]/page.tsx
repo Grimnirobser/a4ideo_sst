@@ -14,6 +14,13 @@ interface ChannelPageParams {
   videoId?: string;
 }
 
+interface problemsetDataType{
+  videoId: string | undefined,
+  channelId: string,
+  problems: any
+
+}
+
 
 export default function UploadProblemset({params}: {params: ChannelPageParams}) {
 
@@ -59,7 +66,7 @@ export default function UploadProblemset({params}: {params: ChannelPageParams}) 
       
       const { mutate, mutateAsync, isPending } = useMutation({
         mutationKey: ["UploadNewProblemset"],
-        mutationFn: async(problemsetData) => await fetch(process.env.NEXT_PUBLIC_SERVER_URL + `/api/problemsets/${videoId}`, {
+        mutationFn: async(problemsetData: problemsetDataType) => await fetch(process.env.NEXT_PUBLIC_SERVER_URL + `/api/problemsets/${videoId}`, {
           method: "POST",
           body: JSON.stringify(problemsetData),
           headers: {

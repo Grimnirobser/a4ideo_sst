@@ -2,6 +2,9 @@ import getCurrentUser from "@/actions/getCurrentUser";
 import prisma from "@/vendor/db";
 import { NextResponse } from "next/server";
 
+
+
+
 export async function POST(request: Request) {
   const currentUser = await getCurrentUser();
 
@@ -9,14 +12,18 @@ export async function POST(request: Request) {
     return NextResponse.error();
   }
 
-  const { username, handle, imageSrc } = await request.json();
+  const { userId, username, handle, imageSrc } = await request.json();
+
+  if (currentUser.id !== userId) {
+    return NextResponse.error();
+  }
 
   const channel = await prisma.channel.create({
     data: {
       username,
       handle,
       imageSrc,
-      userId: currentUser.id,
+      userId,
     },
   });
 

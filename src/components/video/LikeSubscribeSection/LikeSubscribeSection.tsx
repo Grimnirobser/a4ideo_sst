@@ -1,6 +1,6 @@
 "use client";
 
-import { CurrentUserContext } from "@/context/CurrentUserContext";
+import { CurrentChannelContext } from "@/context/CurrentChannelContext";
 import { Channel, Video } from "@prisma/client";
 import { useContext } from "react";
 import LikeDislikeButton from "./LikeDislikeButton";
@@ -19,7 +19,7 @@ const LikeSubscribeSection: React.FC<LikeSubscribeSectionProps> = ({
   video,
   channel,
 }) => {
-  const currentUser = useContext(CurrentUserContext);
+  const currentChannel = useContext(CurrentChannelContext);
 
   return (
     <div className="flex justify-between items-center">
@@ -36,7 +36,7 @@ const LikeSubscribeSection: React.FC<LikeSubscribeSectionProps> = ({
             {compactNumberFormat(channel.subscriberCount)} subscribers
           </p>
         </div>
-        {channel.userId === currentUser?.id ? (
+        {channel.id === currentChannel?.id ? (
           <Link href="/studio">
             <Button type="rounded-dark">Manage videos</Button>
           </Link>

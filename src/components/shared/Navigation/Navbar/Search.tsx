@@ -6,9 +6,9 @@ import { useRouter } from "next/navigation";
 import { MdOutlineSearch } from "react-icons/md";
 import queryString from "query-string";
 
+
 const Search = () => {
   const [text, setText] = useState("");
-
   const router = useRouter();
 
   const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
@@ -29,6 +29,7 @@ const Search = () => {
     );
 
     router.push(url);
+    setText("");
   };
 
   return (

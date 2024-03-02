@@ -1,19 +1,20 @@
+'use server';
 import { Channel } from "@prisma/client";
-import getCurrentUser from "./getCurrentUser";
 import prisma from "@/vendor/db";
+import getCurrentChannel from "./getCurrentChannel";
 
 export default async function getCurrentSubscriptions(): Promise<Channel[]> {
   try {
-    const user = await getCurrentUser();
+    const currentChannel = await getCurrentChannel();
 
-    if (!user) {
+    if (!currentChannel) {
       return [];
     }
 
     const subscriptions = await prisma.channel.findMany({
       where: {
         id: {
-          in: user.subscribedChannelIds,
+          in: currentChannel.subscribedChannelIds,
         },
       },
     });

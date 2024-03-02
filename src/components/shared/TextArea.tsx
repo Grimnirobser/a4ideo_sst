@@ -27,7 +27,6 @@ const TextArea: React.FC<TextAreaProps> = ({
         id={id}
         disabled={disabled}
         {...register(id, { required })}
-        placeholder=" "
         className={`peer w-full px-4 pt-8 pb-2 min-h-[100px] rounded-md outline-none border-[1px] bg-slate-100 transition ${
           errors[id]
             ? "border-red-500 focus:border-red-500"

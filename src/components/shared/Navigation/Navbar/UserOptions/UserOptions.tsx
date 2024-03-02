@@ -1,13 +1,12 @@
 "use client";
 
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import SignInButton from "./SignInButton";
 import { CurrentUserContext } from "@/context/CurrentUserContext";
 import IconButton from "@/components/shared/IconButton";
 import { MdOutlineVideoCall } from "react-icons/md";
 import Avatar, { AvatarSize } from "@/components/shared/Avatar";
 import { CurrentChannelContext } from "@/context/CurrentChannelContext";
-import { CreateChannelModalContext } from "@/context/CreateChannelModalContext";
 import { useRouter } from "next/navigation";
 import {
   DropdownMenu,
@@ -17,17 +16,19 @@ import {
   DropdownMenuTrigger,
 } from '../../../../ui/dropdown-menu'
 import { signOut } from "next-auth/react";
+import { usePathname } from 'next/navigation'
+
 
 
 
 const UserOptions = () => {
   const currentUser = useContext(CurrentUserContext);
   const currentChannel = useContext(CurrentChannelContext);
-  const createChannelModal = useContext(CreateChannelModalContext);
   const router = useRouter();
+  const pathname = usePathname()
+
 
   if (currentUser && currentChannel) {
-    createChannelModal?.onClose();
     return ( 
     <>
       <div className="flex items-center gap-4 mr-4">
@@ -93,12 +94,15 @@ const UserOptions = () => {
      
       </div>
     </>)
-  }else if (!currentUser){
-    createChannelModal?.onClose();
-    return ( <SignInButton />
-    )
-  }else{
-    createChannelModal?.onOpen();
+  }else if(currentUser){
+    if (pathname === `/create-channel/${currentUser.id}`){
+      return <SignInButton />
+    }else{
+      router.push(`/create-channel/${currentUser.id}`)
+      return <SignInButton />
+    }
+  }
+  else{
     return <SignInButton />
   }
 

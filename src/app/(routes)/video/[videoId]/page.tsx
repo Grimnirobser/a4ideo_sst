@@ -26,7 +26,6 @@ export default async function VideoPage({
   const comments = await getCommentsByVideoId({ videoId,});
   const problemsets = await getProblemsetsByVideoId({ videoId });
 
-
   return video && channel && comments ? (
     <div className="flex flex-col lg:flex-row mx-6 mt-2 gap-4">
       <div className="w-full lg:w-4/6 flex flex-col gap-4 overflow-y-auto max-h-screen [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">

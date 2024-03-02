@@ -1,5 +1,4 @@
-import { Button } from "@/components/ui/button"
-
+import { Badge } from "@/components/ui/badge";
 interface StatusBasedTagProps {
     status: Boolean | undefined;
   }
@@ -9,9 +8,9 @@ export const StatusBasedTag:React.FC<StatusBasedTagProps> = ({
   }) => {
 
     return status ? (
-        <Button variant="passed">PASSED</Button> 
+        <Badge variant="passed">PASSED</Badge> 
     ):(
-        <Button variant="destructive">UNPASSED</Button>
+        <Badge variant="destructive">UNPASSED</Badge>
     )
   }
 

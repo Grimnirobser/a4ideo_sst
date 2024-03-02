@@ -1,6 +1,6 @@
 "use client";
 
-import { CurrentUserContext } from "@/context/CurrentUserContext";
+import { CurrentChannelContext } from "@/context/CurrentChannelContext";
 import { Channel } from "@prisma/client";
 import { useContext } from "react";
 import Avatar, { AvatarSize } from "../shared/Avatar";
@@ -18,7 +18,7 @@ const ChannelHeader: React.FC<ChannelHeaderProps> = ({
   channel,
   videoCount,
 }) => {
-  const currentUser = useContext(CurrentUserContext);
+  const currentChannel = useContext(CurrentChannelContext);
 
   return (
     <div className="flex flex-col md:flex-row gap-6 md:gap-0 px-24 py-6 justify-between items-center">
@@ -35,7 +35,7 @@ const ChannelHeader: React.FC<ChannelHeaderProps> = ({
           </div>
         </div>
       </div>
-      {channel.userId === currentUser?.id ? (
+      {channel.id === currentChannel?.id ? (
         <Link href="/studio">
           <Button type="buttonColor">Manage Videos</Button>
         </Link>

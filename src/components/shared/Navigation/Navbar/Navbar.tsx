@@ -1,3 +1,4 @@
+'use client';
 import React from "react";
 import NavigationHeader from "../NavigationHeader";
 import Search from "./Search";
