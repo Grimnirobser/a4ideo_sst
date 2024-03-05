@@ -2,7 +2,6 @@
 
 import prisma from "@/vendor/db";
 
-
 interface GetAttemptByChannelIdParams {
     problemsetId: string;
     channelId?: string
@@ -32,6 +31,7 @@ export default async function getAttemptByChannelId(
     }
 
     return attempt.correct;
+    
   } catch (error: any) {
     throw new Error(error);
   }

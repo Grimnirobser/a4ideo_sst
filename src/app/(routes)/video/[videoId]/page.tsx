@@ -20,11 +20,10 @@ export default async function VideoPage({
   params: VideoPageParams;
 }) {
   const { videoId } = params;
-  
+  const problemsets = await getProblemsetsByVideoId({ videoId });
   const video = await increaseVideoViewCount({ videoId });
   const channel = await getChannelById({ channelId: video?.channelId });
   const comments = await getCommentsByVideoId({ videoId,});
-  const problemsets = await getProblemsetsByVideoId({ videoId });
 
   return video && channel && comments ? (
     <div className="flex flex-col lg:flex-row mx-6 mt-2 gap-4">

@@ -12,6 +12,7 @@ const YoutubePlayer = ({ youtubeId }: VideoProps) => {
   const videoRef = useRef(null);
 
   useEffect(() => {
+    const currentVideo = videoRef.current;
     const observer = new IntersectionObserver((entries) => {
       if (entries[0].isIntersecting) {
         setLoad(true);
@@ -22,8 +23,8 @@ const YoutubePlayer = ({ youtubeId }: VideoProps) => {
     observer.observe(videoRef.current!);
 
     return () => {
-      if (videoRef.current) {
-        observer.unobserve(videoRef.current);
+      if (currentVideo) {
+        observer.unobserve(currentVideo);
       }
     };
   }, []);

@@ -60,8 +60,6 @@ const ProblemsetSection: React.FC<ProblemsetSectionProps> = ({
     incrementProblemNum = () => setProblemsetNum(totalProblemset);
   }
 
-
-
   const currentChannel = useContext(CurrentChannelContext);
 
   const {data: problems, isLoading: LoadingProblems} = useQuery({

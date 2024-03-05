@@ -1,6 +1,7 @@
 import prisma from "@/vendor/db";
 import { NextRequest, NextResponse } from "next/server";
 import getProblemsByProblemsetId from "@/actions/getProblemsByProblemsetId";
+import { Config } from 'sst/node/config'
 
 interface attemptProps {
     channelId: string;
@@ -11,11 +12,11 @@ interface attemptProps {
   
 async function query(data:any) {
     const response = await fetch(
-        process.env.HUGGINGFACE_INFERENCE_ENDPOINT!,
+      Config.HUGGINGFACE_INFERENCE_ENDPOINT!,
         {
             headers: { 
                 "Accept" : "application/json",
-                "Authorization": "Bearer " + process.env.HUGGINGFACE_ACCESS_TOKEN,
+                "Authorization": "Bearer " + Config.HUGGINGFACE_ACCESS_TOKEN,
                 "Content-Type": "application/json" 
             },
             method: "POST",

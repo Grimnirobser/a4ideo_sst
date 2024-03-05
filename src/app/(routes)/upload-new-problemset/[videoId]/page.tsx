@@ -82,7 +82,7 @@ export default function UploadProblemset({params}: {params: ChannelPageParams}) 
           router.refresh();
         },
     
-        onError: () => toast.error("Could not publish video")
+        onError: () => toast.error("Could not publish problemset.")
       })
     
       const onSubmit: SubmitHandler<FieldValues> = async (data) => {
@@ -94,8 +94,6 @@ export default function UploadProblemset({params}: {params: ChannelPageParams}) 
 
         mutateAsync(problemsetData);
       }
-
-    
     
       return (
         <>
