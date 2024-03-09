@@ -56,5 +56,9 @@
         ]
       }
     ]
+  },
+  "hosted-zone:account=975050345920:domainName=a4ideo.com:region=us-east-1": {
+    "Id": "/hostedzone/Z08468573U52AO5FOGBJ3",
+    "Name": "a4ideo.com."
   }
 }

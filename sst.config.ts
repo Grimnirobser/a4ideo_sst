@@ -20,10 +20,10 @@ export default {
       const site = new NextjsSite(stack, "web", {
         bind: [NEXTAUTH_SECRET, GOOGLE_CLIENT_SECRET, CLOUDINARY_UPLOAD_PRESET, 
               HUGGINGFACE_ACCESS_TOKEN, HUGGINGFACE_INFERENCE_ENDPOINT],
-        // customDomain: {
-        //   domainName: "a4ideo.com",
-        //   domainAlias: "www.a4ideo.com",
-        // },
+        customDomain: {
+          domainName: "a4ideo.com",
+          domainAlias: "www.a4ideo.com",
+        },
         warm: 20,
         timeout: "5 seconds",
         memorySize: "2048 MB",
