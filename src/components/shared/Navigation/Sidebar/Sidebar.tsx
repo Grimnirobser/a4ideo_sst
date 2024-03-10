@@ -3,13 +3,12 @@
 import { SidebarContext } from "@/context/SidebarContext";
 import { Channel } from "@prisma/client";
 import { useContext } from "react";
-import NavigationHeader from "../NavigationHeader";
 import MenuItem from "../Navbar/UserOptions/MenuItem";
 import { MdOutlineHome, MdOutlineSubscriptions, MdOutlineFolderShared, MdOutlineRocket, MdOutlineModeComment } from "react-icons/md";
 import { useRouter } from "next/navigation";
-import { CurrentUserContext } from "@/context/CurrentUserContext";
 import { CurrentChannelContext } from "@/context/CurrentChannelContext";
 import Avatar, { AvatarSize } from "../../Avatar";
+import Link from 'next/link'
 
 interface SidebarProps {
   subscribedChannels: Channel[];
@@ -91,7 +90,66 @@ const Sidebar: React.FC<SidebarProps> = ({ subscribedChannels }) => {
               );
             })}
           </div>
-        ) : null}
+        ) : null}          
+
+        <div className="absolute bottom-12">
+
+        <div className='mb-2 md:flex md:items-center md:justify-between'>
+          <div className='mt-4 flex items-center justify-center md:mt-0'>
+            <div className='flex space-x-8'>
+              <Link
+                href="./terms"
+                onClick={() =>
+                  handleItemClick(()=>{})
+                }
+                className='text-sm text-muted-foreground hover:text-gray-600'>
+                Terms of service
+              </Link>
+            </div>
+          </div>
+        </div>
+
+        <div className='mb-2 md:flex md:items-center md:justify-between'>
+          <div className='mt-4 flex items-center justify-center md:mt-0'>
+            <div className='flex space-x-8'>
+            <Link
+                href='./privacy-policy'
+                onClick={() =>
+                  handleItemClick(()=>{})
+                }
+                className='text-sm text-muted-foreground hover:text-gray-600'>
+                Privacy Policy
+              </Link>
+            </div>
+          </div>
+        </div>
+
+        <div className='mb-2 md:flex md:items-center md:justify-between'>
+          <div className='mt-4 flex items-center justify-center md:mt-0'>
+            <div className='flex space-x-8'>
+              <Link
+                href='#'
+                onClick={() =>
+                  handleItemClick(()=>{})
+                }
+                className='text-sm text-muted-foreground hover:text-gray-600'>
+                Cookie Policy
+              </Link>
+            </div>
+          </div>
+        </div>
+
+
+
+
+        <div className='text-center md:text-left mb-2'>
+            <p className='text-sm text-muted-foreground'>
+              &copy; {new Date().getFullYear()} A4ideo Inc.
+            </p>
+        </div>
+
+        </div>
+        
       </div>
     </>
   );
