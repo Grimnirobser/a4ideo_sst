@@ -1,6 +1,6 @@
 'use server';
 import prisma from "@/vendor/db";
-import { Channel, Problemset } from "@prisma/client";
+import { Channel, Problemset, Problem } from "@prisma/client";
 
 interface GetProblemsetsByVideoIdParams {
   videoId?: string;
@@ -8,7 +8,7 @@ interface GetProblemsetsByVideoIdParams {
 
 export default async function getProblemsetsByVideoId(
   params: GetProblemsetsByVideoIdParams
-): Promise<(Problemset & { channel: Channel })[] | null> {
+): Promise<(Problemset & { channel: Channel, problems: Problem[] })[] | null> {
   try {
     const { videoId } = params;
 
@@ -22,6 +22,7 @@ export default async function getProblemsetsByVideoId(
       where: query,
       include: {
         channel: true,
+        problems: true,
       },
       orderBy: [
         {
@@ -31,6 +32,7 @@ export default async function getProblemsetsByVideoId(
     });
     
     return problemsets;
+    
   } catch (error: any) {
     throw new Error(error);
   }

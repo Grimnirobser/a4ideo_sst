@@ -113,23 +113,23 @@ model Comment {
 }
 
 model Problemset {
-  id           String              @id @default(nanoid())
+  id           String    @id @default(nanoid())
   channelId    String
   videoId      String
   auditedBy    String?
-  likeCount    Int                 @default(0)
-  dislikeCount Int                 @default(0)
-  createdAt    DateTime            @default(now())
-  approved     Boolean             @default(false)
-  suspended    Boolean             @default(false)
-  passedScore  Float               @default(0.50)
-  problems     QuestionAndAnswer[]
-  channel      Channel             @relation(fields: [channelId], references: [id], onDelete: Cascade)
-  video        Video               @relation(fields: [videoId], references: [id], onDelete: Cascade)
-  audited      Admin?              @relation(fields: [auditedBy], references: [id], onDelete: Cascade)
+  likeCount    Int       @default(0)
+  dislikeCount Int       @default(0)
+  createdAt    DateTime  @default(now())
+  approved     Boolean   @default(false)
+  suspended    Boolean   @default(false)
+  passedScore  Float     @default(0.50)
+  problems     Problem[]
+  channel      Channel   @relation(fields: [channelId], references: [id], onDelete: Cascade)
+  video        Video     @relation(fields: [videoId], references: [id], onDelete: Cascade)
+  audited      Admin?    @relation(fields: [auditedBy], references: [id], onDelete: Cascade)
 }
 
-model QuestionAndAnswer {
+model Problem {
   id           String   @id @default(nanoid())
   problemsetId String
   type         String

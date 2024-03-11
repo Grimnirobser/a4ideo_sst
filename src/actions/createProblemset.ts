@@ -56,7 +56,7 @@ export async function createProblemset( params: CreateProblemsetParams
           const problemsWithProblemsetId = problems.map((item: problemProps) => ({...item, problemsetId: problemset.id}));
       
           const createdProblems = await prisma.$transaction(
-            problemsWithProblemsetId.map((problemWithProblemsetId: problemWithProblemsetIdProps) => prisma.questionAndAnswer.create({ data: problemWithProblemsetId })),
+            problemsWithProblemsetId.map((problemWithProblemsetId: problemWithProblemsetIdProps) => prisma.problem.create({ data: problemWithProblemsetId })),
          );
          
           const resultProblemset = await prisma.problemset.update({

@@ -1,6 +1,6 @@
 'use server';
 import prisma from "@/vendor/db";
-import { QuestionAndAnswer as Problem } from "@prisma/client";
+import { Problem } from "@prisma/client";
 
 
 export default async function getProblemsByProblemsetId(

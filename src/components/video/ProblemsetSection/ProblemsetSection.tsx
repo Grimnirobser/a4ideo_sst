@@ -1,9 +1,8 @@
 "use client";
 
-import { Channel, Problemset as ProblemsetType } from "@prisma/client";
+import { Channel, Problemset, Problem } from "@prisma/client";
 import { useState } from 'react'
 import ProblemPagination from "./ProblemPagination";
-import { QuestionAndAnswer as Problem } from "@prisma/client";
 import getAttemptByChannelId from "@/actions/getAttemptByChannelId"
 import {StatusBasedTag} from "./StatusBasedTag"
 import { CurrentChannelContext } from "@/context/CurrentChannelContext";
@@ -32,7 +31,7 @@ import { Loader2 } from 'lucide-react'
 import { compliment, insult } from "@/lib/words";
 
 interface ProblemsetSectionProps {
-  problemsets: (ProblemsetType & { channel: Channel })[];
+  problemsets: (Problemset & { channel: Channel, problems: Problem[] })[];
   videoId: string,
 }
 
@@ -62,15 +61,9 @@ const ProblemsetSection: React.FC<ProblemsetSectionProps> = ({
 
   const currentChannel = useContext(CurrentChannelContext);
 
-  const {data: problems, isLoading: LoadingProblems} = useQuery({
-    queryKey: ['queryProblemsByProblemsetId', problemsets[problemsetNum-1].id],
-    queryFn: () => getProblemsByProblemsetId(problemsets[problemsetNum-1].id),
-    staleTime: 1000 * 60,
-  });
-
   const {data: attemptStatus, isLoading: LoadingStatus, refetch} = useQuery({
     queryKey: ['attemptStatus'],
-    queryFn: () => getAttemptByChannelId({ problemsetId: problemsets[problemsetNum-1].id, channelId: currentChannel?.id}),
+    queryFn: async() => await getAttemptByChannelId({ problemsetId: problemsets[problemsetNum-1].id, channelId: currentChannel?.id}),
     refetchOnWindowFocus: true,
     staleTime: 0,
     refetchInterval: 0,
@@ -152,7 +145,7 @@ const ProblemsetSection: React.FC<ProblemsetSectionProps> = ({
 
 
 
-  if (!problems || problems[problemsetNum-1] === undefined || LoadingProblems || LoadingStatus) {
+  if ( problemsets[problemsetNum-1].problems === undefined || LoadingStatus) {
     return (
         <>
         <ProblemPagination
@@ -183,7 +176,7 @@ const ProblemsetSection: React.FC<ProblemsetSectionProps> = ({
 
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        {problems!.map((problem, index) => (
+        {problemsets[problemsetNum-1].problems.map((problem, index) => (
           <FormField
             key={index}
             control={form.control}

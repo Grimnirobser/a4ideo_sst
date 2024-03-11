@@ -8,6 +8,7 @@ import VideoPlayer from "@/components/video/VideoPlayer";
 import YoutubePlayer from "@/components/video/YoutubePlayer";
 import getProblemsetsByVideoId from "@/actions/getProblemsetsByVideoId";
 import ProblemsetSection from "@/components/video/ProblemsetSection/ProblemsetSection";
+import useSWR from "swr";
 
 
 interface VideoPageParams {
@@ -39,7 +40,6 @@ export default async function VideoPage({
       <div className="w-full lg:w-2/6 max-h-screen">
         <ProblemsetSection problemsets={problemsets!} videoId={video.id} />
       </div>
-
       
     </div>
   ) : (
