@@ -35,6 +35,7 @@ export async function POST(request: Request) {
     const createdProblems = await prisma.$transaction(
       problemsWithProblemsetId.map((problemWithProblemsetId: problemWithProblemsetIdProps) => prisma.questionAndAnswer.create({ data: problemWithProblemsetId })),
    );
+   
     const resultProblemset = await prisma.problemset.update({
       where: {
         id: problemset.id,
@@ -46,6 +47,7 @@ export async function POST(request: Request) {
       },
     });
   
+
     return NextResponse.json(resultProblemset);
   }
   

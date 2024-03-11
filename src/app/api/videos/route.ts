@@ -1,6 +1,7 @@
 import getCurrentChannel from "@/actions/getCurrentChannel";
 import prisma from "@/vendor/db";
 import { NextRequest, NextResponse } from "next/server";
+import { createProblemset } from "@/actions/createProblemset";
 
 export async function POST(request: Request) {
   const currentChannel = await getCurrentChannel();
@@ -28,15 +29,20 @@ export async function POST(request: Request) {
     problems: problems,
   };
 
-  const result = await fetch(process.env.NEXT_PUBLIC_SERVER_URL + `/api/problemsets/${video.id}`, {
-    method: "POST",
-    body: JSON.stringify(problemsetData),
-    headers: {
-      'Accept': 'application/json',
-      "Content-Type": "application/json",
+  const result = await createProblemset(problemsetData);
+
+
+  const resultVideo = await prisma.video.update({
+    where: {
+      id: video.id,
     },
-  
+    data: {
+      problemsets: {
+        set: result,
+      },
+    },
   });
 
-  return NextResponse.json(video);
+
+  return NextResponse.json(resultVideo);
 }

@@ -9,6 +9,7 @@ import { useForm, FieldValues, SubmitHandler, useFieldArray } from "react-hook-f
 import { useMutation } from "@tanstack/react-query"
 import Button from "@/components/shared/Button";
 import ProblemsetUploadForm from "@/components/studio/upload/ProblemsetUploadForm";
+import { createProblemset } from "@/actions/createProblemset";
 
 interface ChannelPageParams {
   videoId?: string;
@@ -66,15 +67,7 @@ export default function UploadProblemset({params}: {params: ChannelPageParams}) 
       
       const { mutate, mutateAsync, isPending } = useMutation({
         mutationKey: ["UploadNewProblemset"],
-        mutationFn: async(problemsetData: problemsetDataType) => await fetch(process.env.NEXT_PUBLIC_SERVER_URL + `/api/problemsets/${videoId}`, {
-          method: "POST",
-          body: JSON.stringify(problemsetData),
-          headers: {
-            'Accept': 'application/json',
-            "Content-Type": "application/json",
-          },
-        
-        }),
+        mutationFn: async(problemsetData: problemsetDataType) => await createProblemset(problemsetData),
     
         onSuccess: () => {
           toast.success("Problemset published successfully");
