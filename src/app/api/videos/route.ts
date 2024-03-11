@@ -32,17 +32,5 @@ export async function POST(request: Request) {
   const result = await createProblemset(problemsetData);
 
 
-  const resultVideo = await prisma.video.update({
-    where: {
-      id: video.id,
-    },
-    data: {
-      problemsets: {
-        set: result,
-      },
-    },
-  });
-
-
-  return NextResponse.json(resultVideo);
+  return NextResponse.json(video);
 }

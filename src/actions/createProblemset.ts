@@ -33,6 +33,19 @@ export async function createProblemset( params: CreateProblemsetParams
     try {
         const {videoId, channelId, problems } = params;
 
+        const video = await prisma.video.findUnique({
+            where: {
+              id: videoId!,
+            },
+            include: {
+                problemsets: true,
+                },
+          });
+      
+          if (!video) {
+            throw new Error("Invalid videoId");
+          }
+
         const problemset = await prisma.problemset.create({
             data: {
               videoId: videoId!,
@@ -56,7 +69,8 @@ export async function createProblemset( params: CreateProblemsetParams
               },
             },
           });
-        
+          
+          video.problemsets.push(resultProblemset);       
       
           return resultProblemset;
         
