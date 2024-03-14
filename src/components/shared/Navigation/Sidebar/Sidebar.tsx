@@ -51,7 +51,7 @@ const Sidebar: React.FC<SidebarProps> = ({ subscribedChannels }) => {
             label="Leaderboard"
             logo={<MdOutlineRocket className="h-6 w-6 mr-4" />}
             round
-            onClick={() => handleItemClick(() => router.push("/"))}
+            onClick={() => handleItemClick(() => router.push("/leaderboard"))}
           />
 
           {currentChannel ? (

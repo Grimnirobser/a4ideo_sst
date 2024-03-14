@@ -130,12 +130,13 @@ model Problemset {
 }
 
 model Problem {
-  id           String   @id @default(nanoid())
+  id           String    @id @default(nanoid())
   problemsetId String
   type         String
   question     String
-  answer       String
-  createdAt    DateTime @default(now())
+  emphasis     Boolean[]
+  answer       String[]
+  createdAt    DateTime  @default(now())
 
   problemset Problemset @relation(fields: [problemsetId], references: [id], onDelete: Cascade)
 }

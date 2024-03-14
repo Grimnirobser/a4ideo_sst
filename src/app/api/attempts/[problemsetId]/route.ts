@@ -26,6 +26,7 @@ async function query(data:any) {
     const result = await response.json();
     return result[0].prediction;
 }
+
 function check_PASSED(content: string){
     return content == "PASSED";
 }

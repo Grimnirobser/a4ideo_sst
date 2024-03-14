@@ -11,11 +11,12 @@ import Button from "@/components/shared/Button";
 import ProblemsetUploadForm from "@/components/studio/upload/ProblemsetUploadForm";
 import { createProblemset } from "@/actions/createProblemset";
 
+
 interface ChannelPageParams {
   videoId?: string;
 }
 
-interface problemsetDataType{
+interface ProblemsetDataType{
   videoId: string | undefined,
   channelId: string,
   problems: any
@@ -39,7 +40,7 @@ export default function UploadProblemset({params}: {params: ChannelPageParams}) 
         setValue,
       } = useForm<FieldValues>({
         defaultValues: {
-          problems: [{question: "", type:"step" ,answer: ""}],
+          problems: [{question: "", type:"reason" ,answer: [], emphasis: []}],
         },
       });
 
@@ -67,7 +68,7 @@ export default function UploadProblemset({params}: {params: ChannelPageParams}) 
       
       const { mutate, mutateAsync, isPending } = useMutation({
         mutationKey: ["UploadNewProblemset"],
-        mutationFn: async(problemsetData: problemsetDataType) => await createProblemset(problemsetData),
+        mutationFn: async(problemsetData: ProblemsetDataType) => await createProblemset(problemsetData),
     
         onSuccess: () => {
           toast.success("Problemset published successfully");
@@ -128,7 +129,7 @@ export default function UploadProblemset({params}: {params: ChannelPageParams}) 
                     ))}
     
                 <div className="relative w-26 h-10 mb-2 mt-2">
-                <Button className="absolute inset-y-0 left-0 h-full" type="box" onClick={() => {append({question: "", type:"step" ,answer: ""});incrementTotalProblems()}}>
+                <Button className="absolute inset-y-0 left-0 h-full" type="box" onClick={() => {append({question: "", type:"reason" ,answer: [], emphasis: []});incrementTotalProblems()}}>
                     Add Question
                 </Button>   
               </div>

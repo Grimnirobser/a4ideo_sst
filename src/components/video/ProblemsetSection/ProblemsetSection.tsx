@@ -18,10 +18,21 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
 import { Textarea } from "@/components/ui/textarea"
 import { FileQuestion } from 'lucide-react';
 import { useRouter } from "next/navigation";
-import { useForm, FieldValues, SubmitHandler, useFieldArray } from "react-hook-form";
+import { useForm, FieldValues, SubmitHandler } from "react-hook-form";
 import { Skeleton } from "@/components/ui/skeleton"
 import getProblemsByProblemsetId  from "@/actions/getProblemsByProblemsetId"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -37,7 +48,7 @@ interface ProblemsetSectionProps {
 
 interface readyDataType{
   channelId: string,
-  problemsetId: string,
+  problems: Problem[],
   attempts: {attempt: string}[]
 }
 
@@ -128,16 +139,13 @@ const ProblemsetSection: React.FC<ProblemsetSectionProps> = ({
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     if (!currentChannel) {
-      alert("Please sign in to comment");
+      alert("Please sign in to submit your perspective.");
       return;
-    }
-    if (attemptStatus === true){
-      alert("Note that your PASSED status will be overwritten by this submission.");
     }
 
     const readyData = {
       channelId: currentChannel.id,
-      problemsetId: problemsets[problemsetNum-1].id,
+      problems: problemsets[problemsetNum-1].problems,
       attempts: data.attempts,
     }
     mutateAsync(readyData);
@@ -201,12 +209,29 @@ const ProblemsetSection: React.FC<ProblemsetSectionProps> = ({
         />
         ))}
 
-          
           <div className="flex flex-row gap-2">
-            <Button type="submit" disabled={isPending}>
-              {isPending && (
-                    <Loader2 className='mr-2 h-4 w-4 animate-spin' />
-              )}Submit</Button>
+            <AlertDialog open={attemptStatus === true}>
+                <AlertDialogTrigger asChild>
+                    <Button type="submit" disabled={isPending}>
+                    {isPending && (
+                          <Loader2 className='mr-2 h-4 w-4 animate-spin' />
+                    )}Submit</Button>
+
+                </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Do you want to continue?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                      Note that your PASSED status will change if you fail.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction>Continue</AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+
             <StatusBasedTag status={attemptStatus}/>
             <FileQuestion className='cursor-pointer w-10 h-10 hover:bg-slate-200 rounded-lg' onClick={() => {router.push(`/upload-new-problemset/${videoId}`);}}/>
 

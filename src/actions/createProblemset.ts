@@ -1,28 +1,28 @@
 'use server';
 
 import prisma from "@/vendor/db";
-import { Problemset } from "@prisma/client";
+import { Problemset, Problem } from "@prisma/client";
 
 
 interface problemProps {
-  question: string;
-  type: string;
-  answer: string;
+  question: string,
+  type: string,
+  answer: string[],
+  emphasis: boolean[]
 }
 
 interface problemWithProblemsetIdProps{
-  question: string;
-  type: string;
-  answer: string;
-  problemsetId: string;
-
+  question: string,
+  type: string,
+  answer: string[],
+  emphasis: boolean[],
+  problemsetId: string,
 }
 
 interface CreateProblemsetParams{
     videoId: string | undefined,
     channelId: string,
-    problems: any
-  
+    problems: problemProps[]
 }
 
 
@@ -58,26 +58,32 @@ export async function createProblemset( params: CreateProblemsetParams
           const createdProblems = await prisma.$transaction(
             problemsWithProblemsetId.map((problemWithProblemsetId: problemWithProblemsetIdProps) => prisma.problem.create({ data: problemWithProblemsetId })),
          );
-         
-          const resultProblemset = await prisma.problemset.update({
-            where: {
-              id: problemset.id,
-            },
-            data: {
-              problems: {
-                set: createdProblems,
-              },
-            },
-          });
-          
-          video.problemsets.push(resultProblemset);       
-      
-          return resultProblemset;
+
+
         
-        } catch (error: any) {
-        throw new Error(error);
-        }
-    }
+        const resultProblemset = await prisma.problemset.update({
+          where: {
+            id: problemset.id,
+          },
+          data: {
+            problems: {
+              connect: createdProblems.map((problem: Problem) => ({ id: problem.id })),
+            },
+          }
+        });
+
+
+        video.problemsets.push(resultProblemset);       
+
+        console.log(resultProblemset);
+        console.log(video);
+      
+        return resultProblemset;
+      
+      } catch (error: any) {
+      throw new Error(error);
+      }
+  }
 
 
 

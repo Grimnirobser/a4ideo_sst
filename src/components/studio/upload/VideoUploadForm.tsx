@@ -2,12 +2,11 @@
 
 import MediaUpload from "@/components/shared/MediaUpload";
 import TextArea from "@/components/shared/TextArea";
+import DescriptionArea from "@/components/shared/DescriptionArea";
 import Image from "next/image";
 import { FieldErrors, FieldValues, UseFormRegister } from "react-hook-form";
 import { FaRegSquarePlus } from "react-icons/fa6";
 import { ChevronRight } from 'lucide-react';
-
-
 
 interface VideoUploadFormProps {
   register: UseFormRegister<FieldValues>;
@@ -97,7 +96,7 @@ const VideoUploadForm: React.FC<VideoUploadFormProps> = ({
 
       </div>
 
-      <TextArea
+      <DescriptionArea 
         register={register}
         id="description"
         label="Description (required)"

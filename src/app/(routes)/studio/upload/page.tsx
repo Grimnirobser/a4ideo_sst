@@ -6,18 +6,33 @@ import VideoPreview from "@/components/studio/upload/VideoPreview";
 import VideoUploadForm from "@/components/studio/upload/VideoUploadForm";
 import { UploadVideoModalContext } from "@/context/UploadVideoModalContext";
 import { useRouter } from "next/navigation";
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useContext, useState } from "react";
 import ProblemsetUploadForm from "@/components/studio/upload/ProblemsetUploadForm";
 import { useForm, FieldValues, SubmitHandler, useFieldArray } from "react-hook-form";
 
 import { toast } from "react-hot-toast";
 import TextArea from "@/components/shared/TextArea";
-import axios from "axios";
-import { v4 as uuid } from "uuid";
 import { useProtectedRoute } from "@/hooks/useProtectedRoute";
 import { useMutation } from "@tanstack/react-query"
-import { on } from "events";
+import { createVideo } from "@/actions/createVideo";
+import { CurrentChannelContext } from "@/context/CurrentChannelContext";
 
+
+interface VideoDataType{
+  channelId: string,
+  title: string,
+  description: string,
+  youtubeId: string,
+  thumbnailSrc: string,
+  problems: ProblemDataType[]
+}
+
+interface ProblemDataType{
+  question: string,
+  type: string,
+  answer: string[],
+  emphasis: boolean[]
+}
 
 export default function UploadPage() {
   useProtectedRoute();
@@ -25,6 +40,7 @@ export default function UploadPage() {
   // const uploadVideoModal = useContext(UploadVideoModalContext);
   // useEffect(() => uploadVideoModal?.onOpen(), []);
 
+  const currentChannel = useContext(CurrentChannelContext);
   const router = useRouter();
 
   const {
@@ -40,7 +56,7 @@ export default function UploadPage() {
       description: "",
       thumbnailSrc: "",
       youtubeId: "",
-      problems: [{question: "", type:"step" ,answer: ""}],
+      problems: [{question: "", type:"reason" ,answer: [], emphasis: []}],
     },
   });
 
@@ -51,7 +67,7 @@ export default function UploadPage() {
   
   const thumbnailSrc: string = watch("thumbnailSrc");
 
-  const changeValue = (id: string, value: string) => {
+  const changeValue = (id: string, value: string | string[] | number[]) => {
     setValue(id, value, {
       shouldDirty: true,
       shouldTouch: true,
@@ -68,15 +84,7 @@ export default function UploadPage() {
   
   const { mutate, mutateAsync, isPending } = useMutation({
     mutationKey: ["uploadVideo"],
-    mutationFn: async(data: FieldValues) => await fetch(process.env.NEXT_PUBLIC_SERVER_URL + "/api/videos", {
-      method: "POST",
-      body: JSON.stringify(data),
-      headers: {
-        'Accept': 'application/json',
-        "Content-Type": "application/json",
-      },
-    
-    }),
+    mutationFn: async(videoData: VideoDataType) => await createVideo(videoData),
 
     onSuccess: () => {
       toast.success("Video published successfully");
@@ -88,7 +96,22 @@ export default function UploadPage() {
   })
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-    mutateAsync(data);
+    if (!currentChannel) {
+      alert("Please sign in to upload video.");
+      return;
+    }
+
+    const videoData = {
+        channelId: currentChannel.id,
+        title: data.title,
+        description: data.description,
+        youtubeId: data.youtubeId,
+        thumbnailSrc: data.thumbnailSrc,
+        problems: data.problems,
+      };
+
+    console.log(videoData);
+    // mutateAsync(videoData);
   }
 
 
@@ -144,7 +167,7 @@ export default function UploadPage() {
                 ))}
 
             <div className="relative w-26 h-10 mb-2 mt-2">
-            <Button className="absolute inset-y-0 left-0 h-full" type="box" onClick={() => {append({question: "", type:"step" ,answer: ""});incrementTotalProblems()}}>
+            <Button className="absolute inset-y-0 left-0 h-full" type="box" onClick={() => {append({question: "", type:"reason", answer: [], emphasis: []});incrementTotalProblems()}}>
                 Add Question
             </Button>   
           </div>
