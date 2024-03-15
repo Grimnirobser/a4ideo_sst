@@ -8,8 +8,7 @@ import { Video } from "@prisma/client";
 interface ProblemDataType{
     question: string,
     type: string,
-    answer: string[],
-    emphasis: boolean[]
+    answer: AnswerType[],
   }
 
 interface CreateVideoParams{
@@ -20,6 +19,11 @@ interface CreateVideoParams{
     thumbnailSrc: string,
     problems: ProblemDataType[]
 }
+
+interface AnswerType{
+    sentence: string,    
+    emphasis: boolean    
+  }
 
 
 export async function createVideo( params: CreateVideoParams

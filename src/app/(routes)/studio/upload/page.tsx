@@ -30,8 +30,12 @@ interface VideoDataType{
 interface ProblemDataType{
   question: string,
   type: string,
-  answer: string[],
-  emphasis: boolean[]
+  answer: AnswerType[],
+}
+
+interface AnswerType{
+  sentence: string,    
+  emphasis: boolean    
 }
 
 export default function UploadPage() {
@@ -56,7 +60,7 @@ export default function UploadPage() {
       description: "",
       thumbnailSrc: "",
       youtubeId: "",
-      problems: [{question: "", type:"reason" ,answer: [], emphasis: []}],
+      problems: [{question: "", type:"reason", answer: []}],
     },
   });
 
@@ -67,7 +71,7 @@ export default function UploadPage() {
   
   const thumbnailSrc: string = watch("thumbnailSrc");
 
-  const changeValue = (id: string, value: string | string[] | number[]) => {
+  const changeValue = (id: string, value: string) => {
     setValue(id, value, {
       shouldDirty: true,
       shouldTouch: true,
@@ -110,8 +114,8 @@ export default function UploadPage() {
         problems: data.problems,
       };
 
-    console.log(videoData);
-    // mutateAsync(videoData);
+    // console.log(videoData);
+    mutateAsync(videoData);
   }
 
 
@@ -167,7 +171,7 @@ export default function UploadPage() {
                 ))}
 
             <div className="relative w-26 h-10 mb-2 mt-2">
-            <Button className="absolute inset-y-0 left-0 h-full" type="box" onClick={() => {append({question: "", type:"reason", answer: [], emphasis: []});incrementTotalProblems()}}>
+            <Button className="absolute inset-y-0 left-0 h-full" type="box" onClick={() => {append({question: "", type:"reason", answer: []});incrementTotalProblems()}}>
                 Add Question
             </Button>   
           </div>

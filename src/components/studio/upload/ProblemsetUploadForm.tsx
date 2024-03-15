@@ -17,7 +17,7 @@ import { ChevronDown } from 'lucide-react';
 import { FaRegSquarePlus } from "react-icons/fa6";
 import { Label } from "@/components/ui/label"
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Dialog,
   DialogContent,
@@ -39,7 +39,7 @@ interface ProblemUploadFormProps {
   control: Control<FieldValues, any, FieldValues>;
   register: UseFormRegister<FieldValues>;
   errors: FieldErrors<FieldValues>;
-  changeValue: (id: string, value: string | string[] | number[])  => void;
+  changeValue: (id: string, value: string)  => void;
   isLoading: boolean;
   removeFunction: (index: number) => void;
   decrement: () => void;
@@ -49,6 +49,11 @@ interface OptionType {
   value: string;
   label: string;
 };
+
+interface AnswerType{
+  sentence: string,    
+  emphasis: boolean    
+}
 
 
 const ProblemUploadForm: React.FC<ProblemUploadFormProps> = ({
@@ -67,75 +72,66 @@ const ProblemUploadForm: React.FC<ProblemUploadFormProps> = ({
       { value: 'reason', label: 'reason'},
       { value: 'step', label: 'step'},
     ];
+    
 
-    const [sentence, setSentence] = useState<string[]>([]);
-    const [emphasis, setEmphasis] = useState<boolean[]>([]);
-    const [sentenceToShow, setSentenceToShow] = useState<string[]>([]);
+    // state will have punctuation but the content in form will not have punctuation
+    const [sentenceEmphasis, setSentenceEmphasis] = useState<AnswerType[]>([]);
+    // const [sentenceToShow, setSentenceToShow] = useState<string[]>([]);
 
     const [answerInput, setAnswerInput] = useState<string>('');
     const [dialogOpen, setDialogOpen] = useState(false);
 
-    const { fields: answerFields, append: appendAnswer, remove: removeAnswer, insert: insertAnswer, update: updateAnswer } = useFieldArray({
+    const { fields: answerFields, append, remove, insert, update } = useFieldArray({
       control, // control props comes from useForm (optional: if you are using FormContext)
+      shouldUnregister: false,
       name: `problems.${index}.answer`, // unique name for your Field Array
-    });
-
-    const { fields: emphasisFields, append: appendEmphasis, remove: removeEmphasis, insert: insertEmphasis, update: updateEmphasis } = useFieldArray({
-      control, // control props comes from useForm (optional: if you are using FormContext)
-      name: `problems.${index}.emphasis`, // unique name for your Field Array
     });
 
 
     const addSentence = (content: string) => {
-      const newSentences = content.split(/[,.;?!]+/).filter(sentence => sentence.trim() !== '');
+      const newSentences = content.split(/[,.;?!]+/).map((sentence) => sentence.trim()).filter(sentence => sentence.trim() !== '');
       const newSentencesToShow = content.split(/(?<=[,.;?!])/).filter(sentence => sentence.trim().replace(/[,.;?!]/, '') !== '');
-      setSentence(sentence => [...sentence, ...newSentences]);
-      setEmphasis(emphasis => [...emphasis, ...newSentences.map(() => false)]);
-      setSentenceToShow(sentenceToShow => [...sentenceToShow, ...newSentencesToShow]);
+      
+      const newSentenceEmphasis = newSentencesToShow.map(sentence => ({sentence: sentence, emphasis: false}));
+      
+      setSentenceEmphasis(sentenceEmphasis => [...sentenceEmphasis, ...newSentenceEmphasis]);
 
-      newSentences.map(sentence => {
-        appendAnswer(sentence);
-        appendEmphasis(false);
-      });
+      newSentences.map((sentence) => {
+        append({sentence: sentence, emphasis: false});
+      });   
 
     }
 
     const removeSentence = (emphasisIndex: number) => {
-      setSentence(sentence.filter((_, i) => i !== emphasisIndex));
-      setEmphasis(emphasis.filter((_, i) => i !== emphasisIndex));
-      setSentenceToShow(sentenceToShow.filter((_, i) => i !== emphasisIndex));
+      setSentenceEmphasis(sentenceEmphasis.filter((_, i) => i !== emphasisIndex));
 
-      removeAnswer(emphasisIndex);
-      removeEmphasis(emphasisIndex);
+      remove(emphasisIndex);
+
     }
 
     const updateSentence = (emphasisIndex: number, content: string) => {
-      const newSentences = content.split(/[,.;?!]+/).filter(sentence => sentence.trim() !== '');
+      const newSentences = content.split(/[,.;?!]+/).map((sentence) => sentence.trim()).filter(sentence => sentence.trim() !== '');
       const newSentencesToShow = content.split(/(?<=[,.;?!])/).filter(sentence => sentence.trim().replace(/[,.;?!]/, '') !== '');
+      const newSentenceEmphasis = newSentencesToShow.map(sentence => ({sentence: sentence, emphasis: false}));
 
-      setSentence(sentence => [...sentence.slice(0, emphasisIndex), ...newSentences, ...sentence.slice(emphasisIndex + 1)]);
-      setEmphasis(emphasis => [...emphasis.slice(0, emphasisIndex), ...newSentences.map(() => false), ...emphasis.slice(emphasisIndex + 1)]);
-      setSentenceToShow(sentenceToShow => [...sentenceToShow.slice(0, emphasisIndex), ...newSentencesToShow, ...sentenceToShow.slice(emphasisIndex + 1)]);
+      setSentenceEmphasis(sentenceEmphasis => [...sentenceEmphasis.slice(0, emphasisIndex), ...newSentenceEmphasis, ...sentenceEmphasis.slice(emphasisIndex + 1)]);
 
-      removeAnswer(emphasisIndex);
-      removeEmphasis(emphasisIndex);
+      remove(emphasisIndex);
 
       newSentences.map((sentence, ind) => {
-        insertAnswer(emphasisIndex+ind, sentence);
-        insertEmphasis(emphasisIndex+ind, false);
+        insert(emphasisIndex+ind, {sentence: sentence, emphasis: false});
       });
 
     }
 
 
-    const updateEmphasisWithIndex = (emphasisIndex: number) => {
+    const updateEmphasis = (emphasisIndex: number) => {
 
-      // state emphasis is not changed yet
-      updateEmphasis(emphasisIndex, !emphasis[emphasisIndex]);
-
-      // now change the state emphasis
-      setEmphasis(emphasis => emphasis.map((value, ind) => ind === emphasisIndex ? !value : value));
-
+      // did not store sentence without punctuation and trimming so need to do it here
+      update(emphasisIndex, {sentence: sentenceEmphasis[emphasisIndex].sentence.replace(/[,.;?!]/, '').trim(), 
+                            emphasis: !sentenceEmphasis[emphasisIndex].emphasis});
+      
+      setSentenceEmphasis(sentenceEmphasis => sentenceEmphasis.map((item, ind) => ind === emphasisIndex ? {sentence: sentenceEmphasis[ind].sentence, emphasis: !sentenceEmphasis[ind].emphasis} : item));
     }
 
     const handleAnswerAdd = (ev: any) => {
@@ -233,12 +229,14 @@ const ProblemUploadForm: React.FC<ProblemUploadFormProps> = ({
                 </Dialog>
 
                 <div className="flex flex-col space-y-2 w-full mx-2 mt-12 mb-2 scroll-smooth overflow-y-auto overflow-x-hidden">
-                    {sentenceToShow.map((sentence, emphasisIndex) => (
-                      <div key={emphasisIndex} >
-                        <SingleSentence sentence={sentence} emphasis={emphasis[emphasisIndex]} emphasisIndex={emphasisIndex} 
-                                        removeSentence={removeSentence} updateSentence={updateSentence} updateEmphasis={updateEmphasisWithIndex}/>
+                    {sentenceEmphasis.map((item, emphasisIndex) => (
+                        <SingleSentence {...item}
+                                        key={item.sentence + emphasisIndex}
+                                        emphasisIndex={emphasisIndex} 
+                                        removeSentence={removeSentence} 
+                                        updateSentence={updateSentence} 
+                                        updateEmphasis={updateEmphasis}/>
 
-                      </div>
                     )
                   )}
                 </div>
@@ -338,12 +336,14 @@ const ProblemUploadForm: React.FC<ProblemUploadFormProps> = ({
                 </Dialog>
 
                 <div className="flex flex-col space-y-2 w-full mx-2 mt-12 mb-2 scroll-smooth overflow-y-auto overflow-x-hidden">
-                    {sentenceToShow.map((sentence, emphasisIndex) => (
-                      <div key={emphasisIndex} >
-                        <SingleSentence sentence={sentence} emphasis={emphasis[emphasisIndex]} emphasisIndex={emphasisIndex} 
-                                        removeSentence={removeSentence} updateSentence={updateSentence} updateEmphasis={updateEmphasisWithIndex}/>
+                    {sentenceEmphasis.map((item, emphasisIndex) => (
+                        <SingleSentence {...item}
+                                        key={item.sentence + emphasisIndex}
+                                        emphasisIndex={emphasisIndex} 
+                                        removeSentence={removeSentence} 
+                                        updateSentence={updateSentence} 
+                                        updateEmphasis={updateEmphasis}/>
 
-                      </div>
                     )
                   )}
                 </div>

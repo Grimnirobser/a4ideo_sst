@@ -19,8 +19,17 @@ interface ChannelPageParams {
 interface ProblemsetDataType{
   videoId: string | undefined,
   channelId: string,
-  problems: any
+  problems: ProblemDataType[]
+}
+interface ProblemDataType{
+  question: string,
+  type: string,
+  answer: AnswerType[],
+}
 
+interface AnswerType{
+  sentence: string,    
+  emphasis: boolean    
 }
 
 
@@ -40,7 +49,7 @@ export default function UploadProblemset({params}: {params: ChannelPageParams}) 
         setValue,
       } = useForm<FieldValues>({
         defaultValues: {
-          problems: [{question: "", type:"reason" ,answer: [], emphasis: []}],
+          problems: [{question: "", type:"reason", answer: []}],
         },
       });
 
@@ -129,7 +138,7 @@ export default function UploadProblemset({params}: {params: ChannelPageParams}) 
                     ))}
     
                 <div className="relative w-26 h-10 mb-2 mt-2">
-                <Button className="absolute inset-y-0 left-0 h-full" type="box" onClick={() => {append({question: "", type:"reason" ,answer: [], emphasis: []});incrementTotalProblems()}}>
+                <Button className="absolute inset-y-0 left-0 h-full" type="box" onClick={() => {append({question: "", type:"reason" ,answer: []});incrementTotalProblems()}}>
                     Add Question
                 </Button>   
               </div>

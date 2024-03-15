@@ -7,9 +7,15 @@ import { Problemset, Problem } from "@prisma/client";
 interface problemProps {
   question: string,
   type: string,
-  answer: string[],
-  emphasis: boolean[]
+  answer: AnswerType[],
 }
+
+interface CreateProblemsetParams{
+    videoId: string | undefined,
+    channelId: string,
+    problems: problemProps[]
+}
+
 
 interface problemWithProblemsetIdProps{
   question: string,
@@ -19,11 +25,11 @@ interface problemWithProblemsetIdProps{
   problemsetId: string,
 }
 
-interface CreateProblemsetParams{
-    videoId: string | undefined,
-    channelId: string,
-    problems: problemProps[]
+interface AnswerType{
+  sentence: string,    
+  emphasis: boolean    
 }
+
 
 
 
@@ -52,12 +58,21 @@ export async function createProblemset( params: CreateProblemsetParams
               channelId: channelId,
             },
           });
+
+        
+
       
-          const problemsWithProblemsetId = problems.map((item: problemProps) => ({...item, problemsetId: problemset.id}));
-      
-          const createdProblems = await prisma.$transaction(
-            problemsWithProblemsetId.map((problemWithProblemsetId: problemWithProblemsetIdProps) => prisma.problem.create({ data: problemWithProblemsetId })),
-         );
+        const problemsWithProblemsetId: problemWithProblemsetIdProps[] = problems.map((item: problemProps) => ({
+          problemsetId: problemset.id,
+          answer: item.answer.map(obj => obj.sentence),
+          type: item.type,
+          question: item.question,
+          emphasis: item.answer.map(obj => obj.emphasis),
+          }));
+    
+        const createdProblems = await prisma.$transaction(
+          problemsWithProblemsetId.map((problemWithProblemsetId: problemWithProblemsetIdProps) => prisma.problem.create({ data: problemWithProblemsetId })),
+        );
 
 
         
@@ -71,12 +86,17 @@ export async function createProblemset( params: CreateProblemsetParams
             },
           }
         });
-
-
-        video.problemsets.push(resultProblemset);       
-
-        console.log(resultProblemset);
-        console.log(video);
+                
+        const updatedVideo = await prisma.video.update({  
+          where: {
+            id: videoId!,
+          },
+          data: {
+            problemsets: {
+              connect: [{ id: resultProblemset.id }],
+            },
+          },
+        });
       
         return resultProblemset;
       
