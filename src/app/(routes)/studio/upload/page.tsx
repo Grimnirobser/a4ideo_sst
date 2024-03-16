@@ -11,7 +11,6 @@ import ProblemsetUploadForm from "@/components/studio/upload/ProblemsetUploadFor
 import { useForm, FieldValues, SubmitHandler, useFieldArray } from "react-hook-form";
 
 import { toast } from "react-hot-toast";
-import TextArea from "@/components/shared/TextArea";
 import { useProtectedRoute } from "@/hooks/useProtectedRoute";
 import { useMutation } from "@tanstack/react-query"
 import { createVideo } from "@/actions/createVideo";

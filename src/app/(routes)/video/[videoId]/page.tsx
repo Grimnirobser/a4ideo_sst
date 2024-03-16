@@ -8,7 +8,7 @@ import VideoPlayer from "@/components/video/VideoPlayer";
 import YoutubePlayer from "@/components/video/YoutubePlayer";
 import getProblemsetsByVideoId from "@/actions/getProblemsetsByVideoId";
 import ProblemsetSection from "@/components/video/ProblemsetSection/ProblemsetSection";
-import useSWR from "swr";
+import { initAction } from "@/actions/submitAttempt";
 
 
 interface VideoPageParams {
@@ -20,6 +20,7 @@ export default async function VideoPage({
 }: {
   params: VideoPageParams;
 }) {
+  await initAction();   // dirty work related to next.js issue due to unstable server action https://github.com/vercel/next.js/issues/54282
   const { videoId } = params;
   const problemsets = await getProblemsetsByVideoId({ videoId });
   const video = await increaseVideoViewCount({ videoId });

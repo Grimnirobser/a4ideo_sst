@@ -34,12 +34,13 @@ import { FileQuestion } from 'lucide-react';
 import { useRouter } from "next/navigation";
 import { useForm, FieldValues, SubmitHandler } from "react-hook-form";
 import { Skeleton } from "@/components/ui/skeleton"
-import getProblemsByProblemsetId  from "@/actions/getProblemsByProblemsetId"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { z } from "zod"
+import { set, z } from "zod"
 import { toast } from "react-hot-toast";
 import { Loader2 } from 'lucide-react'
 import { compliment, insult } from "@/lib/words";
+import { submitAttempt } from "@/actions/submitAttempt";
+import { SingleFeedback } from "@/components/shared/SingleFeedback";
 
 interface ProblemsetSectionProps {
   problemsets: (Problemset & { channel: Channel, problems: Problem[] })[];
@@ -48,6 +49,7 @@ interface ProblemsetSectionProps {
 
 interface readyDataType{
   channelId: string,
+  problemsetId: string,
   problems: Problem[],
   attempts: {attempt: string}[]
 }
@@ -59,6 +61,7 @@ const ProblemsetSection: React.FC<ProblemsetSectionProps> = ({
   const router = useRouter();
 
   const [problemsetNum, setProblemsetNum] = useState(1);
+  const [alertOpen, setAlertOpen] = useState(false);
   const totalProblemset = problemsets.length;
 
   let incrementProblemNum = () => setProblemsetNum(problemsetNum + 1);
@@ -104,17 +107,9 @@ const ProblemsetSection: React.FC<ProblemsetSectionProps> = ({
   })
 
 
-  const { mutate, mutateAsync, isPending } = useMutation({
+  const { data: attemptFeedback, mutate, mutateAsync, isPending } = useMutation({
     mutationKey: ["attemptProblemset"],
-    mutationFn: async(readyData: readyDataType) => await fetch(process.env.NEXT_PUBLIC_SERVER_URL + `/api/attempts/${problemsets[problemsetNum-1].id}`, {
-      method: "POST",
-      body: JSON.stringify(readyData),
-      headers: {
-        'Accept': 'application/json',
-        "Content-Type": "application/json",
-      },
-    
-    }),
+    mutationFn: async(readyData: readyDataType) => await submitAttempt(readyData),
 
     onSuccess: () => {
       const min = 1;
@@ -134,8 +129,7 @@ const ProblemsetSection: React.FC<ProblemsetSectionProps> = ({
     },
 
     onError: () => toast.error("Could not submit you answer.")
-  })
-
+  });
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     if (!currentChannel) {
@@ -145,6 +139,7 @@ const ProblemsetSection: React.FC<ProblemsetSectionProps> = ({
 
     const readyData = {
       channelId: currentChannel.id,
+      problemsetId: problemsets[problemsetNum-1].id,
       problems: problemsets[problemsetNum-1].problems,
       attempts: data.attempts,
     }
@@ -185,34 +180,41 @@ const ProblemsetSection: React.FC<ProblemsetSectionProps> = ({
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         {problemsets[problemsetNum-1].problems.map((problem, index) => (
-          <FormField
-            key={index}
-            control={form.control}
-            name={`attempts.${index}.attempt`}
-            render={({ field }) => (
-            <FormItem>
-                {/* <FormLabel>Question(s):</FormLabel> */}
-                <FormDescription className="text-lg">
-                  {problem.question}
-                </FormDescription>
-                <FormControl>
-                  <Textarea
-                    placeholder="Your perspective"
-                    className="resize-none h-52 text-lg"
-                    {...field}
-                  />
-                </FormControl>
-              
-                <FormMessage />
-            </FormItem>
-          )}
-        />
+          
+          <div key={index}>
+            <FormField
+              key={"FormField"+index}
+              control={form.control}
+              name={`attempts.${index}.attempt`}
+              render={({ field }) => (
+              <FormItem>
+                  {/* <FormLabel>Question(s):</FormLabel> */}
+                  <FormDescription className="text-lg">
+                    {problem.question}
+                  </FormDescription>
+                  <FormControl>
+                    <Textarea
+                      placeholder="Your perspective"
+                      className="resize-none h-52 text-lg"
+                      {...field}
+                    />
+                  </FormControl>
+                
+                  <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          {attemptFeedback ? <SingleFeedback key={"SingleFeedback" + index} 
+                          {...attemptFeedback[index]}/> : null
+          }
+        </div>
         ))}
 
           <div className="flex flex-row gap-2">
-            <AlertDialog open={attemptStatus === true}>
+            <AlertDialog open={alertOpen}>
                 <AlertDialogTrigger asChild>
-                    <Button type="submit" disabled={isPending}>
+                    <Button type="submit" disabled={isPending} >
                     {isPending && (
                           <Loader2 className='mr-2 h-4 w-4 animate-spin' />
                     )}Submit</Button>

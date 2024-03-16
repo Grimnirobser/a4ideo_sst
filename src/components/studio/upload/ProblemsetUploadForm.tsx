@@ -71,6 +71,7 @@ const ProblemUploadForm: React.FC<ProblemUploadFormProps> = ({
     const options: OptionType[] = [
       { value: 'reason', label: 'reason'},
       { value: 'step', label: 'step'},
+      { value: 'exact', label: 'exact'},
     ];
     
 
@@ -179,6 +180,7 @@ const ProblemUploadForm: React.FC<ProblemUploadFormProps> = ({
                         <SelectContent >
                           <SelectItem className="text-2xl font-sans subpixel-antialiased" value={options[0].value}>{options[0].label}</SelectItem>
                           <SelectItem className="text-2xl font-sans subpixel-antialiased" value={options[1].value}>{options[1].label}</SelectItem>
+                          <SelectItem className="text-2xl font-sans subpixel-antialiased" value={options[2].value}>{options[2].label}</SelectItem>
                         </SelectContent>
                       </Select>
                   )}
@@ -285,6 +287,7 @@ const ProblemUploadForm: React.FC<ProblemUploadFormProps> = ({
                       <SelectContent >
                         <SelectItem className="text-2xl font-sans subpixel-antialiased" value={options[0].value}>{options[0].label}</SelectItem>
                         <SelectItem className="text-2xl font-sans subpixel-antialiased" value={options[1].value}>{options[1].label}</SelectItem>
+                        <SelectItem className="text-2xl font-sans subpixel-antialiased" value={options[2].value}>{options[2].label}</SelectItem>
                       </SelectContent>
                     </Select>
                 )}
