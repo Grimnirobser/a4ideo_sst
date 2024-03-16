@@ -32,7 +32,7 @@ export default async function VideoPage({
       <div className="w-full lg:w-4/6 flex flex-col gap-4 overflow-y-auto max-h-screen [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
         {/* <VideoPlayer videoSrc={video.videoSrc} /> */}
         <YoutubePlayer youtubeId={video.youtubeId}/>
-        <h1 className="text-2xl font-medium break-all">{video.title}</h1>
+        <h1 className="text-2xl font-medium break-words">{video.title}</h1>
         <LikeSubscribeSection video={video} channel={channel} />
         <Description video={video} />
         <CommentSection comments={comments} videoId={video.id} />

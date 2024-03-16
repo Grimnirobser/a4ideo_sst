@@ -142,7 +142,7 @@ const Sidebar: React.FC<SidebarProps> = ({ subscribedChannels }) => {
 
 
 
-        <div className='text-center md:text-left mb-2'>
+        <div className='text-center md:text-left mb-6'>
             <p className='text-sm text-muted-foreground'>
               &copy; {new Date().getFullYear()} A4ideo Inc.
             </p>

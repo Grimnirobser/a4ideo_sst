@@ -27,7 +27,7 @@ const DescriptionArea: React.FC<DescriptionAreaProps> = ({
         id={id}
         disabled={disabled}
         {...register(id, { required })}
-        className={`peer w-full px-4 pt-8 pb-2 min-h-[314px] rounded-md outline-none border-[1px] bg-slate-100 transition ${
+        className={`peer w-full px-4 pt-8 pb-2 min-h-[192px] rounded-md outline-none border-[1px] bg-slate-100 transition ${
           errors[id]
             ? "border-red-500 focus:border-red-500"
             : "border-zinc-500 focus:border-blue-400"

@@ -44,7 +44,7 @@ export const SingleSentence: React.FC<SingleSentenceProps> = ({
     <div className="relative">
         <Badge className="flex w-full" variant="outline">
             <Checkbox className="absolute left-2 top-2 h-4 w-4" checked={emphasis} onClick={() => updateEmphasis(emphasisIndex)}/>
-            <div className="flex ml-6 mr-8 text-left text-xl text-slate-700 font-sans antialiased break-all">
+            <div className="flex ml-6 mr-8 text-left text-xl text-slate-700 font-sans antialiased break-words">
                 {sentence}
             </div>
  

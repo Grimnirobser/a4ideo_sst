@@ -42,10 +42,10 @@ export const SingleFeedback: React.FC<AttemptFeedback> = ({
                         <Badge  key={sentence+index}
                                 className="flex w-full" 
                                 variant="outline">
-                            <div className={`flex ml-6 mr-8 text-left ${fail.includes(index) 
+                            <div className={`flex mr-4 text-left ${fail.includes(index) 
                                     ? "text-red-500"
-                                    : "text-green-600"
-                                } text-xl font-sans antialiased break-all`}>
+                                    : "text-slate-600"
+                                } text-xl font-sans antialiased break-words`}>
                                 {sentence}
                             </div>
                         </Badge>
