@@ -230,7 +230,7 @@ const ProblemUploadForm: React.FC<ProblemUploadFormProps> = ({
                   </DialogContent>
                 </Dialog>
 
-                <div className="flex flex-col space-y-2 w-full mx-2 mt-12 mb-2 scroll-smooth overflow-y-auto overflow-x-hidden">
+                <div className="flex flex-col space-y-2 w-full mx-2 mt-12 mb-2 scroll-smooth overflow-y-auto overflow-x-hidden no-scrollbar">
                     {sentenceEmphasis.map((item, emphasisIndex) => (
                         <SingleSentence {...item}
                                         key={item.sentence + emphasisIndex}
@@ -338,7 +338,7 @@ const ProblemUploadForm: React.FC<ProblemUploadFormProps> = ({
                   </DialogContent>
                 </Dialog>
 
-                <div className="flex flex-col space-y-2 w-full mx-2 mt-12 mb-2 scroll-smooth overflow-y-auto overflow-x-hidden">
+                <div className="flex flex-col space-y-2 w-full mx-2 mt-12 mb-2 scroll-smooth overflow-y-auto overflow-x-hidden no-scrollbar">
                     {sentenceEmphasis.map((item, emphasisIndex) => (
                         <SingleSentence {...item}
                                         key={item.sentence + emphasisIndex}

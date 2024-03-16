@@ -18,17 +18,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
 import { Textarea } from "@/components/ui/textarea"
 import { FileQuestion } from 'lucide-react';
 import { useRouter } from "next/navigation";
@@ -61,7 +50,6 @@ const ProblemsetSection: React.FC<ProblemsetSectionProps> = ({
   const router = useRouter();
 
   const [problemsetNum, setProblemsetNum] = useState(1);
-  const [alertOpen, setAlertOpen] = useState(false);
   const totalProblemset = problemsets.length;
 
   let incrementProblemNum = () => setProblemsetNum(problemsetNum + 1);
@@ -76,7 +64,7 @@ const ProblemsetSection: React.FC<ProblemsetSectionProps> = ({
   const currentChannel = useContext(CurrentChannelContext);
 
   const {data: attemptStatus, isLoading: LoadingStatus, refetch} = useQuery({
-    queryKey: ['attemptStatus'],
+    queryKey: ['attemptStatus', currentChannel?.id, problemsets[problemsetNum-1].id],
     queryFn: async() => await getAttemptByChannelId({ problemsetId: problemsets[problemsetNum-1].id, channelId: currentChannel?.id}),
     refetchOnWindowFocus: true,
     staleTime: 0,
@@ -108,7 +96,7 @@ const ProblemsetSection: React.FC<ProblemsetSectionProps> = ({
 
 
   const { data: attemptFeedback, mutate, mutateAsync, isPending } = useMutation({
-    mutationKey: ["attemptProblemset"],
+    mutationKey: ["attemptProblemset", currentChannel?.id, problemsets[problemsetNum-1].id],
     mutationFn: async(readyData: readyDataType) => await submitAttempt(readyData),
 
     onSuccess: () => {
@@ -181,19 +169,19 @@ const ProblemsetSection: React.FC<ProblemsetSectionProps> = ({
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         {problemsets[problemsetNum-1].problems.map((problem, index) => (
           
-          <div key={index}>
+          <div key={index} className="space-y-2">
             <FormField
-              key={"FormField"+index}
+              key={"FormField"+problem.id+index}
               control={form.control}
               name={`attempts.${index}.attempt`}
               render={({ field }) => (
               <FormItem>
-                  {/* <FormLabel>Question(s):</FormLabel> */}
                   <FormDescription className="text-lg">
                     {problem.question}
                   </FormDescription>
                   <FormControl>
                     <Textarea
+                      key={"Textarea"+problem.id+index}
                       placeholder="Your perspective"
                       className="resize-none h-52 text-lg"
                       {...field}
@@ -205,44 +193,27 @@ const ProblemsetSection: React.FC<ProblemsetSectionProps> = ({
             )}
           />
 
-          {attemptFeedback ? <SingleFeedback key={"SingleFeedback" + index} 
+          {attemptFeedback ? <SingleFeedback key={"SingleFeedback"+problem.id+index} 
+                          problemsetNum={problemsetNum} 
+                          index={index}
                           {...attemptFeedback[index]}/> : null
           }
         </div>
         ))}
 
           <div className="flex flex-row gap-2">
-            <AlertDialog open={alertOpen}>
-                <AlertDialogTrigger asChild>
-                    <Button type="submit" disabled={isPending} >
-                    {isPending && (
-                          <Loader2 className='mr-2 h-4 w-4 animate-spin' />
-                    )}Submit</Button>
-
-                </AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>Do you want to continue?</AlertDialogTitle>
-                  <AlertDialogDescription>
-                      Note that your PASSED status will change if you fail.
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <AlertDialogAction>Continue</AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
-
+            <Button type="submit" disabled={isPending}>
+            {isPending && (
+                  <Loader2 className='mr-2 h-4 w-4 animate-spin' />
+            )}Submit</Button>
             <StatusBasedTag status={attemptStatus}/>
             <FileQuestion className='cursor-pointer w-10 h-10 hover:bg-slate-200 rounded-lg' onClick={() => {router.push(`/upload-new-problemset/${videoId}`);}}/>
 
           </div>
 
-    <div className="peer w-full mt-4 px-4 pt-2 pb-2  rounded-md outline-none border-[1px] bg-slate-100 transition">
-      <div className="">
-      If you are unsatisfied to those questions, you can click the button next to PASS/UNPASSED tag to upload a new problemset.
-      </div>
+    <div className="peer w-full mt-4 mb-4 px-4 pt-2 pb-2  rounded-md outline-none border-[1px] bg-slate-100 transition">
+        Note if all sentences are green but the result is &quot;fail&quot;, it means the answer is not sufficient.
+        If you are unsatisfied with those, you can click the question mark next to PASS/UNPASSED tag to upload your own questions.
     </div>
 
 
