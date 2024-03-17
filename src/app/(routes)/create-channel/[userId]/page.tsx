@@ -18,32 +18,24 @@ import { toast } from "react-hot-toast";
 import { ZodError, z } from 'zod'
 import { useRouter } from 'next/navigation'
 import { useMutation } from '@tanstack/react-query'
-import Avatar, { AvatarSize } from "../../../../components/shared/Avatar";
-import Button from "../../../../components/shared/Button";
-import MediaUpload from "../../../../components/shared/MediaUpload";
-
+import Avatar, { AvatarSize } from "@/components/shared/Avatar";
+import Button from "@/components/shared/Button";
+import MediaUpload from "@/components/shared/MediaUpload";
+import { createChannel } from '@/actions/createChannel'
 
 interface readyDataType{
-  userId: string | undefined,
+  userId: string,
   username: string,
   handle: string,
   imageSrc: string,
 }
 
-interface CreateChannelPageProps {
-    userId?: string;
-}
 
-export default function CreateChannelPage({
-  params,
-}: {
-  params: CreateChannelPageProps;
-}) {
+export default function CreateChannelPage() {
 
   const currentUser = useContext(CurrentUserContext);
   const currentChannel = useContext(CurrentChannelContext);
   const router = useRouter()
-  const { userId } = params;
   
   const channelSchema = z.object({
       username: z.string()
@@ -140,15 +132,7 @@ export default function CreateChannelPage({
 
   const { mutate, mutateAsync, isPending } = useMutation({
     mutationKey: ["createChannel"],
-    mutationFn: async(readyData: readyDataType) => await fetch(process.env.NEXT_PUBLIC_SERVER_URL + `/api/channels/${userId}`, {
-      method: "POST",
-      body: JSON.stringify(readyData),
-      headers: {
-        'Accept': 'application/json',
-        "Content-Type": "application/json",
-      },
-    
-    }),
+    mutationFn: async(readyData: readyDataType) => await createChannel(readyData),
 
     onSuccess: () => {
       toast.success("Channel created successfully.");
@@ -162,7 +146,7 @@ export default function CreateChannelPage({
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
 
     const readyData = {
-      userId: userId,
+      userId: currentUser!.id,
       username: data.username,
       handle: data.handle,
       imageSrc: data.imageSrc,
@@ -172,9 +156,9 @@ export default function CreateChannelPage({
   };
 
 
-  if (!currentUser || currentUser.id != userId) {
+  if (!currentUser) {
     router.push("/");
-    toast.error("Something went wrong, please try again.");
+    toast.error("Please sign in to create a channel.");
     return;
   }else if(currentChannel) {
     router.push("/");
@@ -200,7 +184,7 @@ export default function CreateChannelPage({
             <form onSubmit={handleSubmit(onSubmit)}>
               <div className='grid gap-2'>
                 <div className='grid gap-1 py-2'>
-                  <Label id='username' htmlFor='username'>Username</Label>
+                  <Label htmlFor={"username"+currentUser.id}>Username</Label>
                   <Input
                     {...register('username')}
                     className={cn({
@@ -208,7 +192,7 @@ export default function CreateChannelPage({
                         errors.username,
                     })}
                     placeholder='username'
-                    id="username"
+                    id={"username"+currentUser.id}
                   />
                   {errors?.username && (
                     <p className='text-sm text-red-500'>
@@ -218,7 +202,7 @@ export default function CreateChannelPage({
                 </div>
 
                 <div className='grid gap-1 py-2'>
-                  <Label id='handle' htmlFor='handle'>Handle</Label>
+                  <Label htmlFor={"handle"+currentUser.id}>Handle</Label>
                   <Input
                     {...register('handle')}
                     type='handle'
@@ -227,7 +211,7 @@ export default function CreateChannelPage({
                         errors.handle,
                     })}
                     placeholder='handle'
-                    id="handle"
+                    id={"handle"+currentUser.id}
                   />
                   {errors?.handle && (
                     <p className='text-sm text-red-500'>

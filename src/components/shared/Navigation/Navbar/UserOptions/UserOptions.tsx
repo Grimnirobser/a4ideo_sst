@@ -95,10 +95,10 @@ const UserOptions = () => {
       </div>
     </>)
   }else if(currentUser){
-    if (pathname === `/create-channel/${currentUser.id}`){
+    if (pathname === "/create-channel"){
       return <SignInButton />
     }else{
-      router.push(`/create-channel/${currentUser.id}`)
+      router.push("/create-channel")
       return <SignInButton />
     }
   }
