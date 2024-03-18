@@ -83,7 +83,7 @@ const Sidebar: React.FC<SidebarProps> = ({ subscribedChannels }) => {
                   round
                   onClick={() =>
                     handleItemClick(() =>
-                      router.push(`/channel/${subscribedChannel.id}`)
+                      router.push(`/channel/${subscribedChannel.username}`)
                     )
                   }
                 />

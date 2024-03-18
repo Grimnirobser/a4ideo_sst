@@ -1,10 +1,9 @@
-import getChannelById from "@/actions/getChannelById";
-import getVideosByChannelId from "@/actions/getVideosByChannelId";
 import ChannelHeader from "@/components/channel/ChannelHeader";
 import VideoCard from "@/components/shared/VideoCard";
+import getInfoByUsername  from "@/actions/getInfoByUsername";
 
 interface ChannelPageParams {
-  channelId?: string;
+  username?: string;
 }
 
 export default async function ChannelPage({
@@ -12,10 +11,9 @@ export default async function ChannelPage({
 }: {
   params: ChannelPageParams;
 }) {
-  const { channelId } = params;
+  const { username } = params;
 
-  const channel = await getChannelById({ channelId });
-  const videos = await getVideosByChannelId({ channelId });
+  const {channel, videos, problemsets} = await getInfoByUsername({username});
 
   return channel ? (
     <div className="flex flex-col">

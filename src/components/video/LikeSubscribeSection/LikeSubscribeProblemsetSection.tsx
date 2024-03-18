@@ -24,12 +24,12 @@ const LikeSubscribeProblemsetSection: React.FC<LikeSubscribeProblemsetSectionPro
   return (
     <div className="flex justify-between items-center">
       <div className="flex gap-3 items-center">
-        <Link href={`/channel/${channel.id}`}>
+        <Link href={`/channel/${channel.username}`}>
           <Avatar size={AvatarSize.medium} imageSrc={channel.imageSrc} />
         </Link>
 
         <div className="flex flex-col justify-between mr-2">
-          <Link href={`/channel/${channel.id}`}>
+          <Link href={`/channel/${channel.username}`}>
             <h2 className="text-lg">{channel.username}</h2>
           </Link>
           <p className="text-sm text-neutral-400">
