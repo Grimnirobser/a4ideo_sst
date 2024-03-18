@@ -3,9 +3,6 @@ import { useCallback, useContext, useMemo } from "react";
 import { toast } from "react-hot-toast";
 import { CurrentChannelContext } from "@/context/CurrentChannelContext";
 
-
-import axios from "axios";
-
 interface UseLikeDislikeProps {
   videoId: string;
 }
@@ -38,7 +35,6 @@ export const useLikeDislike = ({ videoId }: UseLikeDislikeProps) => {
     }
   }, [currentChannel, videoId]);
 
-
   
   const toggleLikeDislike = useCallback(
     async (action: "like" | "dislike") => {
@@ -51,29 +47,41 @@ export const useLikeDislike = ({ videoId }: UseLikeDislikeProps) => {
         if (action === "like") {
           switch (likeDislikeStatus) {
             case LikeDislikeStatus.Liked:
-              await axios.delete(`/api/videos/${videoId}/like`);
+              await fetch(`/api/videos/${videoId}/like`, {
+                method: "DELETE",
+              });
               break;
             case LikeDislikeStatus.Disliked:
-              await axios
-                .delete(`/api/videos/${videoId}/dislike`)
-                .then(() => axios.post(`/api/videos/${videoId}/like`));
+              await fetch(`/api/videos/${videoId}/dislike`, {
+                method: "DELETE",
+              }).then(() => fetch(`/api/videos/${videoId}/like`, {
+                method: "POST",
+              }));
               break;
             default:
-              await axios.post(`/api/videos/${videoId}/like`);
+              await fetch(`/api/videos/${videoId}/like`, {
+                method: "POST",
+              });
               break;
           }
         } else if (action === "dislike") {
           switch (likeDislikeStatus) {
             case LikeDislikeStatus.Liked:
-              await axios
-                .delete(`/api/videos/${videoId}/like`)
-                .then(() => axios.post(`/api/videos/${videoId}/dislike`));
+              await fetch(`/api/videos/${videoId}/like`, {
+                method: "DELETE",
+              }).then(() => fetch(`/api/videos/${videoId}/dislike`, {
+                method: "POST",
+              }));
               break;
             case LikeDislikeStatus.Disliked:
-              await axios.delete(`/api/videos/${videoId}/dislike`);
+              await fetch(`/api/videos/${videoId}/dislike`, {
+                method: "DELETE",
+              });
               break;
             default:
-              await axios.post(`/api/videos/${videoId}/dislike`);
+              await fetch(`/api/videos/${videoId}/dislike`, {
+                method: "POST",
+              });
               break;
           }
         }

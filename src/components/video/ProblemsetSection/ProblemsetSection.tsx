@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/form"
 import { Textarea } from "@/components/ui/textarea"
 import { FileQuestion } from 'lucide-react';
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { useForm, FieldValues, SubmitHandler } from "react-hook-form";
 import { Skeleton } from "@/components/ui/skeleton"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -30,6 +30,8 @@ import { Loader2 } from 'lucide-react'
 import { compliment, insult } from "@/lib/words";
 import { submitAttempt } from "@/actions/submitAttempt";
 import { SingleFeedback } from "@/components/shared/SingleFeedback";
+import LikeSubscribeProblemsetSection from "../LikeSubscribeSection/LikeSubscribeProblemsetSection";
+import getChannelById from "@/actions/getChannelById";
 
 interface ProblemsetSectionProps {
   problemsets: (Problemset & { channel: Channel, problems: Problem[] })[];
@@ -49,23 +51,37 @@ const ProblemsetSection: React.FC<ProblemsetSectionProps> = ({
 }) => {
   const router = useRouter();
 
-  const [problemsetNum, setProblemsetNum] = useState(1);
   const totalProblemset = problemsets.length;
+  const searchParams = useSearchParams()
+  const ps = searchParams.get('ps')
+  const pathname = usePathname();
 
-  let incrementProblemNum = () => setProblemsetNum(problemsetNum + 1);
-  let decrementProblemNum = () => setProblemsetNum(problemsetNum - 1);
-  if(problemsetNum <= 1) {
-    decrementProblemNum = () => setProblemsetNum(1);
+  const targetProblemset = ps ? parseInt(ps) : 1;
+  const target = 1 <= targetProblemset && targetProblemset <= totalProblemset ? targetProblemset : 1;
+
+  const incrementProblemNum = () => {
+    if(target < totalProblemset){
+      router.push(`${pathname}?ps=${target + 1}`);
+    }
   }
-  if (problemsetNum >= totalProblemset) {
-    incrementProblemNum = () => setProblemsetNum(totalProblemset);
+
+  const decrementProblemNum = () => {
+    if(target > 1){
+      router.push(`${pathname}?ps=${target - 1}`);
+    }
   }
 
   const currentChannel = useContext(CurrentChannelContext);
 
+
+  const {data: problemsetCreatorChannel, isLoading: LoadingCreator} = useQuery({
+    queryKey: ['problemsetCreatorChannel', problemsets[target-1].id],
+    queryFn: async() => await getChannelById({ channelId: problemsets[target-1].channelId}),
+  });
+
   const {data: attemptStatus, isLoading: LoadingStatus, refetch} = useQuery({
-    queryKey: ['attemptStatus', currentChannel?.id, problemsets[problemsetNum-1].id],
-    queryFn: async() => await getAttemptByChannelId({ problemsetId: problemsets[problemsetNum-1].id, channelId: currentChannel?.id}),
+    queryKey: ['attemptStatus', currentChannel?.id, problemsets[target-1].id],
+    queryFn: async() => await getAttemptByChannelId({ problemsetId: problemsets[target-1].id, channelId: currentChannel?.id}),
     refetchOnWindowFocus: true,
     staleTime: 0,
     refetchInterval: 0,
@@ -96,7 +112,7 @@ const ProblemsetSection: React.FC<ProblemsetSectionProps> = ({
 
 
   const { data: attemptFeedback, mutate, mutateAsync, isPending } = useMutation({
-    mutationKey: ["attemptProblemset", currentChannel?.id, problemsets[problemsetNum-1].id],
+    mutationKey: ["attemptProblemset", currentChannel?.id, problemsets[target-1].id],
     mutationFn: async(readyData: readyDataType) => await submitAttempt(readyData),
 
     onSuccess: () => {
@@ -127,8 +143,8 @@ const ProblemsetSection: React.FC<ProblemsetSectionProps> = ({
 
     const readyData = {
       channelId: currentChannel.id,
-      problemsetId: problemsets[problemsetNum-1].id,
-      problems: problemsets[problemsetNum-1].problems,
+      problemsetId: problemsets[target-1].id,
+      problems: problemsets[target-1].problems,
       attempts: data.attempts,
     }
     mutateAsync(readyData);
@@ -136,12 +152,13 @@ const ProblemsetSection: React.FC<ProblemsetSectionProps> = ({
 
 
 
-  if ( problemsets[problemsetNum-1].problems === undefined || LoadingStatus) {
+  if ( problemsets[target-1].problems === undefined || problemsetCreatorChannel === null ||
+        problemsetCreatorChannel === undefined|| LoadingStatus || LoadingCreator) {
     return (
         <>
         <ProblemPagination
         end = {totalProblemset}
-        current = {problemsetNum}
+        current = {target}
         increment = {incrementProblemNum}
         decrement = {decrementProblemNum}
         />
@@ -160,14 +177,14 @@ const ProblemsetSection: React.FC<ProblemsetSectionProps> = ({
     <>
     <ProblemPagination
       end = {totalProblemset}
-      current = {problemsetNum}
+      current = {target}
       increment = {incrementProblemNum}
       decrement = {decrementProblemNum}
     />
 
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        {problemsets[problemsetNum-1].problems.map((problem, index) => (
+        {problemsets[target-1].problems.map((problem, index) => (
           
           <div key={index} className="space-y-2">
             <FormField
@@ -194,13 +211,14 @@ const ProblemsetSection: React.FC<ProblemsetSectionProps> = ({
           />
 
           {attemptFeedback ? <SingleFeedback key={"SingleFeedback"+problem.id+index} 
-                          problemsetNum={problemsetNum} 
+                          problemsetNum={target} 
                           index={index}
                           {...attemptFeedback[index]}/> : null
           }
         </div>
         ))}
 
+          <LikeSubscribeProblemsetSection channel={problemsetCreatorChannel} problemset={problemsets[target-1]}/>
           <div className="flex flex-row gap-2">
             <Button type="submit" disabled={isPending}>
             {isPending && (
@@ -212,8 +230,8 @@ const ProblemsetSection: React.FC<ProblemsetSectionProps> = ({
           </div>
 
     <div className="peer w-full mt-4 mb-4 px-4 pt-2 pb-2  rounded-md outline-none border-[1px] bg-slate-100 transition">
-        Note if all sentences are green but the result is &quot;fail&quot;, it means the answer is not sufficient.
-        If you are unsatisfied with those, you can click the question mark next to PASS/UNPASSED tag to upload your own questions.
+        Note if all sentences are not red but the result is &quot;fail&quot;, it means the answer is not sufficient.
+        You can try click the question mark next to PASS/UNPASSED badge to upload your own questions.
     </div>
 
 
