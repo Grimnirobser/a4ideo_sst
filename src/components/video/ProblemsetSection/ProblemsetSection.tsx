@@ -53,8 +53,8 @@ const ProblemsetSection: React.FC<ProblemsetSectionProps> = ({
   const router = useRouter();
 
   const totalProblemset = problemsets.length;
-  const searchParams = useSearchParams()
-  const ps = searchParams.get('ps')
+  const searchParams = useSearchParams();
+  const ps = searchParams.get('ps');
   const pathname = usePathname();
 
   const targetProblemset = ps ? parseInt(ps) : 1;

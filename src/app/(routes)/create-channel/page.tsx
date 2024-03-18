@@ -16,7 +16,7 @@ import { CurrentChannelContext } from "@/context/CurrentChannelContext";
 import { useContext, useState, useEffect, use } from "react";
 import { toast } from "react-hot-toast";
 import { ZodError, z } from 'zod'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import Avatar, { AvatarSize } from "@/components/shared/Avatar";
 import Button from "@/components/shared/Button";
@@ -31,12 +31,16 @@ interface readyDataType{
   imageSrc: string,
 }
 
+interface PageProps {
+  searchParams: {
+    [key: string]: string | string[] | undefined
+  }
+}
 
 
-export default function CreateChannelPage() {
+export default function CreateChannelPage({ searchParams }: PageProps) {
 
-  const searchParams = useSearchParams()
-  const encodedUrl = searchParams.get('e')
+  const encodedUrl = searchParams.e as string;
   const decodedUrl = decodeURIComponent(encodedUrl as string)
 
   const currentUser = useContext(CurrentUserContext);

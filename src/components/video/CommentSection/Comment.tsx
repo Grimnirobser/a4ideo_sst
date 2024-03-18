@@ -15,7 +15,7 @@ const Comment: React.FC<CommentProps> = ({ comment }) => {
       <Avatar imageSrc={comment.channel.imageSrc} />
       <div className="flex flex-col gap-1">
         <div className="flex gap-2 items-center text-sm">
-          <p className="font-medium">@{comment.channel.handle}</p>
+          <p className="font-medium">@{comment.channel.username}</p>
           <p className="font-light text-neutral-400">
             {dayjs(comment.createdAt).fromNow()}
           </p>

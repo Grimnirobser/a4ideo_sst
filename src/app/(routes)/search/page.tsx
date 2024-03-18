@@ -13,7 +13,7 @@ interface PageProps {
 
 export default function SearchPage({ searchParams }: PageProps) {
 
-  const searchQuery  = searchParams.searchQuery as string;
+  const searchQuery  = searchParams.key as string;
   const {data: videos, isLoading} = useQuery({
     queryKey: ['searchVideo'],
     queryFn: async() => await getSearchResults({searchQuery}),

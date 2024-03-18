@@ -15,7 +15,7 @@ const Search = () => {
     e.preventDefault();
 
     const query = {
-      searchQuery: text,
+      key: text,
     };
 
     const url = queryString.stringifyUrl(
