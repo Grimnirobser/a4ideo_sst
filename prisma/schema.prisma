@@ -118,6 +118,8 @@ model Problemset {
   auditedBy    String?
   likeCount    Int       @default(0)
   dislikeCount Int       @default(0)
+  attemptCount Int       @default(0)
+  passCount    Int       @default(0)
   createdAt    DateTime  @default(now())
   approved     Boolean   @default(false)
   suspended    Boolean   @default(false)
@@ -147,6 +149,7 @@ model Attempt {
   createdAt    DateTime @default(now())
   correct      Boolean  @default(false)
   score        Float    @default(0.00)
+  passedBefore Boolean  @default(false) // if the user has passed the problemset before, used to count avg attempt count to pass the problemset
 
   Channel Channel @relation(fields: [channelId], references: [id], onDelete: Cascade)
 }

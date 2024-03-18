@@ -8,6 +8,7 @@ import { Config } from 'sst/node/config'
 interface SubmitAttemptParams{
     channelId: string,
     problemsetId: string,
+    problemsetAuthorId: string,
     problems: Problem[],
     attempts: {attempt: string}[]
   }
@@ -73,7 +74,7 @@ export async function submitAttempt( params: SubmitAttemptParams
 
   
     try {
-        const {channelId, problemsetId, problems, attempts } = params;
+        const {channelId, problemsetId, problemsetAuthorId, problems, attempts } = params;
 
         if (!channelId) {
             throw new Error("Channel ID is required");
@@ -91,8 +92,11 @@ export async function submitAttempt( params: SubmitAttemptParams
 
         const result_prediction = result_lst.map((single_result, index) => single_result.prediction);
 
-
         const attemptStatus = result_prediction.every(check_PASSED);
+
+
+        // author's submission does not count
+        // if the attempt is passed before, this attempt does not count
 
         const existedAttempt = await prisma.attempt.findFirst({
             where: {
@@ -101,16 +105,37 @@ export async function submitAttempt( params: SubmitAttemptParams
             },
         });
 
-        if (!existedAttempt) {
-            const createdAttempt = await prisma.attempt.create({
-                data: {
+        let needCount = false;
+        let needCountPass = false;
+
+        if (!existedAttempt && attemptStatus === true) {
+            const createdAttemptPass = await prisma.attempt.create({
+                data: { 
                     channelId: channelId,
                     problemsetId: problemsetId,
-                    correct: attemptStatus
+                    correct: attemptStatus,
+                    passedBefore: true,
                 },
             });
-        }else{
-            const updatedAttempt = await prisma.attempt.update({
+            needCount = true;
+            needCountPass = true;
+
+        }else if (existedAttempt && attemptStatus === true){
+            needCount = !existedAttempt.passedBefore;
+            needCountPass = !existedAttempt.passedBefore;
+
+            const updatedAttemptPass = await prisma.attempt.update({
+                where: {
+                    id: existedAttempt.id,
+                },
+                data: {
+                    correct: attemptStatus,
+                    passedBefore: true,
+                },
+            });
+        }else if(existedAttempt && attemptStatus === false){
+            needCount = !existedAttempt.passedBefore;
+            const updatedAttemptFail = await prisma.attempt.update({
                 where: {
                     id: existedAttempt.id,
                 },
@@ -118,6 +143,48 @@ export async function submitAttempt( params: SubmitAttemptParams
                     correct: attemptStatus,
                 },
             });
+        }else{  
+            const createdAttemptFail = await prisma.attempt.create({
+                data: { 
+                    channelId: channelId,
+                    problemsetId: problemsetId,
+                    correct: attemptStatus,
+                },
+            });
+            needCount = true;
+        }
+
+
+        if(channelId !== problemsetAuthorId){   // does not count author submission
+            if(needCount){
+                const updatedProblemset = await prisma.problemset.update({
+                    where: {
+                        id: problemsetId,
+                    },
+                    data: {
+                        attemptCount: {
+                            increment: 1,
+                        },
+                    },
+                });
+            }
+
+            if(needCountPass){
+                const updatedProblemsetPass = await prisma.problemset.update({
+                    where: {
+                        id: problemsetId,
+                    },
+                    data: {
+                        attemptCount: {
+                            increment: 1,
+                        },
+                        passCount: {
+                            increment: 1,
+                        },
+                    },
+                });
+            }
+
         }
 
         return feedback;
@@ -126,10 +193,6 @@ export async function submitAttempt( params: SubmitAttemptParams
         throw new Error(error);
     }
 }
-
-
-
-  
 
 
   

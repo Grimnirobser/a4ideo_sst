@@ -3,7 +3,7 @@
 import { Channel, Problemset, Problem } from "@prisma/client";
 import { useState } from 'react'
 import ProblemPagination from "./ProblemPagination";
-import getAttemptByChannelId from "@/actions/getAttemptByChannelId"
+import getAttemptStatusByChannelId from "@/actions/getAttemptStatusByChannelId";
 import {StatusBasedTag} from "./StatusBasedTag"
 import { CurrentChannelContext } from "@/context/CurrentChannelContext";
 import { useContext } from "react";
@@ -41,6 +41,7 @@ interface ProblemsetSectionProps {
 interface readyDataType{
   channelId: string,
   problemsetId: string,
+  problemsetAuthorId: string,
   problems: Problem[],
   attempts: {attempt: string}[]
 }
@@ -81,7 +82,7 @@ const ProblemsetSection: React.FC<ProblemsetSectionProps> = ({
 
   const {data: attemptStatus, isLoading: LoadingStatus, refetch} = useQuery({
     queryKey: ['attemptStatus', currentChannel?.id, problemsets[target-1].id],
-    queryFn: async() => await getAttemptByChannelId({ problemsetId: problemsets[target-1].id, channelId: currentChannel?.id}),
+    queryFn: async() => await getAttemptStatusByChannelId({ problemsetId: problemsets[target-1].id, channelId: currentChannel?.id}),
     refetchOnWindowFocus: true,
     staleTime: 0,
     refetchInterval: 0,
@@ -144,6 +145,7 @@ const ProblemsetSection: React.FC<ProblemsetSectionProps> = ({
     const readyData = {
       channelId: currentChannel.id,
       problemsetId: problemsets[target-1].id,
+      problemsetAuthorId: problemsets[target-1].channelId,
       problems: problemsets[target-1].problems,
       attempts: data.attempts,
     }

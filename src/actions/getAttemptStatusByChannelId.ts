@@ -2,13 +2,13 @@
 
 import prisma from "@/vendor/db";
 
-interface GetAttemptByChannelIdParams {
+interface GetAttemptStatusByChannelIdParams {
     problemsetId: string;
     channelId?: string
 }   
 
-export default async function getAttemptByChannelId(
-  params: GetAttemptByChannelIdParams
+export default async function getAttemptStatusByChannelId(
+  params: GetAttemptStatusByChannelIdParams
 ): Promise<Boolean> {
 
   try {

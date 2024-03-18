@@ -12,11 +12,13 @@ import SubscribeButton from "../shared/SubscribeButton";
 interface ChannelHeaderProps {
   channel: Channel;
   videoCount: number;
+  problemsetCount: number;
 }
 
 const ChannelHeader: React.FC<ChannelHeaderProps> = ({
   channel,
   videoCount,
+  problemsetCount,
 }) => {
   const currentChannel = useContext(CurrentChannelContext);
 
@@ -31,6 +33,7 @@ const ChannelHeader: React.FC<ChannelHeaderProps> = ({
               channel.subscriberCount
             )} subscribers`}</p>
             <p>{`${compactNumberFormat(videoCount)} videos`}</p>
+            <p>{`${compactNumberFormat(problemsetCount)} problemsets`}</p>
           </div>
         </div>
       </div>

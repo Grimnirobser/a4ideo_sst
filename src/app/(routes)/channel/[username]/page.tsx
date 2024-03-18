@@ -17,7 +17,7 @@ export default async function ChannelPage({
 
   return channel ? (
     <div className="flex flex-col">
-      <ChannelHeader channel={channel} videoCount={videos.length} />
+      <ChannelHeader channel={channel} videoCount={videos.length} problemsetCount={problemsets.length}/>
       <div className="border-b-2 border-b-neutral-800 capitalize">
         <div className="text-center px-6 py-2 border-b-2 border-b-neutral-400 w-24 mx-auto md:mx-32">
           Videos
