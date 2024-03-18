@@ -13,15 +13,16 @@ import Link from 'next/link'
 import { useForm, FieldValues, SubmitHandler } from "react-hook-form";
 import { CurrentUserContext } from "@/context/CurrentUserContext";
 import { CurrentChannelContext } from "@/context/CurrentChannelContext";
-import { useContext } from "react";
+import { useContext, useState, useEffect, use } from "react";
 import { toast } from "react-hot-toast";
 import { ZodError, z } from 'zod'
-import { useRouter } from 'next/navigation'
-import { useMutation } from '@tanstack/react-query'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import Avatar, { AvatarSize } from "@/components/shared/Avatar";
 import Button from "@/components/shared/Button";
 import MediaUpload from "@/components/shared/MediaUpload";
-import getChannelByUsername from '@/actions/getChannelByUsername'
+import getChannelByUsername from '@/actions/getChannalByUsername'
+import { RightWrongIcon } from "@/components/shared/RightWrongIcon";
 
 interface readyDataType{
   userId: string,
@@ -31,204 +32,220 @@ interface readyDataType{
 }
 
 
-export default function UpdateChannelPage() {
+export default function SettingPage() {
 
-    const currentUser = useContext(CurrentUserContext);
-    const currentChannel = useContext(CurrentChannelContext);
-    const router = useRouter()
-    
-    const channelSchema = z.object({
-        username: z.string()
-          .min(1, {
-          message: "Username at least contains 1 character",
-          })
-          .max(20, {
-            message: "Username at most contains 20 character",
-          }),
-        imageSrc: z.string(),
-        })
-          .superRefine(({ username }, checkUsernameComplexity) => {
-            const containsUppercase = (ch: string) => /[A-Z]/.test(ch);
-            const containsLowercase = (ch: string) => /[a-z]/.test(ch);
-            const containsSpecialChar = (ch: string) =>
-              /[_\-/\\]/.test(ch);
-            let countOfUpperCase = 0,
-              countOfLowerCase = 0,
-              countOfNumbers = 0,
-              countOfSpecialChar = 0;
-            for (let i = 0; i < username.length; i++) {
-              let ch = username.charAt(i);
-              if (!isNaN(+ch)) countOfNumbers++;
-              else if (containsUppercase(ch)) countOfUpperCase++;
-              else if (containsLowercase(ch)) countOfLowerCase++;
-              else if (containsSpecialChar(ch)) countOfSpecialChar++;
-            }
-            if (
-              countOfNumbers+countOfUpperCase+countOfLowerCase+countOfSpecialChar !== username.length
-            ) {
-              checkUsernameComplexity.addIssue({
-                code: "custom",
-                path: ["username"],
-                message: "Username can only contain '_-/\\' as special characters",
-              });
-            }
-          })
-          .superRefine(({ username }, checkUsernameUniqueness) => {
-            const existingChannel = await getChannelByUsername({username});
-            if (existingChannel && existingChannel.username === username) {
-              checkUsernameUniqueness.addIssue({
-                code: "custom",
-                path: ["username"],
-                message: "Username already exists. Please choose another one.",
-              });
-            }
-          })
-  
-  
-      const form = useForm<z.infer<typeof channelSchema>>({
-        resolver: zodResolver(channelSchema),
-        defaultValues: {
-          username: "",
-          imageSrc: "",
-        },
-      })
-  
-    const { register, handleSubmit, formState: { errors }, watch, setValue} = form
-  
-    const imageSrc = watch("imageSrc");
-  
-    const handleImageUpload = (value: string) => {
-      setValue("imageSrc", value, {
-        shouldDirty: true,
-        shouldTouch: true,
-        shouldValidate: true,
-      });
-    };
-  
-  
-    const { mutate, mutateAsync, isPending } = useMutation({
-      mutationKey: ["createChannel"],
-      mutationFn: async(readyData: readyDataType) => await createChannel(readyData),
-  
-      onSuccess: () => {
-        toast.success("Channel created successfully.");
-        router.back();
+  const searchParams = useSearchParams()
+  const encodedUrl = searchParams.get('e')  //encodedUrl
+  const decodedUrl = decodeURIComponent(encodedUrl as string)
+
+  const currentUser = useContext(CurrentUserContext);
+  const currentChannel = useContext(CurrentChannelContext);
+  const router = useRouter()
+
+  useEffect(() => {
+    if (!currentUser || !currentChannel) {
+      if (decodedUrl === "") {
+        router.push("/");
+        toast.error("Something went wrong. Please try again.");
         router.refresh();
-      },
-  
-      onError: () => toast.error("Could not create a channel.")
-    })
-  
-    const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-  
-      const readyData = {
-        userId: currentUser!.id,
-        username: data.username,
-        imageSrc: data.imageSrc,
+      } else{
+        router.push(decodedUrl);
+        router.refresh();
       }
-      
-      mutateAsync(readyData);
-    };
-  
-  
-    if (!currentUser) {
+    }
+  }, [currentUser, currentChannel, decodedUrl, router]); 
+
+
+  const [tryUsername, setTryUsername] = useState<string>(currentChannel?.username || "");
+
+  const channelSchema = z.object({
+      username: z.string()
+        .min(1, {
+        message: "Username at least contains 1 character",
+        })
+        .max(25, {
+          message: "Username at most contains 25 character",
+        }),
+      imageSrc: z.string(),
+      })
+        .superRefine(({ username }, checkUsernameContent) => {
+          const containsUppercase = (ch: string) => /[A-Z]/.test(ch);
+          const containsLowercase = (ch: string) => /[a-z]/.test(ch);
+          const containsSpecialChar = (ch: string) =>
+            /[_\-/\\]/.test(ch);
+          let countOfUpperCase = 0,
+            countOfLowerCase = 0,
+            countOfNumbers = 0,
+            countOfSpecialChar = 0;
+          for (let i = 0; i < username.length; i++) {
+            let ch = username.charAt(i);
+            if (!isNaN(+ch)) countOfNumbers++;
+            else if (containsUppercase(ch)) countOfUpperCase++;
+            else if (containsLowercase(ch)) countOfLowerCase++;
+            else if (containsSpecialChar(ch)) countOfSpecialChar++;
+          }
+          if (
+            countOfNumbers+countOfUpperCase+countOfLowerCase+countOfSpecialChar !== username.length
+          ) {
+            checkUsernameContent.addIssue({
+              code: "custom",
+              path: ["username"],
+              message: "Username can only contain _-/\\ as special characters",
+            });
+          }
+        })
+        
+
+        
+    const form = useForm<z.infer<typeof channelSchema>>({
+      resolver: zodResolver(channelSchema),
+      defaultValues: {
+        username: currentChannel?.username || "",
+        imageSrc: currentChannel?.imageSrc || "",
+      },
+    })
+
+  const { register, handleSubmit, formState: { errors }, watch, setValue} = form
+
+  const imageSrc = watch("imageSrc");
+
+  const handleImageUpload = (value: string) => {
+    setValue("imageSrc", value, {
+      shouldDirty: true,
+      shouldTouch: true,
+      shouldValidate: true,
+    });
+  };
+
+  const {data: isUnique, isLoading} = useQuery({
+      queryKey: ['isUsernameUniqueForUpdate', tryUsername],
+      queryFn: async() => await getChannelByUsername({username: tryUsername}),
+  });
+
+  const { mutate, mutateAsync, isPending } = useMutation({
+    mutationKey: ["UpdateChannel", tryUsername],
+    mutationFn: async(readyData: readyDataType) => await fetch(process.env.NEXT_PUBLIC_SERVER_URL + `/api/update-channel/${currentUser!.id}`, {
+      method: "POST",
+      body: JSON.stringify(readyData),
+      headers: {
+        'Accept': 'application/json',
+        "Content-Type": "application/json",
+      },
+    
+    }),
+
+    onSuccess: () => {
+      if (decodedUrl === "") {
+        router.push("/");
+        router.refresh();
+      } else{
+        router.push(decodedUrl);
+        router.refresh();
+      }
+      toast.success("Changes saved.");
+    },
+
+    onError: () => toast.error("Something went wrong. Please try again.")
+  })
+
+  const onSubmit: SubmitHandler<FieldValues> = async (data) => {
+
+    const readyData = {
+      userId: currentUser!.id,
+      username: data.username,
+      handle: data.handle,
+      imageSrc: data.imageSrc,
+    }
+    
+    mutateAsync(readyData);
+  };
+
+  const handleCancel = () => {  
+    if (decodedUrl === "") {
       router.push("/");
-      toast.error("Please sign in to create a channel.");
-      return;
-    }else if(currentChannel) {
-      router.push("/");
-      return;
-    }else{
-      return (
-      <>
-        <title>Create Channel </title>
-        <div className='container relative flex pt-20 flex-col items-center justify-center lg:px-0'>
-          <div className='mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]'>
-            <div className='flex flex-col items-center space-y-2 text-center'>
-              {/* <Icons.logo className='h-20 w-20' /> */}
-              <h1 className='text-2xl font-semibold tracking-tight'>
-                Join In A4ideo
-              </h1>
-              <Avatar size={AvatarSize.large} imageSrc={imageSrc} />
-               <MediaUpload onChange={handleImageUpload}>
-                  <Button type="primary">Upload picture</Button>
-              </MediaUpload>
-            </div>
-  
-            <div className='grid gap-6'>
-              <form onSubmit={handleSubmit(onSubmit)}>
-                <div className='grid gap-2'>
-                  <div className='grid gap-1 py-2'>
-                    <Label htmlFor={"username"+currentUser.id}>Username</Label>
+      router.refresh();
+    } else{
+      router.push(decodedUrl);
+      router.refresh();
+    }
+  }
+
+    return (
+    <>
+      <title>Create Channel </title>
+      <div className='container relative flex pt-20 flex-col items-center justify-center lg:px-0'>
+        <div className='mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]'>
+          <div className='flex flex-col items-center space-y-2 text-center'>
+            <h1 className='text-2xl font-semibold'>
+              Change your preference
+            </h1>
+            <Avatar size={AvatarSize.large} imageSrc={imageSrc} />
+             <MediaUpload onChange={handleImageUpload}>
+                <Button type="primary">Upload picture</Button>
+            </MediaUpload>
+          </div>
+
+          <div className='grid gap-6'>
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <div className='grid gap-2'>
+              <div className='grid gap-1 py-2 space-y-2'>
+                  <Label htmlFor={"email"+currentUser?.id}>Email</Label>
+                  <div className='relative'> 
+                    <Input
+                      className={cn({
+                        'focus-visible:ring-red-500':
+                          errors.username,
+                      }, 'mr-6 text-lg'
+                      )}
+                      id={"email"+currentUser?.id}
+                      value={currentUser?.email as string}
+                      disabled={true}
+                    />
+                  </div>
+                </div>
+
+                <div className='grid gap-1 py-2 space-y-2'>
+                  <Label htmlFor={"username"+tryUsername}>Username</Label>
+                  <div className='relative'> 
                     <Input
                       {...register('username')}
                       className={cn({
                         'focus-visible:ring-red-500':
                           errors.username,
-                      })}
+                      }, 'mr-6 text-lg'
+                      )}
                       placeholder='username'
-                      id={"username"+currentUser.id}
+                      id={"username"+tryUsername}
+                      value={tryUsername}
+                      onChange={(ev) => setTryUsername(ev.target.value)}
+                      maxLength={25}
                     />
-                    {errors?.username && (
-                      <p className='text-sm text-red-500'>
-                        {errors.username.message}
-                      </p>
-                    )}
+                    <div className='absolute right-2 top-2'>
+                    { tryUsername ? (isLoading ? (<Loader2 className='h-6 w-6 animate-spin' />) : ( isUnique ? (<RightWrongIcon isCorrect={true} />) : <RightWrongIcon isCorrect={false} />)) : null}
+                    </div>
                   </div>
-  
-                  <div className='grid gap-1 py-2'>
-                    <Label htmlFor={"handle"+currentUser.id}>Handle</Label>
-                    <Input
-                      {...register('handle')}
-                      type='handle'
-                      className={cn({
-                        'focus-visible:ring-red-500':
-                          errors.handle,
-                      })}
-                      placeholder='handle'
-                      id={"handle"+currentUser.id}
-                    />
-                    {errors?.handle && (
-                      <p className='text-sm text-red-500'>
-                        {errors.handle.message}
-                      </p>
-                    )}
-                  </div>
-                  
-                  <h2 className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50">
-                    By create a channel, you agree to our
-                  <Link
-                    className={buttonVariants({
-                      variant: 'link',
-                      className: 'gap-1.5',
-                    })}
-                    href='/terms'>
-                    Terms
-                    </Link>
-                    &
-                    <Link
-                      className={buttonVariants({
-                        variant: 'link',
-                        className: 'gap-1.5',
-                      })}
-                      href='/privacy-policy'>
-                      Privacy
-                    </Link>
-                  </h2>
-  
-                  <UIButton disabled={isPending} className='text-lg'>
-                    {isPending && (
-                      <Loader2 className='mr-2 h-4 w-4 animate-spin' />
-                    )}
-                    Create Channel
-                  </UIButton>
-  
+                  {errors?.username && (
+                    <p className='text-sm text-red-500'>
+                      {errors.username.message}
+                    </p>
+                  )}
                 </div>
-              </form>
-            </div>
+
+                <UIButton disabled={isPending || isLoading} className='text-lg'>
+                  {isPending && (
+                    <Loader2 className='mr-2 h-4 w-4 animate-spin' />
+                  )}
+                  Confirm Changes
+                </UIButton>
+
+              </div>
+            </form>
+              <UIButton onClick={handleCancel} disabled={isPending || isLoading} className='text-lg bg-gray-400 text-primary-foreground hover:bg-slate-400/80'>
+                Cancel
+              </UIButton>
           </div>
         </div>
-      </>
-    )}
-  }
-  
+      </div>
+    </>
+  )
+}

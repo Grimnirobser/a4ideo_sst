@@ -36,13 +36,29 @@ interface readyDataType{
 export default function CreateChannelPage() {
 
   const searchParams = useSearchParams()
-  const encodedUrl = searchParams.get('encodedUrl')
+  const encodedUrl = searchParams.get('e')
   const decodedUrl = decodeURIComponent(encodedUrl as string)
 
   const currentUser = useContext(CurrentUserContext);
   const currentChannel = useContext(CurrentChannelContext);
-  const [tryUsername, setTryUsername] = useState<string>('');
   const router = useRouter()
+
+  useEffect(() => {
+    if (!currentUser || (currentUser && currentChannel)) {
+      if (decodedUrl === "") {
+        router.push("/");
+        toast.error("Something went wrong. Please try again.");
+        router.refresh();
+      } else{
+        router.push(decodedUrl);
+        router.refresh();
+      }
+    }
+  }, [currentUser, currentChannel, decodedUrl, router]); 
+
+
+
+  const [tryUsername, setTryUsername] = useState<string>('');
 
   const channelSchema = z.object({
       username: z.string()
@@ -146,19 +162,6 @@ export default function CreateChannelPage() {
     
     mutateAsync(readyData);
   };
-
-    useEffect(() => {
-      if (!currentUser || (currentUser && currentChannel)) {
-        if (decodedUrl === "") {
-          router.push("/");
-          toast.error("Something went wrong. Please try again.");
-          router.refresh();
-        } else{
-          router.push(decodedUrl);
-          router.refresh();
-        }
-      }
-    }, [currentUser, currentChannel, decodedUrl, router]); 
 
 
     return (

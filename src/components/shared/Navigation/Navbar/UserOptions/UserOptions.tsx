@@ -25,6 +25,7 @@ const UserOptions = () => {
   const currentChannel = useContext(CurrentChannelContext);
   const router = useRouter();
   const path = usePathname();
+  const encodedUrl = encodeURIComponent(path);
 
   if (currentUser && currentChannel) {
     return (
@@ -65,20 +66,20 @@ const UserOptions = () => {
           <w3m-button/>
         </DropdownMenuItem>
 
-        {/* <DropdownMenuItem className='cursor-pointer text-base'
-            onClick={() => {
-              router.push(`/studio`);
-              
-            }}>
-              Preference
-        </DropdownMenuItem>     */}
-
-          <DropdownMenuItem className='cursor-pointer text-base'
+        <DropdownMenuItem className='cursor-pointer text-base mt-2'
             onClick={() => {
                 router.push(`/studio`);
             }}>
           Studio
         </DropdownMenuItem>
+
+        <DropdownMenuItem className='cursor-pointer text-base'
+            onClick={() => {
+              router.push(`/settings?e=${encodedUrl}`);
+              
+            }}>
+              Settings
+        </DropdownMenuItem>    
     
         <DropdownMenuItem className='cursor-pointer text-base' onClick={() => {
             signOut();
@@ -96,7 +97,7 @@ const UserOptions = () => {
     return <SignOutButton />
   }
   else{
-    return <SignInButton path={path}/>
+    return <SignInButton encodedUrl={encodedUrl}/>
   }
 
 };
