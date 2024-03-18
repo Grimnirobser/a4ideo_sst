@@ -2,6 +2,7 @@
 
 import { useContext } from "react";
 import SignInButton from "./SignInButton";
+import SignOutButton from "./SignOutButton";
 import { CurrentUserContext } from "@/context/CurrentUserContext";
 import IconButton from "@/components/shared/IconButton";
 import { MdOutlineVideoCall } from "react-icons/md";
@@ -18,15 +19,15 @@ import {
 import { signOut } from "next-auth/react";
 import { usePathname } from 'next/navigation'
 
+
 const UserOptions = () => {
   const currentUser = useContext(CurrentUserContext);
   const currentChannel = useContext(CurrentChannelContext);
   const router = useRouter();
-  const pathname = usePathname()
+  const path = usePathname();
 
   if (currentUser && currentChannel) {
-
-    return ( 
+    return (
     <>
       <div className="flex items-center gap-4 mr-4">
         <IconButton onClick={() => router.push("/studio/upload")} className="mr-4">
@@ -90,17 +91,12 @@ const UserOptions = () => {
         </DropdownMenu>
      
       </div>
-    </>)
+    </>);
   }else if(currentUser){
-    if (pathname === "/create-channel"){
-      return <SignInButton />
-    }else{
-      router.push("/create-channel")
-      return <SignInButton />
-    }
+    return <SignOutButton />
   }
   else{
-    return <SignInButton />
+    return <SignInButton path={path}/>
   }
 
 };

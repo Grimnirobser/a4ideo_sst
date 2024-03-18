@@ -13,18 +13,16 @@ import Link from 'next/link'
 import { useForm, FieldValues, SubmitHandler } from "react-hook-form";
 import { CurrentUserContext } from "@/context/CurrentUserContext";
 import { CurrentChannelContext } from "@/context/CurrentChannelContext";
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect, use } from "react";
 import { toast } from "react-hot-toast";
 import { ZodError, z } from 'zod'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import Avatar, { AvatarSize } from "@/components/shared/Avatar";
 import Button from "@/components/shared/Button";
 import MediaUpload from "@/components/shared/MediaUpload";
 import getChannelByUsername from '@/actions/getChannalByUsername'
 import { RightWrongIcon } from "@/components/shared/RightWrongIcon";
-
-
 
 interface readyDataType{
   userId: string,
@@ -34,7 +32,12 @@ interface readyDataType{
 }
 
 
+
 export default function CreateChannelPage() {
+
+  const searchParams = useSearchParams()
+  const encodedUrl = searchParams.get('encodedUrl')
+  const decodedUrl = decodeURIComponent(encodedUrl as string)
 
   const currentUser = useContext(CurrentUserContext);
   const currentChannel = useContext(CurrentChannelContext);
@@ -101,13 +104,13 @@ export default function CreateChannelPage() {
   };
 
   const {data: isUnique, isLoading} = useQuery({
-      queryKey: ['isUsernameUnique', tryUsername + currentUser!.id],
+      queryKey: ['isUsernameUnique', tryUsername],
       queryFn: async() => await getChannelByUsername({username: tryUsername}),
 
   });
 
   const { mutate, mutateAsync, isPending } = useMutation({
-    mutationKey: ["createChannel", tryUsername + currentUser!.id],
+    mutationKey: ["createChannel", tryUsername],
     mutationFn: async(readyData: readyDataType) => await fetch(process.env.NEXT_PUBLIC_SERVER_URL + `/api/channels/${currentUser!.id}`, {
       method: "POST",
       body: JSON.stringify(readyData),
@@ -120,8 +123,13 @@ export default function CreateChannelPage() {
 
     onSuccess: () => {
       toast.success("Channel created successfully.");
-      router.back();
-      router.refresh();
+      if (decodedUrl === "") {
+        router.push("/");
+        router.refresh();
+      } else{
+        router.push(decodedUrl);
+        router.refresh();
+      }
     },
 
     onError: () => toast.error("Something went wrong. Please try again.")
@@ -139,15 +147,20 @@ export default function CreateChannelPage() {
     mutateAsync(readyData);
   };
 
+    useEffect(() => {
+      if (!currentUser || (currentUser && currentChannel)) {
+        if (decodedUrl === "") {
+          router.push("/");
+          toast.error("Something went wrong. Please try again.");
+          router.refresh();
+        } else{
+          router.push(decodedUrl);
+          router.refresh();
+        }
+      }
+    }, [currentUser, currentChannel, decodedUrl, router]); 
 
-  if (!currentUser) {
-    router.push("/");
-    toast.error("Please sign in to create a channel.");
-    return;
-  }else if(currentChannel) {
-    router.push("/");
-    return;
-  }else{
+
     return (
     <>
       <title>Create Channel </title>
@@ -167,7 +180,7 @@ export default function CreateChannelPage() {
             <form onSubmit={handleSubmit(onSubmit)}>
               <div className='grid gap-2'>
                 <div className='grid gap-1 py-2 space-y-2'>
-                  <Label htmlFor={"username"+currentUser.id+tryUsername}>Username</Label>
+                  <Label htmlFor={"username"+tryUsername}>Username</Label>
                   <div className='relative'> 
                     <Input
                       {...register('username')}
@@ -177,7 +190,7 @@ export default function CreateChannelPage() {
                       }, 'mr-6 text-lg'
                       )}
                       placeholder='username'
-                      id={"username"+currentUser.id+tryUsername}
+                      id={"username"+tryUsername}
                       value={tryUsername}
                       onChange={(ev) => setTryUsername(ev.target.value)}
                       maxLength={25}
@@ -231,5 +244,5 @@ export default function CreateChannelPage() {
         </div>
       </div>
     </>
-  )}
+  )
 }
