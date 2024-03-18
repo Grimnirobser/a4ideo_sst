@@ -31,8 +31,6 @@ interface AnswerType{
 }
 
 
-
-
 export async function createProblemset( params: CreateProblemsetParams
     ): Promise<Problemset>{
   
@@ -58,8 +56,6 @@ export async function createProblemset( params: CreateProblemsetParams
               channelId: channelId,
             },
           });
-
-        
 
       
         const problemsWithProblemsetId: problemWithProblemsetIdProps[] = problems.map((item: problemProps) => ({

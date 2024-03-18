@@ -9,11 +9,8 @@ import getCurrentUser from "@/actions/getCurrentUser";
 interface CreateChannelParams{
     userId: string;
     username: string;
-    handle: string;
     imageSrc: string;
 }
-
-
 
 export async function createChannel( params: CreateChannelParams
     ): Promise<Channel>{
@@ -24,7 +21,7 @@ export async function createChannel( params: CreateChannelParams
             throw new Error("Request not sign in.");
         }
 
-        const { userId, username, handle, imageSrc } = params;
+        const { userId, username, imageSrc } = params;
 
         if (currentUser.id !== userId) {
             throw new Error("Two user ids do not match.");
@@ -32,18 +29,24 @@ export async function createChannel( params: CreateChannelParams
 
         const existingChannel = await prisma.channel.findFirst({
             where: {
-                userId,
+                OR: [
+                    {
+                        username: username,
+                    },
+                    {
+                        userId: userId,
+                    },
+                ],
             },
         });
 
         if (existingChannel) {
-            throw new Error("Channel already exists.");
+            throw new Error("Username already exists.");
         }
 
         const channel = await prisma.channel.create({
             data: {
                 username,
-                handle,
                 imageSrc,
                 userId,
             },

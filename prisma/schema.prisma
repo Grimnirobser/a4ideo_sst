@@ -54,8 +54,7 @@ model Account {
 model Channel {
   id                    String   @id @default(nanoid())
   userId                String   @unique
-  username              String
-  handle                String
+  username              String   @unique
   imageSrc              String
   createdAt             DateTime @default(now())
   subscriberCount       Int      @default(0)

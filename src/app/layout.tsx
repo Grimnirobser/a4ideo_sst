@@ -11,7 +11,7 @@ import { Web3provider } from "@/context/Web3Provider";
 import { constructMetadata } from "@/utils/websiteUtils";
 import Provider from "@/context/Provider";
 import ProgressBarProvider from "@/context/ProgressBarProvider";
-
+import { submitAttemptInitAction } from "@/actions/submitAttempt";
 
 const roboto = Roboto({
   subsets: ["latin"],
@@ -27,6 +27,8 @@ export default async function RootLayout({
 }) {
   const currentUser = await getCurrentUser();
   const currentChannel = await getCurrentChannel();
+
+  await submitAttemptInitAction();
 
   return (
     <html lang="en">

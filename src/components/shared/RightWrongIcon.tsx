@@ -2,7 +2,7 @@
 export const RightWrongIcon = ({ isCorrect }: { isCorrect: boolean }) => {
 
     return (
-        <div className="flex items-center">
+        <div className="flex items-center justify-center">
             {isCorrect ? (
                 <svg
                     xmlns="http://www.w3.org/2000/svg"

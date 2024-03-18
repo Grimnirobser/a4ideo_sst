@@ -27,7 +27,6 @@ const ChannelHeader: React.FC<ChannelHeaderProps> = ({
         <div className="flex flex-col pt-4 gap-4 md:gap-0">
           <h1 className="text-2xl text-center md:text-start">{channel.username}</h1>
           <div className="flex flex-col md:flex-row items-center gap-1 md:gap-3 text-stone-400">
-            <p className="font-medium">{`@${channel.handle}`}</p>
             <p>{`${compactNumberFormat(
               channel.subscriberCount
             )} subscribers`}</p>

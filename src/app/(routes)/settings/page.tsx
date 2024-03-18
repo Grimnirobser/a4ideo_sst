@@ -21,7 +21,7 @@ import { useMutation } from '@tanstack/react-query'
 import Avatar, { AvatarSize } from "@/components/shared/Avatar";
 import Button from "@/components/shared/Button";
 import MediaUpload from "@/components/shared/MediaUpload";
-import { createChannel } from '@/actions/createChannel'
+import getChannelByUsername from '@/actions/getChannelByUsername'
 
 interface readyDataType{
   userId: string,
@@ -29,8 +29,6 @@ interface readyDataType{
   handle: string,
   imageSrc: string,
 }
-
-
 
 
 export default function UpdateChannelPage() {
@@ -46,13 +44,6 @@ export default function UpdateChannelPage() {
           })
           .max(20, {
             message: "Username at most contains 20 character",
-          }),
-        handle: z.string()
-        .min(1, {
-          message: "Handle at least contains 1 character",
-          })
-          .max(20, {
-            message: "Handle at most contains 20 character",
           }),
         imageSrc: z.string(),
         })
@@ -82,29 +73,13 @@ export default function UpdateChannelPage() {
               });
             }
           })
-          .superRefine(({ handle }, checkHandleComplexity) => {
-            const containsUppercase = (ch: string) => /[A-Z]/.test(ch);
-            const containsLowercase = (ch: string) => /[a-z]/.test(ch);
-            const containsSpecialChar = (ch: string) =>
-              /[_\-/\\]/.test(ch);
-            let countOfUpperCase = 0,
-              countOfLowerCase = 0,
-              countOfNumbers = 0,
-              countOfSpecialChar = 0;
-            for (let i = 0; i < handle.length; i++) {
-              let ch = handle.charAt(i);
-              if (!isNaN(+ch)) countOfNumbers++;
-              else if (containsUppercase(ch)) countOfUpperCase++;
-              else if (containsLowercase(ch)) countOfLowerCase++;
-              else if (containsSpecialChar(ch)) countOfSpecialChar++;
-            }
-            if (
-              countOfNumbers+countOfUpperCase+countOfLowerCase+countOfSpecialChar !== handle.length
-            ) {
-              checkHandleComplexity.addIssue({
+          .superRefine(({ username }, checkUsernameUniqueness) => {
+            const existingChannel = await getChannelByUsername({username});
+            if (existingChannel && existingChannel.username === username) {
+              checkUsernameUniqueness.addIssue({
                 code: "custom",
-                path: ["handle"],
-                message: "Handle can only contain '_-/\\' as special characters",
+                path: ["username"],
+                message: "Username already exists. Please choose another one.",
               });
             }
           })
@@ -114,7 +89,6 @@ export default function UpdateChannelPage() {
         resolver: zodResolver(channelSchema),
         defaultValues: {
           username: "",
-          handle: "",
           imageSrc: "",
         },
       })
@@ -150,7 +124,6 @@ export default function UpdateChannelPage() {
       const readyData = {
         userId: currentUser!.id,
         username: data.username,
-        handle: data.handle,
         imageSrc: data.imageSrc,
       }
       

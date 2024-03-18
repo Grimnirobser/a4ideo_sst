@@ -18,17 +18,14 @@ import {
 import { signOut } from "next-auth/react";
 import { usePathname } from 'next/navigation'
 
-
-
-
 const UserOptions = () => {
   const currentUser = useContext(CurrentUserContext);
   const currentChannel = useContext(CurrentChannelContext);
   const router = useRouter();
   const pathname = usePathname()
 
-
   if (currentUser && currentChannel) {
+
     return ( 
     <>
       <div className="flex items-center gap-4 mr-4">

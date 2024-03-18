@@ -32,7 +32,7 @@ interface AttemptFeedback{
 }
 
 
-export async function initAction(){} // dirty work related to next.js issue https://github.com/vercel/next.js/issues/54282
+export async function submitAttemptInitAction(){} // dirty work related to next.js issue https://github.com/vercel/next.js/issues/54282
 
 async function query(data:QueryFormat): Promise<compareReturnType> {
 
