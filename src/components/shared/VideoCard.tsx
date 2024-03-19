@@ -31,6 +31,7 @@ const VideoCard: React.FC<VideoCardProps> = ({
           className={`relative aspect-video ${isVertical ? "w-full" : "w-2/5"}`}
         >
           <Image
+            unoptimized
             className="object-cover rounded-lg"
             src={video.thumbnailSrc}
             alt={`Thumbnail for ${video.title}`}

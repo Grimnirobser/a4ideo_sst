@@ -36,7 +36,8 @@ const YoutubePlayer = ({ youtubeId }: VideoProps) => {
           <Iframe
             className="w-full aspect-video z-[5] rounded-xl"
             url={`https://www.youtube.com/embed/${youtubeId}`}
-            allow="autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+            allow="autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture;"
+            allowFullScreen
             ></Iframe>
         </div>
       ) : (
