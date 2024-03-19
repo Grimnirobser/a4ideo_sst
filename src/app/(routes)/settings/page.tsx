@@ -9,7 +9,6 @@ import { Label } from '@/components/ui/label'
 import { cn } from '@/lib/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Loader2 } from 'lucide-react'
-import Link from 'next/link'
 import { useForm, FieldValues, SubmitHandler } from "react-hook-form";
 import { CurrentUserContext } from "@/context/CurrentUserContext";
 import { CurrentChannelContext } from "@/context/CurrentChannelContext";
@@ -46,6 +45,9 @@ export default function SettingPage({ searchParams }: PageProps) {
   const currentUser = useContext(CurrentUserContext);
   const currentChannel = useContext(CurrentChannelContext);
   const router = useRouter()
+
+  const previousImgSrc = currentChannel?.imageSrc;
+  const previousUsername = currentChannel?.username;
 
   useEffect(() => {
     if (!currentUser || !currentChannel) {
@@ -98,6 +100,11 @@ export default function SettingPage({ searchParams }: PageProps) {
               message: "Username can only contain _-/\\ as special characters",
             });
           }
+        })
+        .refine(({ username,  imageSrc}) => username !== previousUsername || imageSrc !== previousImgSrc,
+        {
+          path: ["username"],
+          message: "No change has been made.",
         })
         
 
@@ -226,7 +233,7 @@ export default function SettingPage({ searchParams }: PageProps) {
                       maxLength={25}
                     />
                     <div className='absolute right-2 top-2'>
-                    { tryUsername ? (isLoading ? (<Loader2 className='h-6 w-6 animate-spin' />) : ( isUnique ? (<RightWrongIcon isCorrect={true} />) : <RightWrongIcon isCorrect={false} />)) : null}
+                    { tryUsername ? (isLoading ? (<Loader2 className='h-6 w-6 animate-spin' />) : ( (isUnique || tryUsername === previousUsername) ? (<RightWrongIcon isCorrect={true} />) : <RightWrongIcon isCorrect={false} />)) : null}
                     </div>
                   </div>
                   {errors?.username && (
