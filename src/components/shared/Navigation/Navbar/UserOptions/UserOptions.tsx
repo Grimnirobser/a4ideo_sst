@@ -54,17 +54,17 @@ const UserOptions = () => {
               {currentChannel.username}
             </p>
 
-            <p className='font-medium text-base text-black'>
+            {/* <p className='font-medium text-base text-black'>
               {currentChannel.balance} AIV coin
-            </p>
+            </p> */}
           </div>
         </div>
     
         <DropdownMenuSeparator />
                       
-        <DropdownMenuItem asChild className='cursor-pointer'>
+        {/* <DropdownMenuItem asChild className='cursor-pointer'>
           <w3m-button/>
-        </DropdownMenuItem>
+        </DropdownMenuItem> */}
 
         <DropdownMenuItem className='cursor-pointer text-base mt-2'
             onClick={() => {

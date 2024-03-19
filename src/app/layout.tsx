@@ -34,7 +34,7 @@ export default async function RootLayout({
     <html lang="en">
       <body className={roboto.className}>
         <Provider> 
-          <Web3provider>
+          {/* <Web3provider> */}
             <Toaster toastOptions={{ position: "bottom-right" }} />
             <CurrentUserProvider user={currentUser}>
               <CurrentChannelProvider channel={currentChannel}>
@@ -50,7 +50,7 @@ export default async function RootLayout({
                 {/* </UploadVideoModalProvider> */}
               </CurrentChannelProvider>
             </CurrentUserProvider>
-            </Web3provider>
+            {/* </Web3provider> */}
         </Provider>
       </body>
     </html>
