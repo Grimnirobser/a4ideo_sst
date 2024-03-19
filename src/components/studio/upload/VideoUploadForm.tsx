@@ -72,6 +72,7 @@ const VideoUploadForm: React.FC<VideoUploadFormProps> = ({
         >
           {thumbnailSrc ? (
             <Image
+              
               src={thumbnailSrc}
               alt="thumbnail"
               height="124"
