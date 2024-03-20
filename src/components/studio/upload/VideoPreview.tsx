@@ -2,10 +2,8 @@
 
 import IconButton from "@/components/shared/IconButton";
 import { useEffect, useState } from "react";
-
 import { MdOutlineContentCopy } from "react-icons/md";
-
-import { toast } from "react-hot-toast";
+import { useToast } from "@/components/ui/use-toast"
 
 interface VideoPreviewProps {
   videoId: string;
@@ -14,6 +12,7 @@ interface VideoPreviewProps {
 
 const VideoPreview: React.FC<VideoPreviewProps> = ({ videoId, videoSrc }) => {
   const [videoLink, setVideoLink] = useState("");
+  const { toast } = useToast();
 
   useEffect(() => {
     setVideoLink(`${window.location.host}/video/${videoId}`);
@@ -22,7 +21,11 @@ const VideoPreview: React.FC<VideoPreviewProps> = ({ videoId, videoSrc }) => {
   const copyLink = () => {
     navigator.clipboard
       .writeText(videoLink)
-      .then(() => toast.success("Link copied to clipboard"));
+      .then(() => toast({
+        variant: "success",
+        title: "Success",
+        description: "Video added."})
+      );
   };
   return (
     <div className="w-full md:w-2/5 flex flex-col overflow-hidden rounded-md">

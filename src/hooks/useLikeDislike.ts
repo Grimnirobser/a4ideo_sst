@@ -1,6 +1,6 @@
 import { useRouter } from "next/navigation";
 import { useCallback, useContext, useMemo } from "react";
-import { toast } from "react-hot-toast";
+import { useToast } from "@/components/ui/use-toast"
 import { CurrentChannelContext } from "@/context/CurrentChannelContext";
 
 interface UseLikeDislikeProps {
@@ -16,9 +16,8 @@ export enum LikeDislikeStatus {
 export const useLikeDislike = ({ videoId }: UseLikeDislikeProps) => {
 
   const currentChannel = useContext(CurrentChannelContext);
-
-
   const router = useRouter();
+  const { toast } = useToast();
 
   const likeDislikeStatus = useMemo(() => {
     if (!currentChannel || !videoId) return false;
@@ -87,12 +86,19 @@ export const useLikeDislike = ({ videoId }: UseLikeDislikeProps) => {
         }
 
         router.refresh();
-        toast.success("Success!");
+        toast({
+          variant: "success",
+          title: "Success",
+        });
       } catch (error) {
-        toast.error("There was an error");
-      }
+        toast({
+          variant: "error",
+          title: "Error",
+          description: "Something went wrong, please try again.", 
+         })      
+        }
     },
-    [currentChannel, videoId, likeDislikeStatus, router]
+    [currentChannel, videoId, likeDislikeStatus, router, toast]
   );
 
   return {

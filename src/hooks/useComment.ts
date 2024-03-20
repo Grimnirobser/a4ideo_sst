@@ -1,6 +1,6 @@
 import { CurrentChannelContext } from "@/context/CurrentChannelContext";
 import { useCallback, useContext, useState } from "react";
-import { toast } from "react-hot-toast";
+import { useToast } from "@/components/ui/use-toast"
 import { useRouter } from "next/navigation";
 import axios from "axios";
 
@@ -11,6 +11,7 @@ interface UseCommentProps {
 export const useComment = ({ videoId }: UseCommentProps) => {
   const currentChannel = useContext(CurrentChannelContext);
   const router = useRouter();
+  const { toast } = useToast();
 
   const [text, setText] = useState("");
 
@@ -30,23 +31,29 @@ export const useComment = ({ videoId }: UseCommentProps) => {
 
     try {
       if (text.trim()) {
-        await axios
-          .post(`/api/comments/${videoId}`, data)
-          .then(() => setText(""));
+        await fetch(`/api/comments/${videoId}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }).then(() => setText(""));
       }
 
       router.refresh();
-      toast.success("Comment added successfully!");
+      toast({
+        variant: "success",
+        title: "Success",
+        description: "Comment successfully added.",
+      });
     } catch (error) {
-      toast.error("Could not comment");
+      toast({
+        variant: "error",
+        title: "Error",
+        description: "Could not comment, please try again.", 
+       })
     }
-  }, [
-    currentChannel,
-    videoId,
-    text,
-    setText,
-    router,
-  ]);
+  }, [currentChannel, videoId, text, setText, router, toast]);
 
   return {
     text,

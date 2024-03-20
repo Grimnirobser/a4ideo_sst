@@ -44,7 +44,7 @@ export const SingleFeedback: React.FC<AttemptFeedback> = ({
                             <div className={`flex mr-4 text-left ${fail.includes(index) 
                                     ? "text-red-500"
                                     : "text-slate-600"
-                                } text-xl font-sans antialiased break-words`}>
+                                } text-xl font-sans antialiased break-words hyphens-auto`}>
                                 {sentence}
                             </div>
                         </Badge>

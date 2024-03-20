@@ -3,7 +3,6 @@ import "./globals.css";
 import { Roboto } from "next/font/google";
 import CurrentUserProvider from "@/context/CurrentUserContext";
 import getCurrentUser from "@/actions/getCurrentUser";
-import { Toaster } from "react-hot-toast";
 import getCurrentChannel from "@/actions/getCurrentChannel";
 import CurrentChannelProvider from "@/context/CurrentChannelContext";
 import SidebarProvider from "@/context/SidebarContext";
@@ -12,6 +11,7 @@ import { constructMetadata } from "@/utils/websiteUtils";
 import Provider from "@/context/Provider";
 import ProgressBarProvider from "@/context/ProgressBarProvider";
 import { submitAttemptInitAction } from "@/actions/submitAttempt";
+import { Toaster } from "@/components/ui/toaster"
 
 const roboto = Roboto({
   subsets: ["latin"],
@@ -34,8 +34,7 @@ export default async function RootLayout({
     <html lang="en">
       <body className={roboto.className}>
         <Provider> 
-          {/* <Web3provider> */}
-            <Toaster toastOptions={{ position: "bottom-right" }} />
+            <Toaster />
             <CurrentUserProvider user={currentUser}>
               <CurrentChannelProvider channel={currentChannel}>
                 {/* <UploadVideoModalProvider> */}
@@ -50,7 +49,6 @@ export default async function RootLayout({
                 {/* </UploadVideoModalProvider> */}
               </CurrentChannelProvider>
             </CurrentUserProvider>
-            {/* </Web3provider> */}
         </Provider>
       </body>
     </html>

@@ -13,7 +13,6 @@ import { useForm, FieldValues, SubmitHandler } from "react-hook-form";
 import { CurrentUserContext } from "@/context/CurrentUserContext";
 import { CurrentChannelContext } from "@/context/CurrentChannelContext";
 import { useContext, useState, useEffect, use } from "react";
-import { toast } from "react-hot-toast";
 import { ZodError, z } from 'zod'
 import { useRouter } from 'next/navigation'
 import { useMutation, useQuery } from '@tanstack/react-query'
@@ -22,6 +21,8 @@ import Button from "@/components/shared/Button";
 import MediaUpload from "@/components/shared/MediaUpload";
 import getChannelByUsername from '@/actions/getChannalByUsername'
 import { RightWrongIcon } from "@/components/shared/RightWrongIcon";
+import { useToast } from "@/components/ui/use-toast"
+
 
 interface readyDataType{
   userId: string,
@@ -48,19 +49,21 @@ export default function SettingPage({ searchParams }: PageProps) {
 
   const previousImgSrc = currentChannel?.imageSrc;
   const previousUsername = currentChannel?.username;
+  const { toast } = useToast()
 
   useEffect(() => {
     if (!currentUser || !currentChannel) {
       if (decodedUrl === "") {
         router.push("/");
-        toast.error("Something went wrong. Please try again.");
-        router.refresh();
       } else{
         router.push(decodedUrl);
-        router.refresh();
       }
+      toast({
+        variant: "error",
+        title: "Unauthorized request.",
+      });
     }
-  }, [currentUser, currentChannel, decodedUrl, router]); 
+  }, [currentUser, currentChannel, decodedUrl, router, toast]); 
 
 
   const [tryUsername, setTryUsername] = useState<string>(currentChannel?.username || "");
@@ -149,15 +152,22 @@ export default function SettingPage({ searchParams }: PageProps) {
     onSuccess: () => {
       if (decodedUrl === "") {
         router.push("/");
-        router.refresh();
       } else{
         router.push(decodedUrl);
         router.refresh();
       }
-      toast.success("Changes saved.");
+      toast({
+        variant: "success",
+        title: "Success",
+        description: "Changes saved.",
+      });
     },
 
-    onError: () => toast.error("Something went wrong. Please try again.")
+    onError: () => toast({
+      variant: "error",
+      title: "Error",
+      description: "Something went wrong, please try again.",
+    })
   })
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
