@@ -14,7 +14,6 @@ import { useForm, FieldValues, SubmitHandler } from "react-hook-form";
 import { CurrentUserContext } from "@/context/CurrentUserContext";
 import { CurrentChannelContext } from "@/context/CurrentChannelContext";
 import { useContext, useState, useEffect, use } from "react";
-import { toast } from "react-hot-toast";
 import { ZodError, z } from 'zod'
 import { useRouter } from 'next/navigation'
 import { useMutation, useQuery } from '@tanstack/react-query'
@@ -23,6 +22,7 @@ import Button from "@/components/shared/Button";
 import MediaUpload from "@/components/shared/MediaUpload";
 import getChannelByUsername from '@/actions/getChannalByUsername'
 import { RightWrongIcon } from "@/components/shared/RightWrongIcon";
+import { useToast } from "@/components/ui/use-toast"
 
 interface readyDataType{
   userId: string,
@@ -46,19 +46,22 @@ export default function CreateChannelPage({ searchParams }: PageProps) {
   const currentUser = useContext(CurrentUserContext);
   const currentChannel = useContext(CurrentChannelContext);
   const router = useRouter()
+  const { toast } = useToast()
 
   useEffect(() => {
     if (!currentUser || (currentUser && currentChannel)) {
-      if (decodedUrl === "") {
+      if (!encodedUrl || decodedUrl === "") {
         router.push("/");
-        toast.error("Something went wrong. Please try again.");
-        router.refresh();
       } else{
         router.push(decodedUrl);
-        router.refresh();
       }
+      toast({
+        variant: "error",
+        title: "Error",
+        description: "Unauthorized request.",
+      });
     }
-  }, [currentUser, currentChannel, decodedUrl, router]); 
+  }, [currentUser, currentChannel, encodedUrl, decodedUrl, router, toast]); 
 
 
 
@@ -142,7 +145,6 @@ export default function CreateChannelPage({ searchParams }: PageProps) {
     }),
 
     onSuccess: () => {
-      toast.success("Channel created successfully.");
       if (decodedUrl === "") {
         router.push("/");
         router.refresh();
@@ -150,9 +152,19 @@ export default function CreateChannelPage({ searchParams }: PageProps) {
         router.push(decodedUrl);
         router.refresh();
       }
+      toast({
+        variant: "success",
+        title: "Success",
+        description: "Channel successfully created.",
+      });
     },
 
-    onError: () => toast.error("Something went wrong. Please try again.")
+    onError: () => toast({
+        variant: "error",
+        title: "Error",
+        description: "Something went wrong, please try again.",
+      })
+    
   })
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {

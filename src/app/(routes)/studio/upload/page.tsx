@@ -10,7 +10,7 @@ import { useContext, useState } from "react";
 import ProblemsetUploadForm from "@/components/studio/upload/ProblemsetUploadForm";
 import { useForm, FieldValues, SubmitHandler, useFieldArray } from "react-hook-form";
 
-import { toast } from "react-hot-toast";
+import { useToast } from "@/components/ui/use-toast"
 import { useProtectedRoute } from "@/hooks/useProtectedRoute";
 import { useMutation } from "@tanstack/react-query"
 import { createVideo } from "@/actions/createVideo";
@@ -45,6 +45,7 @@ export default function UploadPage() {
 
   const currentChannel = useContext(CurrentChannelContext);
   const router = useRouter();
+  const { toast } = useToast();
 
   const {
     control,
@@ -90,12 +91,21 @@ export default function UploadPage() {
     mutationFn: async(videoData: VideoDataType) => await createVideo(videoData),
 
     onSuccess: () => {
-      toast.success("Video published successfully");
+      toast({
+        variant: "success",
+        title: "Success",
+        description: "Video successfully published.",
+      });
       router.push("/studio");
       router.refresh();
+
     },
 
-    onError: () => toast.error("Could not publish video")
+    onError: () =>  toast({
+      variant: "error",
+      title: "Error",
+      description: "Something went wrong, please try again.", 
+     })
   })
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {

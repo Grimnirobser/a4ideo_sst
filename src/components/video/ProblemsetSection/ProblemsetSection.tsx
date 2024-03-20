@@ -25,7 +25,7 @@ import { useForm, FieldValues, SubmitHandler } from "react-hook-form";
 import { Skeleton } from "@/components/ui/skeleton"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { set, z } from "zod"
-import { toast } from "react-hot-toast";
+import { useToast } from "@/components/ui/use-toast"
 import { Loader2 } from 'lucide-react'
 import { compliment, insult } from "@/lib/words";
 import { submitAttempt } from "@/actions/submitAttempt";
@@ -51,6 +51,7 @@ const ProblemsetSection: React.FC<ProblemsetSectionProps> = ({
   videoId,
 }) => {
   const router = useRouter();
+  const { toast } = useToast();
 
   const totalProblemset = problemsets.length;
   const searchParams = useSearchParams();
@@ -122,18 +123,36 @@ const ProblemsetSection: React.FC<ProblemsetSectionProps> = ({
       const rand = Math.floor(Math.random() * (max - min + 1) ) + min;
       refetch().then((response) => {
           if (response.data === true){
-            toast.success(compliment[rand]);
+            // toast.success(compliment[rand]);
+            toast({
+              variant: "success",
+              title: "Right",
+              description: compliment[rand],
+            });
           }else if (response.data === false){
-            toast.error(insult[rand]);
+            // toast.error(insult[rand]);
+            toast({
+              variant: "error",
+              title: "Wrong",
+              description: insult[rand], 
+             })
           }
           else{
-            toast.error("Something went wrong. Please try again.");
+            toast({
+              variant: "error",
+              title: "Error",
+              description: "Something went wrong, please try again.", 
+             })
           }
       });
       router.refresh();
     },
 
-    onError: () => toast.error("Could not submit you answer.")
+    onError: () => toast({
+      variant: "error",
+      title: "Error",
+      description: "Something went wrong, please try again.", 
+     })
   });
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {

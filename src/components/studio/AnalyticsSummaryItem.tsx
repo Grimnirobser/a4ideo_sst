@@ -12,7 +12,7 @@ const AnalyticsSummaryItem: React.FC<AnalyticsSummaryItemProps> = ({
   return (
     <div className="h-full flex flex-col justify-between p-5 rounded-lg bg-white">
       <h1 className="text-2xl lg:text-3xl">{value}</h1>
-      <p className="font-medium text-stone-400 text-md lg:text-xl break-words">
+      <p className="font-medium text-stone-400 text-md lg:text-xl break-words hyphens-auto">
         {subtitle}
       </p>
     </div>

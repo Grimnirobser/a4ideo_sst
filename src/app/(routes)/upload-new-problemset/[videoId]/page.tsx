@@ -4,7 +4,7 @@ import { CurrentChannelContext } from "@/context/CurrentChannelContext";
 import { useRouter } from "next/navigation";
 import { useContext, useState } from "react";
 import { useProtectedRoute } from "@/hooks/useProtectedRoute";
-import { toast } from "react-hot-toast";
+import { useToast } from "@/components/ui/use-toast"
 import { useForm, FieldValues, SubmitHandler, useFieldArray } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query"
 import Button from "@/components/shared/Button";
@@ -39,6 +39,7 @@ export default function UploadProblemset({params}: {params: ChannelPageParams}) 
     const { videoId } = params;
     const router = useRouter();
     const currentChannel = useContext(CurrentChannelContext);
+    const { toast } = useToast();
 
     const {
         control,
@@ -80,12 +81,20 @@ export default function UploadProblemset({params}: {params: ChannelPageParams}) 
         mutationFn: async(problemsetData: ProblemsetDataType) => await createProblemset(problemsetData),
     
         onSuccess: () => {
-          toast.success("Problemset published successfully");
+          toast({
+            variant: "success",
+            title: "Success",
+            description: "Problemset successfully published.",
+          });
           router.push(process.env.NEXT_PUBLIC_SERVER_URL +`/video/${videoId}`);
           router.refresh();
         },
     
-        onError: () => toast.error("Could not publish problemset.")
+        onError: () => toast({
+          variant: "error",
+          title: "Error",
+          description: "Something went wrong, please try again.",
+        })
       })
     
       const onSubmit: SubmitHandler<FieldValues> = async (data) => {

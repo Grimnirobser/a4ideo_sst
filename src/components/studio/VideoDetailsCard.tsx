@@ -9,7 +9,7 @@ import { compactNumberFormat } from "@/utils/numUtils";
 import { MdDelete, MdEdit } from "react-icons/md";
 import { useCallback } from "react";
 import axios from "axios";
-import { toast } from "react-hot-toast";
+import { useToast } from "@/components/ui/use-toast"
 
 interface VideoDetailsCardProps {
   video: Video;
@@ -17,6 +17,7 @@ interface VideoDetailsCardProps {
 
 const VideoDetailsCard: React.FC<VideoDetailsCardProps> = ({ video }) => {
   const router = useRouter();
+  const { toast } = useToast();
 
   const likeFraction = video.likeCount / (video.likeCount + video.dislikeCount);
 
@@ -34,19 +35,27 @@ const VideoDetailsCard: React.FC<VideoDetailsCardProps> = ({ video }) => {
   //   }
   // }, [video.id]);
 
-
-
   const handleDeleteVideo = useCallback(() => {
     if (confirm("Are you sure you want to delete this video?")) {
-      axios
-        .delete(`/api/videos/${video.id}`)
+      fetch(`/api/videos/${video.id}`, {
+        method: "DELETE",
+      })
         .then(() => {
-          toast.success("Video deleted");
+          toast({
+            variant: "success",
+            title: "Success",
+            description: "Video successfully deleted.",
+          });
           router.refresh();
         })
-        .catch(() => toast.error("Video could not be deleted"));
+        .catch(() => toast({
+          variant: "error",
+          title: "Error",
+          description: "Something went wrong, please try again.", 
+         })
+        );
     }
-  }, [video.id, router]);
+  }, [video.id, router, toast]);
 
   return (
     <div

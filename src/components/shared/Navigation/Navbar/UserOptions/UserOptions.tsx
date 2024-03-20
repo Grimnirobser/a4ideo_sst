@@ -18,6 +18,7 @@ import {
 } from '../../../../ui/dropdown-menu'
 import { signOut } from "next-auth/react";
 import { usePathname } from 'next/navigation'
+import { Elsie_Swash_Caps } from "next/font/google";
 
 
 const UserOptions = () => {
@@ -26,6 +27,16 @@ const UserOptions = () => {
   const router = useRouter();
   const path = usePathname();
   const encodedUrl = encodeURIComponent(path);
+
+
+  const handleSettingsRedirect = () => {     // prevent user from settings to settings then redirect to 404 page
+    if (path.includes('settings')) {
+      // router.refresh();
+      return;
+    }else{
+      router.push(`/settings?e=${encodedUrl}`);
+    }
+  }
 
   if (currentUser && currentChannel) {
     return (
@@ -74,10 +85,7 @@ const UserOptions = () => {
         </DropdownMenuItem>
 
         <DropdownMenuItem className='cursor-pointer text-base'
-            onClick={() => {
-              router.push(`/settings?e=${encodedUrl}`);
-              
-            }}>
+            onClick={handleSettingsRedirect}>
               Settings
         </DropdownMenuItem>    
     
