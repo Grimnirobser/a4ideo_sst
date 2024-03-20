@@ -55,6 +55,11 @@ export default function CreateChannelPage({ searchParams }: PageProps) {
       } else{
         router.push(decodedUrl);
       }
+      toast({
+        variant: "error",
+        title: "Error",
+        description: "Unauthorized request.",
+      });
     }
   }, [currentUser, currentChannel, encodedUrl, decodedUrl, router, toast]); 
 
