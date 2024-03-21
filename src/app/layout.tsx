@@ -6,7 +6,6 @@ import getCurrentUser from "@/actions/getCurrentUser";
 import getCurrentChannel from "@/actions/getCurrentChannel";
 import CurrentChannelProvider from "@/context/CurrentChannelContext";
 import SidebarProvider from "@/context/SidebarContext";
-import { Web3provider } from "@/context/Web3Provider";
 import { constructMetadata } from "@/utils/websiteUtils";
 import Provider from "@/context/Provider";
 import ProgressBarProvider from "@/context/ProgressBarProvider";
@@ -34,7 +33,6 @@ export default async function RootLayout({
     <html lang="en">
       <body className={roboto.className}>
         <Provider> 
-          {/* <Web3provider> */}
             <Toaster />
             <CurrentUserProvider user={currentUser}>
               <CurrentChannelProvider channel={currentChannel}>
@@ -50,7 +48,6 @@ export default async function RootLayout({
                 {/* </UploadVideoModalProvider> */}
               </CurrentChannelProvider>
             </CurrentUserProvider>
-            {/* </Web3provider> */}
         </Provider>
       </body>
     </html>

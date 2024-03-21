@@ -30,7 +30,6 @@ export default {
         environment: {
           NEXT_PUBLIC_SERVER_URL: stack.stage === "prod" ? "https://a4ideo.com" : "http://localhost:3000",
           GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID!,
-          NEXT_PUBLIC_PROJECT_ID: process.env.NEXT_PUBLIC_PROJECT_ID!,
           NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME!,
           DATABASE_URL: process.env.DATABASE_URL!,
           NEXTAUTH_URL: process.env.NEXTAUTH_URL!,
