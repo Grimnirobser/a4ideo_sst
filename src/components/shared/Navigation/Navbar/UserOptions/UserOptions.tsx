@@ -18,7 +18,6 @@ import {
 } from '../../../../ui/dropdown-menu'
 import { signOut } from "next-auth/react";
 import { usePathname } from 'next/navigation'
-import { Elsie_Swash_Caps } from "next/font/google";
 
 
 const UserOptions = () => {
@@ -72,10 +71,6 @@ const UserOptions = () => {
         </div>
     
         <DropdownMenuSeparator />
-                      
-        {/* <DropdownMenuItem asChild className='cursor-pointer'>
-          <w3m-button/>
-        </DropdownMenuItem> */}
 
         <DropdownMenuItem className='cursor-pointer text-base mt-2'
             onClick={() => {

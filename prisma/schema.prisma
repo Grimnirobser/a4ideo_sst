@@ -58,7 +58,7 @@ model Channel {
   imageSrc              String
   createdAt             DateTime @default(now())
   subscriberCount       Int      @default(0)
-  balance               Float    @default(0.000)
+  reputation            Int      @default(0)
   subscribedChannelIds  String[]
   likedVideoIds         String[]
   dislikedVideoIds      String[]
@@ -72,9 +72,6 @@ model Channel {
   problemsets Problemset[]
   aips        Aip[]
   attempt     Attempt[]
-
-  fromTransfers Transfer[] @relation("TransferFrom")
-  toTransfers   Transfer[] @relation("TransferTo")
 }
 
 model Video {
@@ -152,17 +149,6 @@ model Attempt {
   passedBefore Boolean  @default(false) // if the user has passed the problemset before, used to count avg attempt count to pass the problemset
 
   Channel Channel @relation(fields: [channelId], references: [id], onDelete: Cascade)
-}
-
-model Transfer {
-  id        String   @id @default(nanoid())
-  from      String
-  to        String
-  amount    Float
-  createdAt DateTime @default(now())
-
-  fromChannel Channel @relation("TransferFrom", fields: [from], references: [id], onDelete: Cascade)
-  toChannel   Channel @relation("TransferTo", fields: [to], references: [id], onDelete: Cascade)
 }
 
 model Aip {

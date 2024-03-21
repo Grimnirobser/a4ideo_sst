@@ -6,7 +6,6 @@ import getCurrentUser from "@/actions/getCurrentUser";
 import getCurrentChannel from "@/actions/getCurrentChannel";
 import CurrentChannelProvider from "@/context/CurrentChannelContext";
 import SidebarProvider from "@/context/SidebarContext";
-import { Web3provider } from "@/context/Web3Provider";
 import { constructMetadata } from "@/utils/websiteUtils";
 import Provider from "@/context/Provider";
 import ProgressBarProvider from "@/context/ProgressBarProvider";
