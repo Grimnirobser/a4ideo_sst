@@ -9,6 +9,7 @@ import { FaRegSquarePlus } from "react-icons/fa6";
 import { ChevronRight } from 'lucide-react';
 
 interface VideoUploadFormProps {
+  channelId: string;
   register: UseFormRegister<FieldValues>;
   errors: FieldErrors<FieldValues>;
   changeValue: (id: string, value: string) => void;
@@ -17,6 +18,7 @@ interface VideoUploadFormProps {
 }
 
 const VideoUploadForm: React.FC<VideoUploadFormProps> = ({
+  channelId,
   register,
   errors,
   changeValue,
@@ -36,12 +38,11 @@ const VideoUploadForm: React.FC<VideoUploadFormProps> = ({
               <div className="w-full">
                 <TextArea
                   register={register}
-                  id="youtubeId"
-                  label="Youtube video ID (required)"
+                  id={"youtubeId"+channelId}
+                  label="Youtube video ID (if not provided, the thumbnail will be used)"
                   errors={errors}
                   disabled={isLoading}
                   changeValue={changeValue}
-                  required
                 />
               </div>
                   <div className="flex w-40 ml-2 rounded-md border-[1px] bg-slate-100 border-zinc-500 text-center items-center justify-center">
@@ -55,7 +56,7 @@ const VideoUploadForm: React.FC<VideoUploadFormProps> = ({
 
           <TextArea
             register={register}
-            id="title"
+            id={"title"+channelId}
             label="Title (required)"
             errors={errors}
             disabled={isLoading}
@@ -72,7 +73,7 @@ const VideoUploadForm: React.FC<VideoUploadFormProps> = ({
         >
           {thumbnailSrc ? (
             <Image
-              
+              unoptimized
               src={thumbnailSrc}
               alt="thumbnail"
               height="124"
@@ -99,7 +100,7 @@ const VideoUploadForm: React.FC<VideoUploadFormProps> = ({
 
       <DescriptionArea 
         register={register}
-        id="description"
+        id={"description"+channelId}
         label="Description (required)"
         errors={errors}
         disabled={isLoading}

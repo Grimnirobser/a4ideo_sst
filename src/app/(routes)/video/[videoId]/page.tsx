@@ -8,6 +8,7 @@ import VideoPlayer from "@/components/video/VideoPlayer";
 import YoutubePlayer from "@/components/video/YoutubePlayer";
 import getProblemsetsByVideoId from "@/actions/getProblemsetsByVideoId";
 import ProblemsetSection from "@/components/video/ProblemsetSection/ProblemsetSection";
+import { DocView } from "@/components/video/DocView";
 
 interface VideoPageParams {
   videoId?: string;
@@ -28,7 +29,7 @@ export default async function VideoPage({
     <div className="flex flex-col lg:flex-row mx-6 mt-2 gap-4">
       <div className="w-full lg:w-4/6 flex flex-col gap-4 overflow-y-auto max-h-screen [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
         {/* <VideoPlayer videoSrc={video.videoSrc} /> */}
-        <YoutubePlayer youtubeId={video.youtubeId}/>
+        {video.youtubeId === "" ? <DocView imageSrc={video.thumbnailSrc}/> : <YoutubePlayer youtubeId={video.youtubeId}/>}
         <h1 className="text-2xl font-medium break-words hyphens-auto">{video.title}</h1>
         <LikeSubscribeSection video={video} channel={channel} />
         <Description video={video} />

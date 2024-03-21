@@ -5,7 +5,6 @@ import SignInButton from "./SignInButton";
 import SignOutButton from "./SignOutButton";
 import { CurrentUserContext } from "@/context/CurrentUserContext";
 import IconButton from "@/components/shared/IconButton";
-import { MdOutlineVideoCall } from "react-icons/md";
 import Avatar, { AvatarSize } from "@/components/shared/Avatar";
 import { CurrentChannelContext } from "@/context/CurrentChannelContext";
 import { useRouter } from "next/navigation";
@@ -18,6 +17,9 @@ import {
 } from '../../../../ui/dropdown-menu'
 import { signOut } from "next-auth/react";
 import { usePathname } from 'next/navigation'
+import { compactNumberFormat } from "@/utils/numUtils";
+import { ClipboardPlus } from 'lucide-react';
+
 
 
 const UserOptions = () => {
@@ -42,7 +44,7 @@ const UserOptions = () => {
     <>
       <div className="flex items-center gap-4 mr-4">
         <IconButton onClick={() => router.push("/studio/upload")} className="mr-4">
-          <MdOutlineVideoCall className="h-7 w-7" />
+          <ClipboardPlus className="h-7 w-7" />
         </IconButton>
         
         <DropdownMenu>
@@ -65,7 +67,7 @@ const UserOptions = () => {
             </p>
 
             <p className='font-medium text-base text-black'>
-              {currentChannel.balance} AIV coin
+              {compactNumberFormat(currentChannel.reputation)} reputation
             </p>
           </div>
         </div>
