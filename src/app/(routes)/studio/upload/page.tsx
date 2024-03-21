@@ -163,6 +163,7 @@ export default function UploadPage() {
         <div className="flex flex-row mt-4 gap-4">
 
           <VideoUploadForm
+            channelId={currentChannel!.id}
             register={register}
             errors={errors}
             changeValue={changeValue}
