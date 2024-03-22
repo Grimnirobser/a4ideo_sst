@@ -1,7 +1,7 @@
 "use client";
 
 import { LikeDislikeProblemsetStatus, useLikeDislikeProblemset } from "@/hooks/useLikeDislikeProblemset";
-import { compactNumberFormat } from "@/utils/numUtils";
+import { compactNumberFormat } from "@/lib/numUtils";
 import { Problemset } from "@prisma/client";
 import {
   MdThumbUp,

@@ -6,7 +6,7 @@ import { Video, Problemset, Attempt } from "@prisma/client";
 import { useContext, useMemo } from "react";
 import Avatar, { AvatarSize } from "../shared/Avatar";
 import AnalyticsSummaryItem from "./AnalyticsSummaryItem";
-import { compactNumberFormat, safeRoundOneDecimalDivider } from "@/utils/numUtils";
+import { compactNumberFormat, safeRoundOneDecimalDivider } from "@/lib/numUtils";
 
 interface AnalyticsSummaryProps {
   videos: Video[];

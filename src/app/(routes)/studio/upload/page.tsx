@@ -14,6 +14,12 @@ import { useToast } from "@/components/ui/use-toast"
 import { useMutation } from "@tanstack/react-query"
 import { createVideo } from "@/actions/createVideo";
 import { CurrentChannelContext } from "@/context/CurrentChannelContext";
+import {
+	RegExpMatcher,
+	TextCensor,
+	englishDataset,
+	englishRecommendedTransformers,
+} from 'obscenity';
 
 
 interface VideoDataType{
@@ -118,9 +124,29 @@ export default function UploadPage() {
      })
   })
 
+  const matcher = new RegExpMatcher({
+    ...englishDataset.build(),
+    ...englishRecommendedTransformers,
+  });
+
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     if (!currentChannel) {
-      alert("Please sign in to upload video.");
+      toast({
+        variant: "error",
+        title: "Error",
+        description: "Please sign in to upload video.",
+      });
+      return;
+    }
+
+    const problemsCheck = data.problems.map((problem: ProblemDataType) => matcher.hasMatch(problem.question));
+
+    if (matcher.hasMatch(data.title) || matcher.hasMatch(data.description) || problemsCheck.includes(true)){
+      toast({
+        variant: "error",
+        title: "Error",
+        description: "Please remove inappropriate words.",
+      });
       return;
     }
 
@@ -160,10 +186,9 @@ export default function UploadPage() {
         </div>
 
 
-        <div className="flex flex-row mt-4 gap-4">
+        <div className="flex flex-row mt-4 gap-4 max-h-screen">
 
           <VideoUploadForm
-            channelId={currentChannel!.id}
             register={register}
             errors={errors}
             changeValue={changeValue}
@@ -171,7 +196,7 @@ export default function UploadPage() {
             isLoading={isPending}
           />
           
-          <div className="w-2/6 space-y-2">
+          <div className="w-2/6 space-y-2 overflow-y-auto no-scrollbar">
 
               {fields.map((field, index) => (
                 <div key={field.id}>

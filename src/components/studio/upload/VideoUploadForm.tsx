@@ -9,7 +9,6 @@ import { FaRegSquarePlus } from "react-icons/fa6";
 import { ChevronRight } from 'lucide-react';
 
 interface VideoUploadFormProps {
-  channelId: string;
   register: UseFormRegister<FieldValues>;
   errors: FieldErrors<FieldValues>;
   changeValue: (id: string, value: string) => void;
@@ -18,7 +17,6 @@ interface VideoUploadFormProps {
 }
 
 const VideoUploadForm: React.FC<VideoUploadFormProps> = ({
-  channelId,
   register,
   errors,
   changeValue,
@@ -56,7 +54,7 @@ const VideoUploadForm: React.FC<VideoUploadFormProps> = ({
 
           <TextArea
             register={register}
-            id={"title"+channelId}
+            id="title"
             label="Title (required)"
             errors={errors}
             disabled={isLoading}
@@ -100,7 +98,7 @@ const VideoUploadForm: React.FC<VideoUploadFormProps> = ({
 
       <DescriptionArea 
         register={register}
-        id={"description"+channelId}
+        id="description"
         label="Description (required)"
         errors={errors}
         disabled={isLoading}

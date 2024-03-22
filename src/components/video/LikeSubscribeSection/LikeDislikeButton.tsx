@@ -1,7 +1,7 @@
 "use client";
 
 import { LikeDislikeStatus, useLikeDislike } from "@/hooks/useLikeDislike";
-import { compactNumberFormat } from "@/utils/numUtils";
+import { compactNumberFormat } from "@/lib/numUtils";
 import { Video } from "@prisma/client";
 import {
   MdThumbUp,

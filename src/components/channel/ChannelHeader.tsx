@@ -4,7 +4,7 @@ import { CurrentChannelContext } from "@/context/CurrentChannelContext";
 import { Channel } from "@prisma/client";
 import { useContext } from "react";
 import Avatar, { AvatarSize } from "../shared/Avatar";
-import { compactNumberFormat } from "@/utils/numUtils";
+import { compactNumberFormat } from "@/lib/numUtils";
 import Link from "next/link";
 import Button from "../shared/Button";
 import SubscribeButton from "../shared/SubscribeButton";
