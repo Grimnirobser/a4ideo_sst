@@ -40,19 +40,19 @@ const Sidebar: React.FC<SidebarProps> = ({ subscribedChannels }) => {
             onClick={() => handleItemClick(() => router.push("/"))}
           />
 
-          <MenuItem
+          {/* <MenuItem
             label="AIPs"
             logo={<MdOutlineModeComment className="h-6 w-6 mr-4" />}
             round
             onClick={() => handleItemClick(() => router.push("/aips"))}
-          />
+          /> */}
 
-          <MenuItem
+          {/* <MenuItem
             label="Leaderboard"
             logo={<MdOutlineRocket className="h-6 w-6 mr-4" />}
             round
             onClick={() => handleItemClick(() => router.push("/leaderboard"))}
-          />
+          /> */}
 
           {currentChannel ? (
             <MenuItem

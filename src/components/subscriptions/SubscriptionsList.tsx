@@ -1,8 +1,8 @@
 "use client";
 
-import { useProtectedRoute } from "@/hooks/useProtectedRoute";
 import { Channel, Video } from "@prisma/client";
 import VideoCard from "../shared/VideoCard";
+import { useProtectedRoute } from "@/hooks/useProtectedRoute";
 
 interface SubscriptionsListProps {
   videos: (Video & { channel: Channel })[];

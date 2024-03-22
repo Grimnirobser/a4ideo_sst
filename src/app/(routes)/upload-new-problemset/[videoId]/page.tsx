@@ -2,8 +2,7 @@
 
 import { CurrentChannelContext } from "@/context/CurrentChannelContext";
 import { useRouter } from "next/navigation";
-import { useContext, useState } from "react";
-import { useProtectedRoute } from "@/hooks/useProtectedRoute";
+import { useContext, useState, useEffect } from "react";
 import { useToast } from "@/components/ui/use-toast"
 import { useForm, FieldValues, SubmitHandler, useFieldArray } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query"
@@ -35,11 +34,21 @@ interface AnswerType{
 
 export default function UploadProblemset({params}: {params: ChannelPageParams}) {
 
-    useProtectedRoute();
     const { videoId } = params;
     const router = useRouter();
     const currentChannel = useContext(CurrentChannelContext);
     const { toast } = useToast();
+
+    useEffect(() => {
+      if (!currentChannel) {
+        router.push("/");
+        toast({
+          variant: "error",
+          title: "Error",
+          description: "You need to sign in to upload.",
+        });
+      }
+    }, [ currentChannel, router, toast]); 
 
     const {
         control,

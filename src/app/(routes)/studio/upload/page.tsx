@@ -6,12 +6,11 @@ import VideoPreview from "@/components/studio/upload/VideoPreview";
 import VideoUploadForm from "@/components/studio/upload/VideoUploadForm";
 import { UploadVideoModalContext } from "@/context/UploadVideoModalContext";
 import { useRouter } from "next/navigation";
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import ProblemsetUploadForm from "@/components/studio/upload/ProblemsetUploadForm";
 import { useForm, FieldValues, SubmitHandler, useFieldArray } from "react-hook-form";
 
 import { useToast } from "@/components/ui/use-toast"
-import { useProtectedRoute } from "@/hooks/useProtectedRoute";
 import { useMutation } from "@tanstack/react-query"
 import { createVideo } from "@/actions/createVideo";
 import { CurrentChannelContext } from "@/context/CurrentChannelContext";
@@ -38,7 +37,6 @@ interface AnswerType{
 }
 
 export default function UploadPage() {
-  useProtectedRoute();
 
   // const uploadVideoModal = useContext(UploadVideoModalContext);
   // useEffect(() => uploadVideoModal?.onOpen(), []);
@@ -46,6 +44,18 @@ export default function UploadPage() {
   const currentChannel = useContext(CurrentChannelContext);
   const router = useRouter();
   const { toast } = useToast();
+
+  useEffect(() => {
+    if (!currentChannel) {
+      router.push("/");
+      toast({
+        variant: "error",
+        title: "Error",
+        description: "You need to sign in to upload.",
+      });
+    }
+  }, [ currentChannel, router, toast]); 
+
 
   const {
     control,
