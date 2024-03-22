@@ -9,6 +9,12 @@ import { useMutation } from "@tanstack/react-query"
 import Button from "@/components/shared/Button";
 import ProblemsetUploadForm from "@/components/studio/upload/ProblemsetUploadForm";
 import { createProblemset } from "@/actions/createProblemset";
+import {
+	RegExpMatcher,
+	TextCensor,
+	englishDataset,
+	englishRecommendedTransformers,
+} from 'obscenity';
 
 
 interface ChannelPageParams {
@@ -83,7 +89,6 @@ export default function UploadProblemset({params}: {params: ChannelPageParams}) 
     
       let incrementTotalProblems = () => setTotalProblems(totalProblems + 1);
       let decrementTotalProblems = () => (totalProblems === 1) ? {} : setTotalProblems(totalProblems - 1);
-    
       
       const { mutate, mutateAsync, isPending } = useMutation({
         mutationKey: ["UploadNewProblemset"],
@@ -105,8 +110,25 @@ export default function UploadProblemset({params}: {params: ChannelPageParams}) 
           description: "Something went wrong, please try again.",
         })
       })
+
+      const matcher = new RegExpMatcher({
+        ...englishDataset.build(),
+        ...englishRecommendedTransformers,
+      });
+
     
       const onSubmit: SubmitHandler<FieldValues> = async (data) => {
+        const problemsCheck = data.problems.map((problem: ProblemDataType) => matcher.hasMatch(problem.question));
+
+        if (problemsCheck.includes(true)){
+          toast({
+            variant: "error",
+            title: "Error",
+            description: "Please remove inappropriate words.",
+          });
+        }
+
+
         const problemsetData = {
             videoId: videoId,
             channelId: currentChannel!.id,

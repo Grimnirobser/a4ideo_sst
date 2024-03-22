@@ -6,7 +6,7 @@ import getCurrentUser from "@/actions/getCurrentUser";
 import getCurrentChannel from "@/actions/getCurrentChannel";
 import CurrentChannelProvider from "@/context/CurrentChannelContext";
 import SidebarProvider from "@/context/SidebarContext";
-import { constructMetadata } from "@/utils/websiteUtils";
+import { constructMetadata } from "@/lib/websiteUtils";
 import Provider from "@/context/Provider";
 import ProgressBarProvider from "@/context/ProgressBarProvider";
 import { submitAttemptInitAction } from "@/actions/submitAttempt";

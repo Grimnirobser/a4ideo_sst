@@ -6,7 +6,7 @@ import { useContext } from "react";
 import LikeDislikeProblemsetButton from "./LikeDislikeProblemsetButton";
 import Link from "next/link";
 import Avatar, { AvatarSize } from "@/components/shared/Avatar";
-import { compactNumberFormat } from "@/utils/numUtils";
+import { compactNumberFormat } from "@/lib/numUtils";
 import Button from "@/components/shared/Button";
 import SubscribeButton from "@/components/shared/SubscribeButton";
 

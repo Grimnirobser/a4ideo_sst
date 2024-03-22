@@ -2,7 +2,13 @@ import { CurrentChannelContext } from "@/context/CurrentChannelContext";
 import { useCallback, useContext, useState } from "react";
 import { useToast } from "@/components/ui/use-toast"
 import { useRouter } from "next/navigation";
-import axios from "axios";
+import {
+	RegExpMatcher,
+	TextCensor,
+	englishDataset,
+	englishRecommendedTransformers,
+  asteriskCensorStrategy
+} from 'obscenity';
 
 interface UseCommentProps {
   videoId?: string | null;
@@ -22,10 +28,15 @@ export const useComment = ({ videoId }: UseCommentProps) => {
     }
 
     if (!videoId) return;
+    const matcher = new RegExpMatcher({ ...englishDataset.build(), ...englishRecommendedTransformers });
+    const censor = new TextCensor().setStrategy(asteriskCensorStrategy());
+
+    const matches = matcher.getAllMatches(text);
+    const censoredText = censor.applyTo(text, matches)
 
     const data = {
       videoId,
-      text,
+      text: censoredText,
       channelId: currentChannel.id,
     };
 

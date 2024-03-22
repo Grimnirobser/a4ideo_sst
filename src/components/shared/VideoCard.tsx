@@ -2,7 +2,7 @@ import { Channel, Video } from "@prisma/client";
 import Image from "next/image";
 import Link from "next/link";
 import Avatar, { AvatarSize } from "./Avatar";
-import { compactNumberFormat } from "@/utils/numUtils";
+import { compactNumberFormat } from "@/lib/numUtils";
 import dayjs from "@/vendor/dayjs";
 
 interface VideoCardProps {

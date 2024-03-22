@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import dayjs from "@/vendor/dayjs";
-import { compactNumberFormat } from "@/utils/numUtils";
+import { compactNumberFormat } from "@/lib/numUtils";
 import { MdDelete, MdEdit } from "react-icons/md";
 import { useCallback } from "react";
 import axios from "axios";

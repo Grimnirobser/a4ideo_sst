@@ -95,8 +95,8 @@ const ProblemsetSection: React.FC<ProblemsetSectionProps> = ({
           .min(1, {
             message: "At least 1 character to answer the question.",
           })
-          .max(200, {
-            message: "Answer cannot exceed 200 characters.",
+          .max(500, {
+            message: "Answer cannot exceed 500 characters.",
           }),
   })
 

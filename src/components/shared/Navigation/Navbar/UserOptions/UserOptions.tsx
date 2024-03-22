@@ -17,7 +17,7 @@ import {
 } from '../../../../ui/dropdown-menu'
 import { signOut } from "next-auth/react";
 import { usePathname } from 'next/navigation'
-import { compactNumberFormat } from "@/utils/numUtils";
+import { compactNumberFormat } from "@/lib/numUtils";
 import { ClipboardPlus } from 'lucide-react';
 
 
