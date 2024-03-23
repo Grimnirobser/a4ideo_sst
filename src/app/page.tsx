@@ -1,5 +1,5 @@
 import getTrendingVideos from "@/actions/getTrendingVideos";
-import VideoCard from "@/components/shared/VideoCard";
+import Poster from "@/components/shared/Poster";
 
 export default async function Home() {
   const trendingVideos = await getTrendingVideos();
@@ -9,7 +9,7 @@ export default async function Home() {
       {trendingVideos
         ? trendingVideos.map((trendingVideo) => {
             return (
-              <VideoCard
+              <Poster
                 key={trendingVideo.id}
                 video={trendingVideo}
                 channel={trendingVideo.channel}

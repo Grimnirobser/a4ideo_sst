@@ -220,7 +220,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoSrc }) => {
       </div>
       <video
         src={videoSrc}
-        className="w-full aspect-video z-[5]"
+        className="w-full aspect-w-16 aspect-h-9 z-[5]"
         ref={videoRef}
         onClick={handleClickPlay}
         onTimeUpdate={updateTimestamp}

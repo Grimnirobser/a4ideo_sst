@@ -19,6 +19,7 @@ import { signOut } from "next-auth/react";
 import { usePathname } from 'next/navigation'
 import { compactNumberFormat } from "@/lib/numUtils";
 import { ClipboardPlus } from 'lucide-react';
+import { Icons } from "@/components/shared/Icons";
 
 
 
@@ -43,6 +44,10 @@ const UserOptions = () => {
     return (
     <>
       <div className="flex items-center gap-4 mr-4">
+        <IconButton onClick={() => window.open("https://discord.gg/xQx5bueEUB", '_blank')} className="mr-4">
+          <Icons.discord />
+        </IconButton>
+
         <IconButton onClick={() => router.push("/studio/upload")} className="mr-4">
           <ClipboardPlus className="h-7 w-7" />
         </IconButton>
@@ -100,9 +105,17 @@ const UserOptions = () => {
     </>);
   }else if(currentUser){
     return <SignOutButton />
+
   }
   else{
-    return <SignInButton encodedUrl={encodedUrl}/>
+    return (
+    <div className="flex items-center gap-4 mr-4">
+        <IconButton onClick={() => window.open("https://discord.gg/xQx5bueEUB", '_blank')} className="mr-4">
+          <Icons.discord />
+        </IconButton>
+      <SignInButton encodedUrl={encodedUrl}/>
+    </div>
+    );
   }
 
 };

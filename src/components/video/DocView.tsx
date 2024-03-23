@@ -16,7 +16,7 @@ export const DocView = ({imageSrc}: DocViewProps) => {
             <Image
                 unoptimized
                 alt="Avatar"
-                className="w-full aspect-video z-[5] rounded-xl"
+                className="w-full aspect-w-16 aspect-h-9 z-[5] rounded-xl"
                 src={imageSrc}
                 height={90}
                 width={160}
