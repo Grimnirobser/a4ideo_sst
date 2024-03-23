@@ -95,8 +95,8 @@ const ProblemsetSection: React.FC<ProblemsetSectionProps> = ({
           .min(1, {
             message: "At least 1 character to answer the question.",
           })
-          .max(500, {
-            message: "Answer cannot exceed 500 characters.",
+          .max(250, {
+            message: "Answer cannot exceed 250 characters.",
           }),
   })
 
@@ -251,7 +251,7 @@ const ProblemsetSection: React.FC<ProblemsetSectionProps> = ({
           </div>
 
     <div className="peer w-full mt-4 mb-4 px-4 pt-2 pb-2  rounded-md outline-none border-[1px] bg-slate-100 transition">
-        Note if all sentences are not red but the result is &quot;fail&quot;, it means the answer is not sufficient.
+        Note if all sentences are not red but the result is &quot;fail&quot;, it means the answer is missing an emphasis.
         You can try click the question mark next to PASS/UNPASSED badge to upload your own questions.
     </div>
 

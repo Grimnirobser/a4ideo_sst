@@ -17,6 +17,9 @@ const config = {
         "2xl": "1400px",
       },
     },
+    corePlugins: {
+      aspectRatio: false,
+    },
     extend: {
       colors: {
         buttonColor: '#0ea5e9',
@@ -75,7 +78,10 @@ const config = {
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [
+    require("tailwindcss-animate"), 
+    require('@tailwindcss/aspect-ratio'),
+  ],
 } satisfies Config
 
 export default config

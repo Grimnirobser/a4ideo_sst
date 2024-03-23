@@ -5,7 +5,7 @@ import Avatar, { AvatarSize } from "./Avatar";
 import { compactNumberFormat } from "@/lib/numUtils";
 import dayjs from "@/vendor/dayjs";
 
-interface VideoCardProps {
+interface PosterProps {
   channel?: Channel;
   channelAvatar?: boolean;
   video: Video;
@@ -13,7 +13,7 @@ interface VideoCardProps {
   isVertical?: boolean;
 }
 
-const VideoCard: React.FC<VideoCardProps> = ({
+const Poster: React.FC<PosterProps> = ({
   channel,
   channelAvatar = false,
   video,
@@ -91,4 +91,4 @@ const VideoCard: React.FC<VideoCardProps> = ({
   );
 };
 
-export default VideoCard;
+export default Poster;

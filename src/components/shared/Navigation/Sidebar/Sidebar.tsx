@@ -98,6 +98,22 @@ const Sidebar: React.FC<SidebarProps> = ({ subscribedChannels }) => {
           <div className='mt-4 flex items-center justify-center md:mt-0'>
             <div className='flex space-x-8'>
               <Link
+                href="./about"
+                onClick={() =>
+                  handleItemClick(()=>{})
+                }
+                className='text-sm text-muted-foreground hover:text-gray-600'>
+                About
+              </Link>
+            </div>
+          </div>
+        </div>
+
+
+        <div className='mb-2 md:flex md:items-center md:justify-between'>
+          <div className='mt-4 flex items-center justify-center md:mt-0'>
+            <div className='flex space-x-8'>
+              <Link
                 href="./terms"
                 onClick={() =>
                   handleItemClick(()=>{})

@@ -65,7 +65,7 @@ const VideoDetailsCard: React.FC<VideoDetailsCardProps> = ({ video }) => {
       <Link href={`video/${video.id}`}>
         <Image
           unoptimized
-          className="aspect-video"
+          className="aspect-w-16 aspect-h-9"
           alt={`${video.title} thumbnail`}
           src={video.thumbnailSrc}
           height={90}
