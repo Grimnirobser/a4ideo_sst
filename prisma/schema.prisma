@@ -23,15 +23,6 @@ model User {
   channel Channel?
 }
 
-model Admin {
-  id                 String       @id @default(nanoid())
-  username           String       @unique
-  password           String
-  createdAt          DateTime     @default(now())
-  aduitedVideos      Video[]
-  aduitedProblemsets Problemset[]
-}
-
 model Account {
   id                String  @id @default(nanoid())
   userId            String  @unique
@@ -59,6 +50,7 @@ model Channel {
   createdAt             DateTime @default(now())
   subscriberCount       Int      @default(0)
   reputation            Int      @default(0)
+  isAuditor             Boolean  @default(false)
   subscribedChannelIds  String[]
   likedVideoIds         String[]
   dislikedVideoIds      String[]
@@ -70,7 +62,6 @@ model Channel {
   comments    Comment[]
   videos      Video[]
   problemsets Problemset[]
-  aips        Aip[]
   attempt     Attempt[]
 }
 
@@ -90,7 +81,6 @@ model Video {
   auditedBy    String?
   suspended    Boolean  @default(false)
 
-  auditor Admin?  @relation(fields: [auditedBy], references: [id], onDelete: Cascade)
   channel Channel @relation(fields: [channelId], references: [id], onDelete: Cascade)
 
   problemsets Problemset[]
@@ -112,7 +102,6 @@ model Problemset {
   id           String    @id @default(nanoid())
   channelId    String
   videoId      String
-  auditedBy    String?
   likeCount    Int       @default(0)
   dislikeCount Int       @default(0)
   attemptCount Int       @default(0)
@@ -124,7 +113,6 @@ model Problemset {
   problems     Problem[]
   channel      Channel   @relation(fields: [channelId], references: [id], onDelete: Cascade)
   video        Video     @relation(fields: [videoId], references: [id], onDelete: Cascade)
-  audited      Admin?    @relation(fields: [auditedBy], references: [id], onDelete: Cascade)
 }
 
 model Problem {
@@ -149,13 +137,4 @@ model Attempt {
   passedBefore Boolean  @default(false) // if the user has passed the problemset before, used to count avg attempt count to pass the problemset
 
   Channel Channel @relation(fields: [channelId], references: [id], onDelete: Cascade)
-}
-
-model Aip {
-  id        Int      @id @default(autoincrement())
-  channelId String
-  text      String
-  createdAt DateTime @default(now())
-
-  channel Channel @relation(fields: [channelId], references: [id], onDelete: Cascade)
 }

@@ -6,6 +6,7 @@
 /node_modules
 /.pnp
 .pnp.js
+.yarnclean
 
 # testing
 /coverage
@@ -54,5 +55,4 @@ next-env.d.ts
 # open-next
 .open-next
 
-#prisma
-prisma/migrations/
+
