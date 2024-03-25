@@ -46,7 +46,7 @@ const ImageSlider = ( {slides, activeIndex, setActiveIndex} : ImageSliderProps) 
   const inactiveStyles = 'hidden text-gray-400'
 
   return (
-    <div className='group bg-zinc-100 aspect-square overflow-hidden rounded-xl'>
+    <div className='group bg-zinc-100 aspect-square rounded-xl'>
       <div className='absolute z-10 inset-0 opacity-0 group-hover:opacity-100 transition'>
         <button
           onClick={(e) => {
@@ -98,7 +98,7 @@ const ImageSlider = ( {slides, activeIndex, setActiveIndex} : ImageSliderProps) 
                     className='-z-10 object-cover object-center rounded-lg'
                     src={slideItem.source}
                     alt='poster image'
-                /> : <div className='-z-10 object-cover object-center mx-2 my-2 text-muted-foreground text-lg'>
+                /> : <div className='-z-10 object-cover object-center mx-2 my-2 text-muted-foreground text-lg overflow-y-auto overflow-hidden no-scrollbar'>
                         {slideItem.source}
                     </div>}
           </SwiperSlide>
