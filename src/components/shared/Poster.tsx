@@ -13,7 +13,6 @@ interface PosterProps {
   channel?: Channel;
   channelAvatar?: boolean;
   video: Video;
-  includeDescription?: boolean;
   questions: string[];
 }
 

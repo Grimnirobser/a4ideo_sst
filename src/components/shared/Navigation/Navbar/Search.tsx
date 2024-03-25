@@ -34,7 +34,7 @@ const Search = () => {
 
   return (
     <form
-      className="flex flex-row border-[1px] border-neutral-700 rounded-full overflow-hidden w-2/5"
+      className="flex flex-row border-[1px] border-neutral-700 rounded-full overflow-hidden w-2/5 "
       onSubmit={handleSearch}
     >
       <input
