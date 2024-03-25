@@ -27,7 +27,7 @@ const AboutPage = () => {
             At that time, a multiple-choice question popped up asking who I thought the criminal was, 
             and numerous danmaku subtitles were discussing this. 
             I thought I could train a language model (LLM) to accept those perspectives and provide feedback on whether it could correctly identify the criminal. 
-            Later I realized it would be better to apply this approach to books we read, like or videos we watched, 
+            Later I realized it would be better to apply this approach to books we read or videos we watched, 
             like what happened to the old man in <cite>The Old Man and the Sea</cite>? 
             or how do you put an elephant into a fridge? I collected data and trained a LLM. 
             </p>
