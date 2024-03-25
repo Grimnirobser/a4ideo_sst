@@ -12,14 +12,14 @@ export const DocView = ({imageSrc}: DocViewProps) => {
 
     return (
 
-        <div className="relative w-full flex justify-center m-auto group bg-white">
+        <div className="relative w-full flex justify-center m-auto group bg-white aspect-w-10 aspect-h-15">
             <Image
                 unoptimized
                 alt="Avatar"
-                className="w-full aspect-w-16 aspect-h-9 z-[5] rounded-xl"
+                className="w-full z-[5] rounded-xl"
                 src={imageSrc}
-                height={90}
-                width={160}
+                height={150}
+                width={100}
             />
         </div>
     );
