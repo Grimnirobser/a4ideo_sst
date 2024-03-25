@@ -10,10 +10,10 @@ import { cn } from '@/lib/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Loader2 } from 'lucide-react'
 import Link from 'next/link'
-import { useForm, FieldValues, SubmitHandler } from "react-hook-form";
+import { useForm, FieldValues, SubmitHandler, set } from "react-hook-form";
 import { CurrentUserContext } from "@/context/CurrentUserContext";
 import { CurrentChannelContext } from "@/context/CurrentChannelContext";
-import { useContext, useState, useEffect, use } from "react";
+import { useContext, useState, useEffect } from "react";
 import { ZodError, z } from 'zod'
 import { useRouter } from 'next/navigation'
 import { useMutation, useQuery } from '@tanstack/react-query'
@@ -39,7 +39,8 @@ interface PageProps {
 
 
 export default function CreateChannelPage({ searchParams }: PageProps) {
-
+  const [checked, setChecked] = useState(false);
+  const [tryUsername, setTryUsername] = useState<string>('');
   const encodedUrl = searchParams.e as string;
   const decodedUrl = decodeURIComponent(encodedUrl as string)
 
@@ -47,20 +48,6 @@ export default function CreateChannelPage({ searchParams }: PageProps) {
   const currentChannel = useContext(CurrentChannelContext);
   const router = useRouter()
   const { toast } = useToast()
-
-  useEffect(() => {
-    if (!currentUser || (currentUser && currentChannel)) {
-      if (!encodedUrl || decodedUrl === "") {
-        router.push("/");
-      } else{
-        router.push(decodedUrl);
-      }
-    }
-  }, [currentUser, currentChannel, encodedUrl, decodedUrl, router, toast]); 
-
-
-
-  const [tryUsername, setTryUsername] = useState<string>('');
 
   const channelSchema = z.object({
       username: z.string()
@@ -174,6 +161,21 @@ export default function CreateChannelPage({ searchParams }: PageProps) {
     mutateAsync(readyData);
   };
 
+  useEffect(() => {
+    if (!currentUser || (currentUser && currentChannel)) {
+      if (!encodedUrl || decodedUrl === "") {
+        router.push("/");
+      } else{
+        router.push(decodedUrl);
+      }
+    }else{
+      setChecked(true);
+    }
+  }, [currentUser, currentChannel, encodedUrl, decodedUrl, router, toast]); 
+
+  if (!checked) {
+    return null;
+  }
 
     return (
     <>

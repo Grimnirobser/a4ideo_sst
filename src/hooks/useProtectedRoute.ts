@@ -1,3 +1,5 @@
+'use client';
+
 import { CurrentChannelContext } from "@/context/CurrentChannelContext";
 import { CurrentUserContext } from "@/context/CurrentUserContext";
 import { useRouter } from "next/navigation";
