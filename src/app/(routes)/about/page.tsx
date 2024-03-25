@@ -32,7 +32,7 @@ const AboutPage = () => {
             or how do you put an elephant into a fridge? I collected data and trained a LLM. 
             Though the LLM is not trained for answering the questions, 
             it is trained to distinguish if the perspective is sufficient and simple enough to cover the answer. 
-            So if you want to present a question, you have to submit the yours solution as well.
+            So if you want to present a question, you may submit the yours solution as well.
             </p>
 
             <p className="text-gray-700 mt-4 text-left font-serif mx-4 text-lg indent-6">
