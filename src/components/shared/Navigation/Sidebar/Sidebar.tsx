@@ -110,7 +110,7 @@ const Sidebar: React.FC<SidebarProps> = ({ subscribedChannels }) => {
         </div>
 
 
-        <div className='mb-2 md:flex md:items-center md:justify-between'>
+        {/* <div className='mb-2 md:flex md:items-center md:justify-between'>
           <div className='mt-4 flex items-center justify-center md:mt-0'>
             <div className='flex space-x-8'>
               <Link
@@ -123,9 +123,9 @@ const Sidebar: React.FC<SidebarProps> = ({ subscribedChannels }) => {
               </Link>
             </div>
           </div>
-        </div>
+        </div> */}
 
-        <div className='mb-2 md:flex md:items-center md:justify-between'>
+        {/* <div className='mb-2 md:flex md:items-center md:justify-between'>
           <div className='mt-4 flex items-center justify-center md:mt-0'>
             <div className='flex space-x-8'>
             <Link
@@ -138,9 +138,9 @@ const Sidebar: React.FC<SidebarProps> = ({ subscribedChannels }) => {
               </Link>
             </div>
           </div>
-        </div>
+        </div> */}
 
-        <div className='mb-2 md:flex md:items-center md:justify-between'>
+        {/* <div className='mb-2 md:flex md:items-center md:justify-between'>
           <div className='mt-4 flex items-center justify-center md:mt-0'>
             <div className='flex space-x-8'>
               <Link
@@ -153,7 +153,7 @@ const Sidebar: React.FC<SidebarProps> = ({ subscribedChannels }) => {
               </Link>
             </div>
           </div>
-        </div>
+        </div> */}
 
 
 
