@@ -1,6 +1,5 @@
 import getTrendingVideos from "@/actions/getTrendingVideos";
 import Poster from "@/components/shared/Poster";
-import VideoCard from "@/components/shared/VideoCard";
 
 export default async function Home() {
   const trendingVideosWithQuestions = await getTrendingVideos();

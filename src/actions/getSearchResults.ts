@@ -7,11 +7,14 @@ interface GetSearchResultsParams{
   searchQuery: string | null;
 }
 
+interface SearchReturnType{
+  video: Video & {channel: Channel}, 
+  questions: string[]
+}
+
 export default async function getSearchResults(
   params: GetSearchResultsParams
-): Promise<
-  (Video & { channel: Channel })[] | null
-> {
+): Promise<SearchReturnType[] | null> {
 
   const { searchQuery } = params;
 
@@ -47,8 +50,32 @@ export default async function getSearchResults(
       ],
     });
 
+    const returnedVideos = await Promise.all(videos.map(async(video) => {
+      const problemsets = await prisma.problemset.findMany({
+        where: {
+          videoId: video.id,
+        },
+        include: {
+          problems: true,
+        },
+        orderBy: [
+          {
+              likeCount: "desc",
+          },
+        ],
+        take: 5,
+      });
 
-    return videos;
+      const questions = problemsets.map((problemset) => problemset.problems[0].question);
+
+      return {
+        video: video,
+        questions: questions,
+      };
+    }));
+
+    return returnedVideos;
+
   } catch (error: any) {
 
     throw new Error(error);
