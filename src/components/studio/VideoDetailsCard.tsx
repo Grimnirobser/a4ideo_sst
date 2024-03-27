@@ -8,18 +8,28 @@ import dayjs from "@/vendor/dayjs";
 import { compactNumberFormat } from "@/lib/numUtils";
 import { MdDelete, MdEdit } from "react-icons/md";
 import { useCallback } from "react";
-import axios from "axios";
 import { useToast } from "@/components/ui/use-toast"
+import { useQuery, useMutation } from "@tanstack/react-query"
+import checkVideoDeletable from "@/actions/checkVideoDeletable";
 
 interface VideoDetailsCardProps {
   video: Video;
 }
 
 const VideoDetailsCard: React.FC<VideoDetailsCardProps> = ({ video }) => {
+  
   const router = useRouter();
   const { toast } = useToast();
 
   const likeFraction = video.likeCount / (video.likeCount + video.dislikeCount);
+
+  const {data: deletable, isLoading} = useQuery({
+    queryKey: ['videoDeletable', video.id],
+    queryFn: async() => await checkVideoDeletable({ videoId: video.id}),
+    refetchOnWindowFocus: true,
+    staleTime: 0,
+    refetchInterval: 0,
+  });
 
   
   //   TODO: Add edit description functionality
@@ -51,7 +61,7 @@ const VideoDetailsCard: React.FC<VideoDetailsCardProps> = ({ video }) => {
         .catch(() => toast({
           variant: "error",
           title: "Error",
-          description: "Something went wrong, please try again.", 
+          description: "We cannot delete this video.", 
          })
         );
     }
@@ -78,8 +88,6 @@ const VideoDetailsCard: React.FC<VideoDetailsCardProps> = ({ video }) => {
           {video.description}
         </p>
       </div>
-
-      {/* TODO: change video.createdAt to video.updatedAt */}
 
       <div className="flex flex-col">
         <p>{dayjs(video.updatedAt).format("MMM D, YYYY")}</p>
@@ -109,10 +117,11 @@ const VideoDetailsCard: React.FC<VideoDetailsCardProps> = ({ video }) => {
         onClick={() => { }}
       />
 
-      <MdDelete
-        className="h-6 w-6 cursor-pointer"
-        onClick={handleDeleteVideo}
-      />
+      <button onClick={handleDeleteVideo} disabled={!deletable || isLoading} title={`${(!deletable || isLoading) ? "contains problemset by someone else" : ""}`}>
+        <MdDelete className={`h-6 w-6 ${deletable ? "cursor-pointer" : "cursor-not-allowed"}`}/>
+      </button>
+              
+
     </div>
   );
 };

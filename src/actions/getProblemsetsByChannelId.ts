@@ -1,6 +1,6 @@
 'use server';
 import prisma from "@/vendor/db";
-import { Problemset } from "@prisma/client";
+import { Problemset, Problem } from "@prisma/client";
 
 interface GetProblemsetsByChannelIdParams {
   channelId?: string;
@@ -8,7 +8,7 @@ interface GetProblemsetsByChannelIdParams {
 
 export default async function getProblemsetsByChannelId(
   params: GetProblemsetsByChannelIdParams
-): Promise<Problemset[]> {
+): Promise<(Problemset & {problems: Problem[]})[]> {
   try {
     const { channelId } = params;
 
@@ -20,6 +20,9 @@ export default async function getProblemsetsByChannelId(
 
     const problemsets = await prisma.problemset.findMany({
       where: query,
+      include: {
+        problems: true,
+      },
     });
 
     return problemsets || [];

@@ -1,26 +1,26 @@
 import getCurrentChannel from "@/actions/getCurrentChannel";
 import prisma from "@/vendor/db";
 import { NextResponse } from "next/server";
-import checkVideoDeletable from "@/actions/checkVideoDeletable";
+import checkProblemsetDeletable from "@/actions/checkProblemsetDeletable";
 
 interface IParams {
-  videoId: string;
+  problemsetId: string;
 }
-
 
 export async function DELETE(_: Request, { params }: { params: IParams }) {
   const currentChannel = await getCurrentChannel();
-  const deletable = await checkVideoDeletable({ videoId: params.videoId });
+  const { problemsetId } = params;
+  const deletable = await checkProblemsetDeletable({ problemsetId });
 
   if (!currentChannel || !deletable) {
     return NextResponse.error();
   }
   
-  const video = await prisma.video.delete({
+  const problemset = await prisma.problemset.delete({
     where: {
-      id: params.videoId,
+      id: problemsetId,
     },
   });
 
-  return NextResponse.json(video);
+  return NextResponse.json(problemset);
 }

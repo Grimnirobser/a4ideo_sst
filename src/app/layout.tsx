@@ -11,6 +11,8 @@ import Provider from "@/context/Provider";
 import ProgressBarProvider from "@/context/ProgressBarProvider";
 import { submitAttemptInitAction } from "@/actions/submitAttempt";
 import { Toaster } from "@/components/ui/toaster"
+import { checkVideoDeletableInitAction } from "@/actions/checkVideoDeletable";
+import { checkProblemsetDeletableInitAction } from "@/actions/checkProblemsetDeletable";
 
 const roboto = Roboto({
   subsets: ["latin"],
@@ -28,6 +30,8 @@ export default async function RootLayout({
   const currentChannel = await getCurrentChannel();
 
   await submitAttemptInitAction();
+  await checkVideoDeletableInitAction();
+  await checkProblemsetDeletableInitAction();
 
   return (
     <html lang="en">

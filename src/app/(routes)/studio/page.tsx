@@ -4,6 +4,7 @@ import AnalyticsSummary from "@/components/studio/AnalyticsSummary";
 import VideoDetailsCard from "@/components/studio/VideoDetailsCard";
 import getProblemsetsByChannelId from "@/actions/getProblemsetsByChannelId";
 import getAttemptsByChannelId from "@/actions/getAttemptsByChannelId";
+import StudioContentSection from "@/components/studio/StudioContentSection";
 
 export default async function StudioPage() {
   const currentChannel = await getCurrentChannel();
@@ -14,14 +15,7 @@ export default async function StudioPage() {
   return (
     <div className="flex flex-col w-full h-full p-8">
       <AnalyticsSummary videos={videos} problemsets={problemsets} attempts={attempts}/>
-      <div className="flex flex-col gap-4 mt-8">
-        <h2 className="text-2xl">Videos</h2>
-        {videos.length
-          ? videos.map((video) => {
-              return <VideoDetailsCard key={video.id} video={video} />;
-            })
-          : "Upload some videos to get started"}
-      </div>
+      <StudioContentSection videos={videos} problemsets={problemsets} attempts={attempts}/>
     </div>
   );
 }
