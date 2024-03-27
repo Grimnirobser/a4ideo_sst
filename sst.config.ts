@@ -24,8 +24,8 @@ export default {
           domainName: "a4ideo.com",
           domainAlias: "www.a4ideo.com",
         },
-        warm: 20,
-        timeout: "5 seconds",
+        warm: 50,
+        timeout: "30 seconds",
         memorySize: "2048 MB",
         environment: {
           NEXT_PUBLIC_SERVER_URL: stack.stage === "prod" ? "https://a4ideo.com" : "http://localhost:3000",
@@ -34,6 +34,10 @@ export default {
           DATABASE_URL: process.env.DATABASE_URL!,
           NEXTAUTH_URL: process.env.NEXTAUTH_URL!,
         },
+      });
+      app.setDefaultFunctionProps({
+        timeout: 30,
+        memorySize: 512,
       });
 
       stack.addOutputs({

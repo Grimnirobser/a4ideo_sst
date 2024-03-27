@@ -32,6 +32,8 @@ import { submitAttempt } from "@/actions/submitAttempt";
 import { SingleFeedback } from "@/components/shared/SingleFeedback";
 import LikeSubscribeProblemsetSection from "../LikeSubscribeSection/LikeSubscribeProblemsetSection";
 import getChannelById from "@/actions/getChannelById";
+import { ToastAction } from "@/components/ui/toast"
+
 
 interface ProblemsetSectionProps {
   problemsets: (Problemset & { channel: Channel, problems: Problem[] })[];
@@ -123,14 +125,12 @@ const ProblemsetSection: React.FC<ProblemsetSectionProps> = ({
       const rand = Math.floor(Math.random() * (max - min + 1) ) + min;
       refetch().then((response) => {
           if (response.data === true){
-            // toast.success(compliment[rand]);
             toast({
               variant: "success",
-              title: "Right",
+              title: "Correct!",
               description: compliment[rand],
             });
           }else if (response.data === false){
-            // toast.error(insult[rand]);
             toast({
               variant: "error",
               title: "Wrong",
