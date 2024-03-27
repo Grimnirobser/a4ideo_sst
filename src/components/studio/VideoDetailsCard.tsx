@@ -58,18 +58,17 @@ const VideoDetailsCard: React.FC<VideoDetailsCardProps> = ({ video }) => {
   }, [video.id, router, toast]);
 
   return (
-    <div
-      key={video.id}
-      className="flex gap-6 justify-between items-center bg-slate-200 p-4 rounded-lg"
+    <div key={video.id}
+    className="flex gap-6 justify-between items-center bg-slate-200 p-4 rounded-lg"
     >
       <Link href={`video/${video.id}`}>
         <Image
           unoptimized
-          className="aspect-w-16 aspect-h-9"
+          className="object-contain object-center"
           alt={`${video.title} thumbnail`}
           src={video.thumbnailSrc}
-          height={90}
-          width={160}
+          height={150}
+          width={100}
         />
       </Link>
 
@@ -83,8 +82,10 @@ const VideoDetailsCard: React.FC<VideoDetailsCardProps> = ({ video }) => {
       {/* TODO: change video.createdAt to video.updatedAt */}
 
       <div className="flex flex-col">
-        <p>{dayjs(video.createdAt).format("MMM D, YYYY")}</p>
-        <p className="text-sm text-neutral-400">Published</p>
+        <p>{dayjs(video.updatedAt).format("MMM D, YYYY")}</p>
+        <p className="text-sm text-neutral-400">
+          {video.approved? "Published" : "Reviewing"}
+        </p>
       </div>
 
       <div className="flex flex-col">
