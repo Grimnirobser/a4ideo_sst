@@ -64,11 +64,6 @@ async function query(data:QueryFormat): Promise<compareReturnType> {
     }
 }
 
-
-function check_PASSED(prediction: string){
-    return prediction === "pass";
-}
-
 export async function submitAttempt( params: SubmitAttemptParams
     ): Promise<AttemptFeedback[]>{
 
@@ -92,7 +87,7 @@ export async function submitAttempt( params: SubmitAttemptParams
 
         const result_prediction = result_lst.map((single_result, index) => single_result.prediction);
 
-        const attemptStatus = result_prediction.every(check_PASSED);
+        const attemptStatus = result_prediction.every(pred => pred === "pass");
 
 
         // author's submission does not count
