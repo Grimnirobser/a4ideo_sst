@@ -36,7 +36,7 @@ export default async function VideoPage({
         <CommentSection comments={comments} videoId={video.id} />
       </div>
 
-      <div className="w-full lg:w-2/6 max-h-screen">
+      <div className="w-full lg:w-2/6 max-h-screen overflow-y-auto no-scrollbar">
         <ProblemsetSection problemsets={problemsets!} videoId={video.id} />
       </div>
       
