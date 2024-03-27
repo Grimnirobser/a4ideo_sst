@@ -17,8 +17,9 @@ import {
 } from 'obscenity';
 
 
-interface ChannelPageParams {
-  videoId?: string;
+interface AddNewProblemsetParams {
+  videoId: string;
+  setUploadProblemset: (value: boolean) => void;
 }
 
 interface ProblemsetDataType{
@@ -38,9 +39,11 @@ interface AnswerType{
 }
 
 
-export default function UploadProblemset({params}: {params: ChannelPageParams}) {
+const AddNewProblemset: React.FC<AddNewProblemsetParams> = ({
+    videoId, 
+    setUploadProblemset
+}) => {
 
-    const { videoId } = params;
     const router = useRouter();
     const currentChannel = useContext(CurrentChannelContext);
     const { toast } = useToast();
@@ -73,9 +76,7 @@ export default function UploadProblemset({params}: {params: ChannelPageParams}) 
         control, // control props comes from useForm (optional: if you are using FormContext)
         name: "problems", // unique name for your Field Array
       });
-      
-      const thumbnailSrc: string = watch("thumbnailSrc");
-    
+          
       const changeValue = (id: string, value: string) => {
         setValue(id, value, {
           shouldDirty: true,
@@ -100,7 +101,7 @@ export default function UploadProblemset({params}: {params: ChannelPageParams}) 
             title: "Success",
             description: "Problemset successfully published.",
           });
-          router.push(process.env.NEXT_PUBLIC_SERVER_URL +`/video/${videoId}`);
+          setUploadProblemset(false);
           router.refresh();
         },
     
@@ -143,9 +144,9 @@ export default function UploadProblemset({params}: {params: ChannelPageParams}) 
           <div className="flex flex-col px-6 pt-4 ">
     
             <div className="flex justify-between">
-              <h1 className="text-2xl">Video details</h1>
+              <h1 className="text-2xl">Problem details</h1>
               <span className="flex gap-4">
-                <Button type="secondary" onClick={() => router.back()}>
+                <Button type="secondary" onClick={() => setUploadProblemset(false)}>
                   Cancel
                 </Button>
                 <Button type="box" onClick={handleSubmit(onSubmit)}>
@@ -192,3 +193,4 @@ export default function UploadProblemset({params}: {params: ChannelPageParams}) 
       );
     }
     
+export default AddNewProblemset;
