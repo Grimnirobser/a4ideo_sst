@@ -5,7 +5,7 @@ import { SimpleLikeDislikeButton } from "@/components/shared/SimpleLikeDislikeBu
 import { compactNumberFormat } from "@/lib/numUtils";
 import { Post } from "@/components/shared/Post"; 
 import { useRouter } from 'next/navigation'
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 
 interface subType {
@@ -143,6 +143,8 @@ export default function SubPage(){
 
     const router = useRouter();
     const { toast } = useToast();
+    const [checked, setChecked] = useState(false);
+
     useEffect(() => {
         router.push("/");
         toast({
@@ -151,6 +153,10 @@ export default function SubPage(){
           });
         }, [router, toast]); 
     
+
+    if (!checked) {
+        return null;
+    }
 
     return (
         <div>

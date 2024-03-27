@@ -33,6 +33,7 @@ import { SingleFeedback } from "@/components/shared/SingleFeedback";
 import LikeSubscribeProblemsetSection from "../LikeSubscribeSection/LikeSubscribeProblemsetSection";
 import getChannelById from "@/actions/getChannelById";
 import { ToastAction } from "@/components/ui/toast"
+import AddNewProblemset from "@/components/shared/AddNewProblemset";
 
 
 interface ProblemsetSectionProps {
@@ -59,6 +60,7 @@ const ProblemsetSection: React.FC<ProblemsetSectionProps> = ({
   const searchParams = useSearchParams();
   const ps = searchParams.get('ps');
   const pathname = usePathname();
+  const [uploadProblemset, setUploadProblemset] = useState(false);
 
   const targetProblemset = ps ? parseInt(ps) : 1;
   const target = 1 <= targetProblemset && targetProblemset <= totalProblemset ? targetProblemset : 1;
@@ -195,6 +197,7 @@ const ProblemsetSection: React.FC<ProblemsetSectionProps> = ({
   else{
 
   return (
+    uploadProblemset ? <AddNewProblemset videoId={videoId} setUploadProblemset={setUploadProblemset}/> : 
     <>
     <ProblemPagination
       end = {totalProblemset}
@@ -246,7 +249,7 @@ const ProblemsetSection: React.FC<ProblemsetSectionProps> = ({
                   <Loader2 className='mr-2 h-4 w-4 animate-spin' />
             )}Submit</Button>
             <StatusBasedTag status={attemptStatus}/>
-            <FileQuestion className='cursor-pointer w-10 h-10 hover:bg-slate-200 rounded-lg' onClick={() => {router.push(`/upload-new-problemset/${videoId}`);}}/>
+            <FileQuestion className='cursor-pointer w-10 h-10 hover:bg-slate-200 rounded-lg' onClick={() => setUploadProblemset(true)}/>
 
           </div>
 
@@ -254,8 +257,6 @@ const ProblemsetSection: React.FC<ProblemsetSectionProps> = ({
         Note if all sentences are not red but the result is &quot;fail&quot;, it means the answer is missing an emphasis.
         You can try click the question mark next to PASS/UNPASSED badge to upload your own questions.
     </div>
-
-
       </form> 
     </Form>
     </>
