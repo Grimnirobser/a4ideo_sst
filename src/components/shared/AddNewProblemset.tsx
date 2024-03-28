@@ -1,7 +1,6 @@
 "use client";
 
 import { CurrentChannelContext } from "@/context/CurrentChannelContext";
-import { useRouter } from "next/navigation";
 import { useContext, useState, useEffect } from "react";
 import { useToast } from "@/components/ui/use-toast"
 import { useForm, FieldValues, SubmitHandler, useFieldArray } from "react-hook-form";
@@ -44,20 +43,19 @@ const AddNewProblemset: React.FC<AddNewProblemsetParams> = ({
     setUploadProblemset
 }) => {
 
-    const router = useRouter();
     const currentChannel = useContext(CurrentChannelContext);
     const { toast } = useToast();
 
     useEffect(() => {
       if (!currentChannel) {
-        router.push("/");
+        setUploadProblemset(false);
         toast({
           variant: "error",
           title: "Error",
           description: "You need to sign in to upload.",
         });
       }
-    }, [ currentChannel, router, toast]); 
+    }, [ currentChannel, toast, setUploadProblemset]); 
 
     const {
         control,
@@ -92,7 +90,7 @@ const AddNewProblemset: React.FC<AddNewProblemsetParams> = ({
       let decrementTotalProblems = () => (totalProblems === 1) ? {} : setTotalProblems(totalProblems - 1);
       
       const { mutate, mutateAsync, isPending } = useMutation({
-        mutationKey: ["UploadNewProblemset"],
+        mutationKey: ["UploadNewProblemset", videoId, currentChannel?.id],
         mutationFn: async(problemsetData: ProblemsetDataType) => await createProblemset(problemsetData),
     
         onSuccess: () => {
@@ -102,7 +100,6 @@ const AddNewProblemset: React.FC<AddNewProblemsetParams> = ({
             description: "Problemset successfully published.",
           });
           setUploadProblemset(false);
-          router.refresh();
         },
     
         onError: () => toast({
@@ -141,7 +138,7 @@ const AddNewProblemset: React.FC<AddNewProblemsetParams> = ({
     
       return (
         <>
-          <div className="flex flex-col px-6 pt-4 ">
+          <div className="flex flex-col pt-4 ">
     
             <div className="flex justify-between">
               <h1 className="text-2xl">Problem details</h1>

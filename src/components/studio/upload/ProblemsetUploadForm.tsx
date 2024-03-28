@@ -155,7 +155,7 @@ const ProblemUploadForm: React.FC<ProblemUploadFormProps> = ({
             <TextArea
               register={register}
               id={`problems.${index}.question`}
-              label="Question (required)"
+              label="Question"
               errors={errors}
               disabled={isLoading}
               changeValue={changeValue}
@@ -191,7 +191,7 @@ const ProblemUploadForm: React.FC<ProblemUploadFormProps> = ({
           <div className="relative ">
             <div className="flex w-full min-h-[300px] max-h-[300px] mb-2 rounded-md border-[1px] bg-slate-100 border-zinc-500 focus:border-blue-400 text-center">
                 <Label htmlFor={`answerInput${index}`} className="absolute bg-slate-100 px-1 top-2 left-4 z-[1] text-zinc-500 text-base font-sans antialiased">
-                    Answer (required)
+                    Answer
                 </Label>
 
                 <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
@@ -262,7 +262,7 @@ const ProblemUploadForm: React.FC<ProblemUploadFormProps> = ({
             <TextArea
               register={register}
               id={`problems.${index}.question`}
-              label="Question (required)"
+              label="Question"
               errors={errors}
               disabled={isLoading}
               changeValue={changeValue}
@@ -299,7 +299,7 @@ const ProblemUploadForm: React.FC<ProblemUploadFormProps> = ({
         <div className="relative ">
             <div className="flex w-full min-h-[422px] max-h-[422px] mb-2 rounded-md border-[1px] bg-slate-100 border-zinc-500 focus:border-blue-400 text-center">
                 <Label htmlFor={`answerInput${index}`} className="absolute bg-slate-100 px-1 top-2 left-4 z-[1] text-zinc-500 text-base font-sans antialiased">
-                    Answer (required)
+                    Answer
                 </Label>
 
                 <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
