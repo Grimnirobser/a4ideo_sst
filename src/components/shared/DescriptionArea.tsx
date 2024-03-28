@@ -10,6 +10,11 @@ interface DescriptionAreaProps {
   changeValue: (id: string, value: string) => void;
 }
 
+function pasteAsPlainText(event: any) {
+  event.preventDefault();
+  event.target.innerText = event.clipboardData.getData("text/plain");
+}
+
 const DescriptionArea: React.FC<DescriptionAreaProps> = ({
   id,
   label,
@@ -19,10 +24,11 @@ const DescriptionArea: React.FC<DescriptionAreaProps> = ({
   errors,
   changeValue,
 }) => {
+
   return (
     <div className="relative">
       <div
-        contentEditable={true}
+        contentEditable="plaintext-only"
         onInput={(e) => changeValue?.(id, e.currentTarget.innerText || "")}
         id={id}
         disabled={disabled}

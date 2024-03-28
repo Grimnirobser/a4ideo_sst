@@ -16,6 +16,7 @@ export default async function getProblemsetsByVideoId(
 
     if (videoId) {
       query.videoId = videoId;
+      // query.approved = true;
     }
 
     const problemsets = await prisma.problemset.findMany({

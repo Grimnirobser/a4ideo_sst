@@ -1,4 +1,5 @@
 import { FieldErrors, FieldValues, UseFormRegister } from "react-hook-form";
+import { useRef, useEffect } from "react";
 
 interface TextAreaProps {
   id: string;
@@ -10,6 +11,12 @@ interface TextAreaProps {
   changeValue: (id: string, value: string) => void;
 }
 
+function pasteAsPlainText(event: any) {
+  event.preventDefault();
+  event.target.innerText = event.clipboardData.getData("text/plain");
+}
+
+
 const TextArea: React.FC<TextAreaProps> = ({
   id,
   label,
@@ -19,10 +26,11 @@ const TextArea: React.FC<TextAreaProps> = ({
   errors,
   changeValue,
 }) => {
+
   return (
     <div className="relative">
       <div
-        contentEditable={true}
+        contentEditable="plaintext-only"
         onInput={(e) => changeValue?.(id, e.currentTarget.innerText || "")}
         id={id}
         disabled={disabled}
@@ -31,7 +39,7 @@ const TextArea: React.FC<TextAreaProps> = ({
           errors[id]
             ? "border-red-500 focus:border-red-500"
             : "border-zinc-500 focus:border-blue-400"
-        } disabled:opacity-70 disabled:cursor-not-allowed text-xl font-sans antialiased`}
+        } disabled:opacity-70 disabled:cursor-not-allowed text-xl font-sans antialiased break-words hyphens-auto`}
       />
       <label
         htmlFor={id}

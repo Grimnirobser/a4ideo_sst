@@ -25,7 +25,7 @@ export default async function NotFoundPage() {
             className: 'absolute top-10 right-10 gap-1.5 text-lg',
           })}
           href='/'>
-          Go back to home
+          A rabbit hole! Go back to home
           <ArrowRight className='h-4 w-4' />
         </Link>
       </div>

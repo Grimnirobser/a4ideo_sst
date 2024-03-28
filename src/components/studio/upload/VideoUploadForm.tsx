@@ -37,7 +37,7 @@ const VideoUploadForm: React.FC<VideoUploadFormProps> = ({
                 <TextArea
                   register={register}
                   id="youtubeId"
-                  label="Youtube video ID (if not provided, the thumbnail will be used)"
+                  label="Youtube video ID"
                   errors={errors}
                   disabled={isLoading}
                   changeValue={changeValue}
@@ -55,7 +55,7 @@ const VideoUploadForm: React.FC<VideoUploadFormProps> = ({
           <TextArea
             register={register}
             id="title"
-            label="Title (required)"
+            label="Title"
             errors={errors}
             disabled={isLoading}
             changeValue={changeValue}
@@ -99,7 +99,7 @@ const VideoUploadForm: React.FC<VideoUploadFormProps> = ({
       <DescriptionArea 
         register={register}
         id="description"
-        label="Description (required)"
+        label="Description"
         errors={errors}
         disabled={isLoading}
         changeValue={changeValue}
