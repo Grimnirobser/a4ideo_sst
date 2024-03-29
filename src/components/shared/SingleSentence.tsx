@@ -14,8 +14,9 @@ import {
     DialogClose,
   } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
-import { AutosizeTextarea } from "@/components/ui/auto-resize"
 import { Trash2, Pencil } from 'lucide-react';
+import { Textarea } from "@/components/ui/textarea"
+
 
 
 interface SingleSentenceProps {
@@ -62,7 +63,7 @@ export const SingleSentence: React.FC<SingleSentenceProps> = ({
                         Please note that the modified answer will be not in the emphasis list by default.
                       </DialogDescription>
                     </DialogHeader>
-                      <AutosizeTextarea id={`answerModify${emphasisIndex}`} className="text-slate-900 text-xl font-sans antialiased"
+                      <Textarea id={`answerModify${emphasisIndex}`} className="text-slate-900 text-xl font-sans antialiased"
                           placeholder="Type your answer here . . ."
                           value={newSentence}
                           onChange={(ev) => setNewSentence(ev.target.value)}
