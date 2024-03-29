@@ -16,7 +16,7 @@ interface CreateVideoParams{
     title: string,
     description: string,
     youtubeId: string,
-    thumbnailSrc: string,
+    imageSrc: string,
     problems: ProblemDataType[]
 }
 
@@ -31,7 +31,7 @@ export async function createVideo( params: CreateVideoParams
   
     try {
 
-        const { channelId, title, description, youtubeId, thumbnailSrc, problems } = params;
+        const { channelId, title, description, youtubeId, imageSrc, problems } = params;
 
         if (!channelId) {
             throw new Error("Invalid channelId");
@@ -43,7 +43,7 @@ export async function createVideo( params: CreateVideoParams
                 title: title,
                 description:description,
                 youtubeId: youtubeId,
-                thumbnailSrc: thumbnailSrc,
+                imageSrc: imageSrc,
             },
         });
 
