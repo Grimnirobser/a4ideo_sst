@@ -27,7 +27,7 @@ interface VideoDataType{
   title: string,
   description: string,
   youtubeId: string,
-  thumbnailSrc: string,
+  imageSrc: string,
   problems: ProblemDataType[]
 }
 
@@ -74,7 +74,7 @@ export default function UploadPage() {
     defaultValues: {
       title: "",
       description: "",
-      thumbnailSrc: "",
+      imageSrc: "",
       youtubeId: "",
       problems: [{question: "", type:"reason", answer: []}],
     },
@@ -85,7 +85,7 @@ export default function UploadPage() {
     name: "problems", // unique name for your Field Array
   });
   
-  const thumbnailSrc: string = watch("thumbnailSrc");
+  const imageSrc: string = watch("imageSrc");
 
   const changeValue = (id: string, value: string) => {
     setValue(id, value, {
@@ -155,7 +155,7 @@ export default function UploadPage() {
         title: data.title,
         description: data.description,
         youtubeId: data.youtubeId,
-        thumbnailSrc: data.thumbnailSrc,
+        imageSrc: data.imageSrc,
         problems: data.problems,
       };
 
@@ -192,7 +192,7 @@ export default function UploadPage() {
             register={register}
             errors={errors}
             changeValue={changeValue}
-            thumbnailSrc={thumbnailSrc}
+            imageSrc={imageSrc}
             isLoading={isPending}
           />
           

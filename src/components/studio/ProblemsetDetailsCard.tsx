@@ -64,7 +64,7 @@ const ProblemsetDetailsCard: React.FC<ProblemsetDetailsCardProps> = ({ problemse
           unoptimized
           className="object-contain object-center"
           alt={`${video.title} thumbnail`}
-          src={video!.thumbnailSrc}
+          src={video!.imageSrc}
           height={150}
           width={100}
         />

@@ -56,13 +56,16 @@ model Channel {
   dislikedVideoIds      String[]
   likedProblemsetIds    String[]
   dislikedProblemsetIds String[]
+  likedCommunityIds     String[]
+  dislikedCommunityIds  String[]
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  comments    Comment[]
-  videos      Video[]
-  problemsets Problemset[]
-  attempt     Attempt[]
+  comments          Comment[]
+  videos            Video[]
+  problemsets       Problemset[]
+  attempt           Attempt[]
+  memberOfCommunity Community[]
 }
 
 model Video {
@@ -75,7 +78,7 @@ model Video {
   viewCount    Int      @default(0)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
-  thumbnailSrc String
+  imageSrc     String
   youtubeId    String
   approved     Boolean  @default(false)
   auditedBy    String?
@@ -99,20 +102,24 @@ model Comment {
 }
 
 model Problemset {
-  id           String    @id @default(nanoid())
+  id           String     @id @default(nanoid())
   channelId    String
   videoId      String
-  likeCount    Int       @default(0)
-  dislikeCount Int       @default(0)
-  attemptCount Int       @default(0)
-  passCount    Int       @default(0)
-  createdAt    DateTime  @default(now())
-  approved     Boolean   @default(false)
-  suspended    Boolean   @default(false)
-  passedScore  Float     @default(0.50)
+  communityId  Int        @default(-1)
+  likeCount    Int        @default(0)
+  dislikeCount Int        @default(0)
+  attemptCount Int        @default(0)
+  passCount    Int        @default(0)
+  createdAt    DateTime   @default(now())
+  approved     Boolean    @default(false)
+  suspended    Boolean    @default(false)
+  passedScore  Float      @default(0.50)
+  auditedBy    String?
+  tags         Tag[]
   problems     Problem[]
-  channel      Channel   @relation(fields: [channelId], references: [id], onDelete: Cascade)
-  video        Video     @relation(fields: [videoId], references: [id], onDelete: Cascade)
+  channel      Channel    @relation(fields: [channelId], references: [id], onDelete: Cascade)
+  video        Video      @relation(fields: [videoId], references: [id], onDelete: Cascade)
+  Community    Community?
 }
 
 model Problem {
@@ -137,4 +144,28 @@ model Attempt {
   passedBefore Boolean  @default(false) // if the user has passed the problemset before, used to count avg attempt count to pass the problemset
 
   Channel Channel @relation(fields: [channelId], references: [id], onDelete: Cascade)
+}
+
+model Tag {
+  id          Int          @id @default(autoincrement())
+  name        String
+  problemsets Problemset[]
+}
+
+model Community {
+  id              String     @id @default(nanoid())
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+  name            String
+  description     String
+  imageSrc        String[]
+  memberCount     Int        @default(0)
+  likeCount       Int        @default(0)
+  dislikeCount    Int        @default(0)
+  approved        Boolean    @default(false)
+  auditedBy       String?
+  suspended       Boolean    @default(false)
+  problemsetId    String     @unique
+  problemset      Problemset @relation(fields: [problemsetId], references: [id])
+  CommunityMember Channel[]
 }

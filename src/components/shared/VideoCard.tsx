@@ -33,7 +33,7 @@ const VideoCard: React.FC<VideoCardProps> = ({
           <Image
             unoptimized
             className="object-cover rounded-lg"
-            src={video.thumbnailSrc}
+            src={video.imageSrc}
             alt={`Thumbnail for ${video.title}`}
             sizes="100%"
             fill

@@ -3,9 +3,6 @@
 import prisma from "@/vendor/db";
 import { Channel } from "@prisma/client";
 import getCurrentUser from "@/actions/getCurrentUser";
-
-
-
 interface CreateChannelParams{
     userId: string;
     username: string;

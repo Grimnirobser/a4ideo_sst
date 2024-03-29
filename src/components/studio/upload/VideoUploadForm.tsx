@@ -12,7 +12,7 @@ interface VideoUploadFormProps {
   register: UseFormRegister<FieldValues>;
   errors: FieldErrors<FieldValues>;
   changeValue: (id: string, value: string) => void;
-  thumbnailSrc: string;
+  imageSrc: string;
   isLoading: boolean;
 }
 
@@ -20,7 +20,7 @@ const VideoUploadForm: React.FC<VideoUploadFormProps> = ({
   register,
   errors,
   changeValue,
-  thumbnailSrc,
+  imageSrc,
   isLoading,
 }) => {
   return (
@@ -64,15 +64,15 @@ const VideoUploadForm: React.FC<VideoUploadFormProps> = ({
           </div>
         </div>
 
-        {/* thumbnailSrc input */}
+        {/* imageSrc input */}
       <div className="">
         <MediaUpload
-          onChange={(value) => !isLoading && changeValue("thumbnailSrc", value)}
+          onChange={(value) => !isLoading && changeValue("imageSrc", value)}
         >
-          {thumbnailSrc ? (
+          {imageSrc ? (
             <Image
               unoptimized
-              src={thumbnailSrc}
+              src={imageSrc}
               alt="thumbnail"
               height="124"
               width="192"
@@ -82,10 +82,10 @@ const VideoUploadForm: React.FC<VideoUploadFormProps> = ({
             />
           ) : (
             <div
-              id="thumbnailSrc"
-              {...register("thumbnailSrc", { required: true })}
+              id="imageSrc"
+              {...register("imageSrc", { required: true })}
               className={`h-52 w-80 bg-slate-100 rounded-md flex items-center justify-center cursor-pointer border-[1px] ${
-                errors["thumbnailSrc"] ? "border-red-500" : "border-zinc-500"
+                errors["imageSrc"] ? "border-red-500" : "border-zinc-500"
               }`}
             >
               <FaRegSquarePlus className="h-6 w-6" />
