@@ -171,7 +171,7 @@ export default function UploadPage() {
           onUpload={(value) => changeValue("videoSrc", value)}
         />
       )} */}
-      <div className="flex flex-col px-6 pt-4 ">
+      <div className="flex flex-col px-6 pt-4">
 
         <div className="flex justify-between">
           <h1 className="text-2xl">Video details</h1>
@@ -186,18 +186,19 @@ export default function UploadPage() {
         </div>
 
 
-        <div className="flex flex-row mt-4 gap-4 max-h-screen">
+        <div className="flex flex-col lg:flex-row mt-2 gap-4 max-h-full">
 
-          <VideoUploadForm
-            register={register}
-            errors={errors}
-            changeValue={changeValue}
-            imageSrc={imageSrc}
-            isLoading={isPending}
-          />
+          <div className="w-full lg:w-4/6 flex flex-col">
+            <VideoUploadForm
+              register={register}
+              errors={errors}
+              changeValue={changeValue}
+              imageSrc={imageSrc}
+              isLoading={isPending}
+            />
+          </div>
           
-          <div className="w-2/6 space-y-2 overflow-y-auto no-scrollbar">
-
+          <div className="w-full lg:w-2/6 max-h-screen overflow-y-auto no-scrollbar">
               {fields.map((field, index) => (
                 <div key={field.id}>
                   <ProblemsetUploadForm

@@ -1,12 +1,13 @@
 "use client";
 
 import MediaUpload from "@/components/shared/MediaUpload";
-import TextArea from "@/components/shared/TextArea";
-import DescriptionArea from "@/components/shared/DescriptionArea";
 import Image from "next/image";
 import { FieldErrors, FieldValues, UseFormRegister } from "react-hook-form";
 import { FaRegSquarePlus } from "react-icons/fa6";
 import { ChevronRight } from 'lucide-react';
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Textarea } from "@/components/ui/textarea"
 
 interface VideoUploadFormProps {
   register: UseFormRegister<FieldValues>;
@@ -24,88 +25,73 @@ const VideoUploadForm: React.FC<VideoUploadFormProps> = ({
   isLoading,
 }) => {
   return (
-    <div className="w-full md:w-4/6 flex flex-col gap-2">
+      <div className="grid grid-cols-3 grid-flow-row gap-4">
+        <div className="col-span-2 space-y-8">
 
-      <div className="flex flex-row gap-4">
-        
-        <div className="flex flex-col w-full gap-2">
+          <div className="row-span-1">
+            <Label htmlFor="youtubeId" className="text-base">Youtube video ID</Label>
+            <Input id="youtubeId" className="text-slate-900 text-xl font-sans antialiased mt-2 border-zinc-500"
+                      placeholder="Youtube video ID"
+                      {...register("youtubeId", { required: false })}
+                      onChange={(ev) => changeValue?.("youtubeId", ev.target.value || "")}
+                      disabled={isLoading}
+                  />
+          </div>
 
-        {/* youtube id input */}
-            <div className="flex gap-2"> 
-
-              <div className="w-full">
-                <TextArea
-                  register={register}
-                  id="youtubeId"
-                  label="Youtube video ID"
-                  errors={errors}
-                  disabled={isLoading}
-                  changeValue={changeValue}
-                />
-              </div>
-                  <div className="flex w-40 ml-2 rounded-md border-[1px] bg-slate-100 border-zinc-500 text-center items-center justify-center">
-                    Thumbnail
-                    <ChevronRight className="h-6 w-6"/>
-                  </div>
-            </div>
-
-          {/* title input */}
-          <div className="w-full"> 
-
-          <TextArea
-            register={register}
-            id="title"
-            label="Title"
-            errors={errors}
-            disabled={isLoading}
-            changeValue={changeValue}
-            required
-          />
+          <div className="row-span-1">
+            <Label htmlFor="title" className="text-base">Title</Label>
+            <Textarea id="title" className="text-slate-900 text-xl font-sans antialiased mt-2 border-zinc-500"
+                      placeholder="Title"
+                      {...register("title", { required: true })}
+                      onChange={(ev) => changeValue?.("title", ev.target.value || "")}
+                      disabled={isLoading}
+                  />
           </div>
         </div>
 
-        {/* imageSrc input */}
-      <div className="">
-        <MediaUpload
-          onChange={(value) => !isLoading && changeValue("imageSrc", value)}
-        >
-          {imageSrc ? (
-            <Image
-              unoptimized
-              src={imageSrc}
-              alt="thumbnail"
-              height="124"
-              width="192"
-              className={`h-52 w-80 overflow-hidden rounded-md border-[1px] border-zinc-500 ${
-                !isLoading ? "cursor-pointer" : ""
-              }`}
+         {/* imageSrc input */}
+         <div className="col-span-1 aspect-w-2 aspect-h-3"> 
+          <MediaUpload
+            onChange={(value) => !isLoading && changeValue("imageSrc", value)}
+          >
+            <Label className="text-base">Image</Label>
+
+            {imageSrc ? (
+              <div className="flex w-full h-full cursor-pointer aspect-w-2 aspect-h-3">
+                <Image
+                  id="imageSrc"
+                  unoptimized
+                  src={imageSrc}
+                  alt="imageSrc"
+                  fill
+                  sizes="100%"
+                  className="-z-10 object-contain object-center rounded-md mt-2 w-full h-full cursor-pointer border-[1px] border-zinc-500"
+                />
+              </div>
+            ) : (
+              <div
+                {...register("imageSrc", { required: true })}
+                className={`flex mt-2 w-full h-full rounded-md items-center cursor-pointer border-[1px] justify-center object-contain ${
+                  errors["imageSrc"] ? "border-red-500" : "border-zinc-500"
+                }`}
+              >
+                <FaRegSquarePlus className="h-6 w-6" />
+              </div>
+            )}
+          </MediaUpload>
+          </div>
+
+        <div className="col-span-3">
+          <Label htmlFor="description" className="text-base">Description</Label>
+          <Textarea 
+              id="description" 
+              className="text-slate-900 text-xl font-sans antialiased mt-2 border-zinc-500"
+              placeholder="Description"
+              {...register("description", { required: true })}
+              onChange={(ev) => changeValue?.("description", ev.target.value || "")}
+              disabled={isLoading}                      
             />
-          ) : (
-            <div
-              id="imageSrc"
-              {...register("imageSrc", { required: true })}
-              className={`h-52 w-80 bg-slate-100 rounded-md flex items-center justify-center cursor-pointer border-[1px] ${
-                errors["imageSrc"] ? "border-red-500" : "border-zinc-500"
-              }`}
-            >
-              <FaRegSquarePlus className="h-6 w-6" />
-            </div>
-          )}
-        </MediaUpload>
       </div>
-
-      </div>
-
-      <DescriptionArea 
-        register={register}
-        id="description"
-        label="Description"
-        errors={errors}
-        disabled={isLoading}
-        changeValue={changeValue}
-        required
-      />
-      
     </div>
   );
 };

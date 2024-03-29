@@ -24,7 +24,7 @@ const PosterForCommunity: React.FC<PosterProps> = ({
 }) => {
 
     const [activeIndex, setActiveIndex] = useState(0)
-    const slides : SlideItem[] = community.imageSrc.map((src) => ({isImage: true, source: src}));
+    const slides : SlideItem[] = community.imageSrcs.map((src) => ({isImage: true, source: src}));
 
     if (questions){
         questions.forEach((question) => {

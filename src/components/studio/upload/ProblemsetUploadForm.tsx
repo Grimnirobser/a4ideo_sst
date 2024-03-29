@@ -1,5 +1,4 @@
 "use client";
-import TextArea from "@/components/shared/TextArea";
 import { FieldErrors, FieldValues, UseFormRegister, Controller, Control, useFieldArray } from "react-hook-form";
 
 import { Trash2 } from 'lucide-react';
@@ -15,8 +14,6 @@ import {
 } from "@/components/ui/select"
 import { ChevronDown } from 'lucide-react';
 import { FaRegSquarePlus } from "react-icons/fa6";
-import { Label } from "@/components/ui/label"
-
 import { useState, useEffect } from "react";
 import {
   Dialog,
@@ -29,8 +26,10 @@ import {
   DialogClose,
 } from "@/components/ui/dialog"
 
-import { AutosizeTextarea } from "@/components/ui/auto-resize"
+import { Textarea } from "@/components/ui/textarea"
 import { SingleSentence } from "@/components/shared/SingleSentence"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 
 
 interface ProblemUploadFormProps {
@@ -146,58 +145,47 @@ const ProblemUploadForm: React.FC<ProblemUploadFormProps> = ({
   if (totalProblems <= 1) {
     return (
       <>
-      <div className="flex gap-1">
       <div className="w-full flex flex-col gap-2">
   
-        <div className="flex flex-row gap-2">
-  
-          <div className="w-3/5">
-            <TextArea
-              register={register}
-              id={`problems.${index}.question`}
-              label="Question"
-              errors={errors}
-              disabled={isLoading}
-              changeValue={changeValue}
-              required
-            />
-          </div>
-        
-          <div className="w-2/5">
-                  <div className="flex w-full h-2/5 mb-2 rounded-md border-[1px] bg-slate-100 border-zinc-500 text-center items-center justify-center">
-                    Question Type
-                    <ChevronDown className="h-6 w-6"/>
-                  </div>
-            <Controller 
-                  control={control}
-                  name={`problems.${index}.type`}
-                  defaultValue={options[0].value}
-                  render={({ field }) => (
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                          <SelectTrigger className="flex h-auto text-2xl font-sans subpixel-antialiased">
-                            <SelectValue />
-                          </SelectTrigger>
-                        <SelectContent >
-                          <SelectItem className="text-2xl font-sans subpixel-antialiased" value={options[0].value}>{options[0].label}</SelectItem>
-                          <SelectItem className="text-2xl font-sans subpixel-antialiased" value={options[1].value}>{options[1].label}</SelectItem>
-                          <SelectItem className="text-2xl font-sans subpixel-antialiased" value={options[2].value}>{options[2].label}</SelectItem>
-                        </SelectContent>
-                      </Select>
-                  )}
-              />
-          </div>
-        </div>
-          
-          <div className="relative ">
-            <div className="flex w-full min-h-[300px] max-h-[300px] mb-2 rounded-md border-[1px] bg-slate-100 border-zinc-500 focus:border-blue-400 text-center">
-                <Label htmlFor={`answerInput${index}`} className="absolute bg-slate-100 px-1 top-2 left-4 z-[1] text-zinc-500 text-base font-sans antialiased">
-                    Answer
-                </Label>
+        <Label className="text-base">Question type</Label>
+        <Controller 
+              control={control}
+              name={`problems.${index}.type`}
+              defaultValue={options[0].value}
+              render={({ field }) => (
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <SelectTrigger className="flex h-auto text-2xl font-sans subpixel-antialiased mt-2 border-zinc-500">
+                        <SelectValue id={`problems.${index}.type`} />
+                      </SelectTrigger>
+                    <SelectContent >
+                      <SelectItem className="text-2xl font-sans subpixel-antialiased" value={options[0].value}>{options[0].label}</SelectItem>
+                      <SelectItem className="text-2xl font-sans subpixel-antialiased" value={options[1].value}>{options[1].label}</SelectItem>
+                      <SelectItem className="text-2xl font-sans subpixel-antialiased" value={options[2].value}>{options[2].label}</SelectItem>
+                    </SelectContent>
+                  </Select>
+              )}
+          />
 
+        <div>
+
+        <Label htmlFor={`problems.${index}.question`} className="text-base">Question</Label>
+        <Textarea 
+          id={`problems.${index}.question`}
+          className="text-slate-900 text-xl font-sans antialiased mt-2 border-zinc-500"
+          placeholder="Question"
+          {...register(`problems.${index}.question`, { required: true })}
+          onChange={(ev) => changeValue?.(`problems.${index}.question`, ev.target.value || "")}
+          disabled={isLoading}                      
+        />
+        </div>
+
+        <Label className="text-base">Answer</Label>
+          <div className="relative">
+          <div className="flex w-full h-[300px] mb-2 rounded-md border-[1px] border-zinc-500 text-center">
                 <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
                   <DialogTrigger asChild>
-                    <Button variant="ghost" disabled={isLoading} className="absolute bg-slate-100 px-1 top-2 right-4 z-[1] ">
-                        <FaRegSquarePlus className="w-6 h-6"/>
+                    <Button variant="ghost" disabled={isLoading} className="absolute px-2 top-2 right-2 z-[1] ">
+                        <FaRegSquarePlus className="w-4 h-4"/>
                     </Button>
                   </DialogTrigger>
 
@@ -209,7 +197,7 @@ const ProblemUploadForm: React.FC<ProblemUploadFormProps> = ({
                         and you need to emphasize those necessary sentences that an acceptable solution must have.
                       </DialogDescription>
                     </DialogHeader>
-                      <AutosizeTextarea id={`answerInput${index}`} className="text-slate-900 text-xl font-sans antialiased"
+                      <Textarea id={`answerInput${index}`} className="text-slate-900 text-xl font-sans antialiased border-zinc-500"
                           placeholder="Type your answer here . . ."
                           value={answerInput}
                           onChange={(ev) => setAnswerInput(ev.target.value)}
@@ -243,11 +231,8 @@ const ProblemUploadForm: React.FC<ProblemUploadFormProps> = ({
                   )}
                 </div>
             </div>
-          </div>
-  
+            </div>
         </div>
-        
-      </div>
       </>
     );
   }else{
@@ -255,57 +240,47 @@ const ProblemUploadForm: React.FC<ProblemUploadFormProps> = ({
       <>
       <div className="flex gap-1">
       <div className="w-full flex flex-col gap-2">
-  
-        <div className="flex flex-row gap-2">
-  
-          <div className="w-3/5">
-            <TextArea
-              register={register}
-              id={`problems.${index}.question`}
-              label="Question"
-              errors={errors}
-              disabled={isLoading}
-              changeValue={changeValue}
-              required
-            />
-          </div>
-        
-          <div className="w-2/5">
-              <div className="flex w-full h-2/5 mb-2 rounded-md border-[1px] bg-slate-100 border-zinc-500 text-center items-center justify-center">
-                    Question Type
-                    <ChevronDown className="h-6 w-6"/>
-                  </div>
-          <Controller
-                control={control}
-                name={`problems.${index}.type`}
-                defaultValue={options[0].value}
-                render={({ field }) => (
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
-                        <SelectTrigger className="flex h-auto text-2xl font-sans subpixel-antialiased">
-                          <SelectValue />
-                        </SelectTrigger>
-                      <SelectContent >
-                        <SelectItem className="text-2xl font-sans subpixel-antialiased" value={options[0].value}>{options[0].label}</SelectItem>
-                        <SelectItem className="text-2xl font-sans subpixel-antialiased" value={options[1].value}>{options[1].label}</SelectItem>
-                        <SelectItem className="text-2xl font-sans subpixel-antialiased" value={options[2].value}>{options[2].label}</SelectItem>
-                      </SelectContent>
-                    </Select>
-                )}
-            />
-          </div>
+        <div>
+        <Label className="text-base">Question type</Label>
+        <Controller 
+              control={control}
+              name={`problems.${index}.type`}
+              defaultValue={options[0].value}
+              render={({ field }) => (
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <SelectTrigger className="flex h-auto text-2xl font-sans subpixel-antialiased mt-2 border-zinc-500">
+                        <SelectValue />
+                      </SelectTrigger>
+                    <SelectContent >
+                      <SelectItem className="text-2xl font-sans subpixel-antialiased" value={options[0].value}>{options[0].label}</SelectItem>
+                      <SelectItem className="text-2xl font-sans subpixel-antialiased" value={options[1].value}>{options[1].label}</SelectItem>
+                      <SelectItem className="text-2xl font-sans subpixel-antialiased" value={options[2].value}>{options[2].label}</SelectItem>
+                    </SelectContent>
+                  </Select>
+              )}
+          />
         </div>
 
+        <div>
 
-        <div className="relative ">
-            <div className="flex w-full min-h-[422px] max-h-[422px] mb-2 rounded-md border-[1px] bg-slate-100 border-zinc-500 focus:border-blue-400 text-center">
-                <Label htmlFor={`answerInput${index}`} className="absolute bg-slate-100 px-1 top-2 left-4 z-[1] text-zinc-500 text-base font-sans antialiased">
-                    Answer
-                </Label>
+        <Label htmlFor={`problems.${index}.question`} className="text-base">Question</Label>
+        <Textarea 
+          id={`problems.${index}.question`}
+          className="text-slate-900 text-xl font-sans antialiased mt-2 border-zinc-500"
+          placeholder="Question"
+          {...register(`problems.${index}.question`, { required: true })}
+          onChange={(ev) => changeValue?.(`problems.${index}.question`, ev.target.value || "")}
+          disabled={isLoading}                      
+        />
+        </div>
 
+        <Label className="text-base">Answer</Label>
+          <div className="relative">
+          <div className="flex w-full h-[300px] mb-2 rounded-md border-[1px] border-zinc-500 text-center">
                 <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
                   <DialogTrigger asChild>
-                    <Button variant="ghost" disabled={isLoading} className="absolute bg-slate-100 px-1 top-2 right-4 z-[1] ">
-                        <FaRegSquarePlus className="w-6 h-6"/>
+                    <Button variant="ghost" disabled={isLoading} className="absolute px-2 top-2 right-2 z-[1] ">
+                        <FaRegSquarePlus className="w-4 h-4"/>
                     </Button>
                   </DialogTrigger>
 
@@ -317,7 +292,7 @@ const ProblemUploadForm: React.FC<ProblemUploadFormProps> = ({
                         and you need to emphasize those necessary sentences that an acceptable solution must have.
                       </DialogDescription>
                     </DialogHeader>
-                      <AutosizeTextarea id={`answerInput${index}`} className="text-slate-900 text-xl font-sans antialiased"
+                      <Textarea id={`answerInput${index}`} className="text-slate-900 text-xl font-sans antialiased border-zinc-500"
                           placeholder="Type your answer here . . ."
                           value={answerInput}
                           onChange={(ev) => setAnswerInput(ev.target.value)}
@@ -346,14 +321,11 @@ const ProblemUploadForm: React.FC<ProblemUploadFormProps> = ({
                                         removeSentence={removeSentence} 
                                         updateSentence={updateSentence} 
                                         updateEmphasis={updateEmphasis}/>
-
                     )
                   )}
                 </div>
             </div>
-          </div>
-  
-  
+            </div>
         </div>
         <Button variant="destructive" className="items-center justify-center h-[314px]" onClick={() => {removeFunction(index);decrement()}}>
           <Trash2 className="w-6 h-6"/>
