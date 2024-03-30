@@ -1,11 +1,11 @@
 import dayjs from "@/vendor/dayjs";
 import { compactNumberFormat } from "@/lib/numUtils";
 import PosterForCommunity from "@/components/shared/PosterForCommunity";
-import getCommunityById from "@/actions/getCommunityById";
-import LikeDislikeCommunityButton from "@/components/video/LikeSubscribeSection/LikeDislikeCommunityButton";
+import getCommunityByName from "@/actions/getCommunityByName";
+import LikeDislikeCommunityButton from "@/components/community/LikeDislikeCommunityButton";
 
 interface CommunityPageParams {
-    communityId: string;
+    communityName: string;
   }
 
 export default async function CommunityPage({
@@ -14,9 +14,8 @@ export default async function CommunityPage({
     params: CommunityPageParams;
   }) {
 
-    const { communityId } = params;
-    const community =  await getCommunityById({communityId});
-
+    const { communityName } = params;
+    const community =  await getCommunityByName({communityName});
 
     return (
 
@@ -24,7 +23,6 @@ export default async function CommunityPage({
             <div className="grid grid-cols-5 grid-flow-row gap-2 mx-20">
                 <div className="col-span-1 aspect-w-2 aspect-h-3">
                     <PosterForCommunity community={community} questions={null}/>
-                        
                 </div>
 
                     <div className="col-span-4 space-y-6">

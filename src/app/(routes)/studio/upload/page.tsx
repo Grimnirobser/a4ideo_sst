@@ -110,7 +110,7 @@ export default function UploadPage() {
       toast({
         variant: "success",
         title: "Success",
-        description: "Video successfully published.",
+        description: "Video successfully submitted for review.",
       });
       router.push("/studio");
       router.refresh();

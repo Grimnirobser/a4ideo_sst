@@ -9,6 +9,8 @@ import YoutubePlayer from "@/components/video/YoutubePlayer";
 import getProblemsetsByVideoId from "@/actions/getProblemsetsByVideoId";
 import ProblemsetSection from "@/components/video/ProblemsetSection/ProblemsetSection";
 import { DocView } from "@/components/video/DocView";
+import { notFound } from 'next/navigation';
+
 
 interface VideoPageParams {
   videoId?: string;
@@ -42,6 +44,6 @@ export default async function VideoPage({
       
     </div>
   ) : (
-    <h1>Video not found</h1>
+    notFound()
   );
 }

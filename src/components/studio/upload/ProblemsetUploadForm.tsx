@@ -12,8 +12,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { ChevronDown } from 'lucide-react';
-import { FaRegSquarePlus } from "react-icons/fa6";
 import { useState, useEffect } from "react";
 import {
   Dialog,
@@ -28,9 +26,8 @@ import {
 
 import { Textarea } from "@/components/ui/textarea"
 import { SingleSentence } from "@/components/shared/SingleSentence"
-import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-
+import { CirclePlus } from 'lucide-react';
 
 interface ProblemUploadFormProps {
   index: number;
@@ -147,14 +144,14 @@ const ProblemUploadForm: React.FC<ProblemUploadFormProps> = ({
       <>
       <div className="w-full flex flex-col gap-2">
   
-        <Label className="text-base">Question type</Label>
+        <Label className="text-base">Question type {index+1}</Label>
         <Controller 
               control={control}
               name={`problems.${index}.type`}
               defaultValue={options[0].value}
               render={({ field }) => (
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <SelectTrigger className="flex h-auto text-2xl font-sans subpixel-antialiased mt-2 border-zinc-500">
+                      <SelectTrigger className="flex h-auto text-2xl font-sans subpixel-antialiased border-zinc-500">
                         <SelectValue id={`problems.${index}.type`} />
                       </SelectTrigger>
                     <SelectContent >
@@ -168,7 +165,7 @@ const ProblemUploadForm: React.FC<ProblemUploadFormProps> = ({
 
         <div>
 
-        <Label htmlFor={`problems.${index}.question`} className="text-base">Question</Label>
+        <Label htmlFor={`problems.${index}.question`} className="text-base">Question {index+1}</Label>
         <Textarea 
           id={`problems.${index}.question`}
           className="text-slate-900 text-xl font-sans antialiased mt-2 border-zinc-500"
@@ -179,13 +176,13 @@ const ProblemUploadForm: React.FC<ProblemUploadFormProps> = ({
         />
         </div>
 
-        <Label className="text-base">Answer</Label>
+        <Label className="text-base">Answer {index+1}</Label>
           <div className="relative">
           <div className="flex w-full h-[300px] mb-2 rounded-md border-[1px] border-zinc-500 text-center">
                 <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
                   <DialogTrigger asChild>
-                    <Button variant="ghost" disabled={isLoading} className="absolute px-2 top-2 right-2 z-[1] ">
-                        <FaRegSquarePlus className="w-4 h-4"/>
+                    <Button variant="ghost" disabled={isLoading} className="absolute px-1 right-2 z-[1] ">
+                        <CirclePlus className="w-4 h-4"/>
                     </Button>
                   </DialogTrigger>
 
@@ -241,7 +238,7 @@ const ProblemUploadForm: React.FC<ProblemUploadFormProps> = ({
       <div className="flex gap-1">
       <div className="w-full flex flex-col gap-2">
         <div>
-        <Label className="text-base">Question type</Label>
+        <Label className="text-base">Question type {index+1}</Label>
         <Controller 
               control={control}
               name={`problems.${index}.type`}
@@ -263,7 +260,7 @@ const ProblemUploadForm: React.FC<ProblemUploadFormProps> = ({
 
         <div>
 
-        <Label htmlFor={`problems.${index}.question`} className="text-base">Question</Label>
+        <Label htmlFor={`problems.${index}.question`} className="text-base">Question {index+1}</Label>
         <Textarea 
           id={`problems.${index}.question`}
           className="text-slate-900 text-xl font-sans antialiased mt-2 border-zinc-500"
@@ -274,13 +271,13 @@ const ProblemUploadForm: React.FC<ProblemUploadFormProps> = ({
         />
         </div>
 
-        <Label className="text-base">Answer</Label>
+        <Label className="text-base">Answer {index+1}</Label>
           <div className="relative">
           <div className="flex w-full h-[300px] mb-2 rounded-md border-[1px] border-zinc-500 text-center">
                 <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
                   <DialogTrigger asChild>
-                    <Button variant="ghost" disabled={isLoading} className="absolute px-2 top-2 right-2 z-[1] ">
-                        <FaRegSquarePlus className="w-4 h-4"/>
+                    <Button variant="ghost" disabled={isLoading} className="absolute px-1 right-2 z-[1] ">
+                        <CirclePlus className="w-4 h-4"/>
                     </Button>
                   </DialogTrigger>
 

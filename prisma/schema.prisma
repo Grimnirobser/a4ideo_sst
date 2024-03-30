@@ -102,24 +102,22 @@ model Comment {
 }
 
 model Problemset {
-  id           String     @id @default(nanoid())
+  id           String    @id @default(nanoid())
   channelId    String
   videoId      String
-  communityId  Int        @default(-1)
-  likeCount    Int        @default(0)
-  dislikeCount Int        @default(0)
-  attemptCount Int        @default(0)
-  passCount    Int        @default(0)
-  createdAt    DateTime   @default(now())
-  approved     Boolean    @default(false)
-  suspended    Boolean    @default(false)
-  passedScore  Float      @default(0.50)
+  likeCount    Int       @default(0)
+  dislikeCount Int       @default(0)
+  attemptCount Int       @default(0)
+  passCount    Int       @default(0)
+  createdAt    DateTime  @default(now())
+  approved     Boolean   @default(false)
+  suspended    Boolean   @default(false)
+  passedScore  Float     @default(0.50)
   auditedBy    String?
   tags         Tag[]
   problems     Problem[]
-  channel      Channel    @relation(fields: [channelId], references: [id], onDelete: Cascade)
-  video        Video      @relation(fields: [videoId], references: [id], onDelete: Cascade)
-  Community    Community?
+  channel      Channel   @relation(fields: [channelId], references: [id], onDelete: Cascade)
+  video        Video     @relation(fields: [videoId], references: [id], onDelete: Cascade)
 }
 
 model Problem {
@@ -153,19 +151,19 @@ model Tag {
 }
 
 model Community {
-  id              String     @id @default(nanoid())
-  createdAt       DateTime   @default(now())
-  updatedAt       DateTime   @updatedAt
-  name            String
+  id              String    @id @default(nanoid())
+  entranceTagId   Int
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  name            String    @unique
   description     String
-  imageSrcs        String[]
-  memberCount     Int        @default(0)
-  likeCount       Int        @default(0)
-  dislikeCount    Int        @default(0)
-  approved        Boolean    @default(false)
+  imageSrcs       String[]
+  memberCount     Int       @default(0)
+  likeCount       Int       @default(0)
+  dislikeCount    Int       @default(0)
+  approved        Boolean   @default(false)
   auditedBy       String?
-  suspended       Boolean    @default(false)
-  problemsetId    String     @unique
-  problemset      Problemset @relation(fields: [problemsetId], references: [id])
+  suspended       Boolean   @default(false)
+  problemsetId    String    @unique
   CommunityMember Channel[]
 }
