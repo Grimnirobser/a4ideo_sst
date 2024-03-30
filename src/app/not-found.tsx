@@ -3,8 +3,6 @@ import Image from 'next/image';
 import { buttonVariants} from '@/components/ui/button'
 import { ArrowRight } from 'lucide-react'
 
-
-
 export default async function NotFoundPage() {
 
   return (
@@ -15,7 +13,7 @@ export default async function NotFoundPage() {
             fill
             sizes="100%"
             className='-z-10 object-contain object-center rounded-lg h-20 w-20'
-            src="./rabbit-hole.jpeg"
+            src="/rabbit-hole.jpeg"
             alt='rabbit hole'
         />
 

@@ -1,15 +1,15 @@
 'use server';
-
 import prisma from "@/vendor/db";
 import { Video, Problemset } from "@prisma/client";
 
 interface GetVideoByIdParams {
-  videoId: string;
+  videoId?: string;
 }
+
 
 export default async function getVideoById(
   params: GetVideoByIdParams
-): Promise<Video & {problemsets: Problemset[]}> {
+): Promise<Video & {problemsets: Problemset[]} | null> {
   try {
     const { videoId } = params;
 
@@ -26,9 +26,6 @@ export default async function getVideoById(
       },
     });
 
-    if (!video) {
-      throw new Error("Video not found");
-    }
 
     return video;
   } catch (error: any) {

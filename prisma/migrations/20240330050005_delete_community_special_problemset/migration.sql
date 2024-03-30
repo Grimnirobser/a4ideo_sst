@@ -1,0 +1,4 @@
+-- AlterTable
+ALTER TABLE "Problemset" ALTER COLUMN "videoId" DROP DEFAULT,
+ALTER COLUMN "communityId" DROP NOT NULL,
+ALTER COLUMN "communityId" DROP DEFAULT;

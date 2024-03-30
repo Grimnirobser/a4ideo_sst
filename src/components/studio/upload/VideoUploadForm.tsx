@@ -3,11 +3,12 @@
 import MediaUpload from "@/components/shared/MediaUpload";
 import Image from "next/image";
 import { FieldErrors, FieldValues, UseFormRegister } from "react-hook-form";
-import { FaRegSquarePlus } from "react-icons/fa6";
+import { Icons } from "@/components/shared/Icons";
 import { ChevronRight } from 'lucide-react';
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
+import { Upload } from 'lucide-react';
 
 interface VideoUploadFormProps {
   register: UseFormRegister<FieldValues>;
@@ -71,11 +72,12 @@ const VideoUploadForm: React.FC<VideoUploadFormProps> = ({
             ) : (
               <div
                 {...register("imageSrc", { required: true })}
-                className={`flex mt-2 w-full h-full rounded-md items-center cursor-pointer border-[1px] justify-center object-contain ${
+                className={`flex flex-col gap-2 mt-2 w-full h-full rounded-md items-center cursor-pointer border-[1px] justify-center object-contain ${
                   errors["imageSrc"] ? "border-red-500" : "border-zinc-500"
                 }`}
               >
-                <FaRegSquarePlus className="h-6 w-6" />
+                <Upload className="h-6 w-6"/> 
+                <p>Click to upload</p>
               </div>
             )}
           </MediaUpload>
