@@ -1,5 +1,6 @@
 import getTrendingCommunities from "@/actions/getTrendingCommunities";
 import PosterForCommunity from "@/components/shared/PosterForCommunity";
+import { notFound } from "next/navigation";
 
 export default async function OriginFansPage() {
   const trendingCommunities = await getTrendingCommunities();
@@ -16,7 +17,8 @@ export default async function OriginFansPage() {
               />
             );
           })
-        : "No videos found"}
+        : notFound()
+      }
     </div>
   );
 }

@@ -7,6 +7,7 @@ import { Problemset, Problem } from "@prisma/client";
 interface problemProps {
   question: string,
   type: string,
+  atTime: number,
   answer: AnswerType[],
 }
 
@@ -20,6 +21,7 @@ interface CreateProblemsetParams{
 interface problemWithProblemsetIdProps{
   question: string,
   type: string,
+  atTime: number,
   answer: string[],
   emphasis: boolean[],
   problemsetId: string,
@@ -62,6 +64,7 @@ export async function createProblemset( params: CreateProblemsetParams
             problemsetId: problemset.id,
             answer: item.answer.map(obj => obj.sentence),
             type: item.type,
+            atTime: item.atTime,
             question: item.question,
             emphasis: item.answer.map(obj => obj.emphasis),
           }));

@@ -34,6 +34,7 @@ interface VideoDataType{
 interface ProblemDataType{
   question: string,
   type: string,
+  atTime: number,
   answer: AnswerType[],
 }
 
@@ -76,7 +77,7 @@ export default function UploadPage() {
       description: "",
       imageSrc: "",
       youtubeId: "",
-      problems: [{question: "", type:"reason", answer: []}],
+      problems: [{question: "", type:"reason", atTime: 0, answer: []}],
     },
   });
 
@@ -87,7 +88,7 @@ export default function UploadPage() {
   
   const imageSrc: string = watch("imageSrc");
 
-  const changeValue = (id: string, value: string) => {
+  const changeValue = (id: string, value: string | number) => {
     setValue(id, value, {
       shouldDirty: true,
       shouldTouch: true,
@@ -217,7 +218,7 @@ export default function UploadPage() {
                 ))}
 
             <div className="relative w-26 h-10 mb-2 mt-2">
-            <Button className="absolute inset-y-0 left-0 h-full" type="box" onClick={() => {append({question: "", type:"reason", answer: []});incrementTotalProblems()}}>
+            <Button className="absolute inset-y-0 left-0 h-full" type="box" onClick={() => {append({question: "", type:"reason", atTime: 0, answer: []});incrementTotalProblems()}}>
                 Add Question
             </Button>   
           </div>

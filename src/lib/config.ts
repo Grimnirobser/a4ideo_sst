@@ -3,10 +3,13 @@ import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import prisma from "@/vendor/db";
 import { AuthOptions } from "next-auth";
 import { Config } from 'sst/node/config'
+import { PrismaClient } from "@prisma/client";
+
 
 
 export const authOptions: AuthOptions = {
-    adapter: PrismaAdapter(prisma),
+    // adapter: PrismaAdapter(prisma),
+    adapter: PrismaAdapter(prisma as unknown as PrismaClient),  // make typescript happy since currently next-auth not support extended prisma
     providers: [
       GoogleProvider({
         clientId: process.env.GOOGLE_CLIENT_ID as string,

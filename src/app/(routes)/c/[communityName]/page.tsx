@@ -3,9 +3,10 @@ import { compactNumberFormat } from "@/lib/numUtils";
 import PosterForCommunity from "@/components/shared/PosterForCommunity";
 import getCommunityByName from "@/actions/getCommunityByName";
 import LikeDislikeCommunityButton from "@/components/community/LikeDislikeCommunityButton";
+import { notFound } from "next/navigation";
 
 interface CommunityPageParams {
-    communityName: string;
+    communityName?: string;
   }
 
 export default async function CommunityPage({
@@ -17,7 +18,7 @@ export default async function CommunityPage({
     const { communityName } = params;
     const community =  await getCommunityByName({communityName});
 
-    return (
+    return community ? (
 
         <div className="bg-slate-100 h-full space-y-4">
             <div className="grid grid-cols-5 grid-flow-row gap-2 mx-20">
@@ -43,17 +44,13 @@ export default async function CommunityPage({
                         <p className="text-neutral-400 text-sm">
                             Community created {dayjs(community.createdAt).fromNow()}
                         </p>
-
                         <p className="text-neutral-400 text-sm">
                             {compactNumberFormat(community.memberCount)} members passed entrance test
                         </p>
-                        
                         <div className="text-neutral-400 text-sm">
                             <p>Total Votes collected {compactNumberFormat(community.likeCount + community.dislikeCount)}</p>
                         </div>
-
                         <LikeDislikeCommunityButton community={community}/>
-
                 </div>
             </div>
 
@@ -64,5 +61,7 @@ export default async function CommunityPage({
             </div> */}
 
         </div>
-    )
+    ): (
+        notFound()
+    );
 }

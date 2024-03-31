@@ -29,6 +29,7 @@ interface ProblemsetDataType{
 interface ProblemDataType{
   question: string,
   type: string,
+  atTime: number,
   answer: AnswerType[],
 }
 
@@ -66,7 +67,7 @@ const AddNewProblemset: React.FC<AddNewProblemsetParams> = ({
         setValue,
       } = useForm<FieldValues>({
         defaultValues: {
-          problems: [{question: "", type:"reason", answer: []}],
+          problems: [{question: "", type:"reason", atTime: 0, answer: []}],
         },
       });
 
@@ -75,7 +76,7 @@ const AddNewProblemset: React.FC<AddNewProblemsetParams> = ({
         name: "problems", // unique name for your Field Array
       });
           
-      const changeValue = (id: string, value: string) => {
+      const changeValue = (id: string, value: string | number) => {
         setValue(id, value, {
           shouldDirty: true,
           shouldTouch: true,
@@ -133,6 +134,7 @@ const AddNewProblemset: React.FC<AddNewProblemsetParams> = ({
             problems: data.problems,
           };
 
+        // console.log("problemsetData", problemsetData);
         mutateAsync(problemsetData);
       }
     
@@ -155,7 +157,6 @@ const AddNewProblemset: React.FC<AddNewProblemsetParams> = ({
     
             <div className="flex flex-row mt-4 gap-4">
     
-              
               <div className="w-full space-y-2">
     
                   {fields.map((field, index) => (
@@ -176,7 +177,7 @@ const AddNewProblemset: React.FC<AddNewProblemsetParams> = ({
                     ))}
     
                 <div className="relative w-26 h-10 mb-2 mt-2">
-                <Button className="absolute inset-y-0 left-0 h-full" type="box" onClick={() => {append({question: "", type:"reason" ,answer: []});incrementTotalProblems()}}>
+                <Button className="absolute inset-y-0 left-0 h-full" type="box" onClick={() => {append({question: "", type:"reason", atTime:0, answer: []});incrementTotalProblems()}}>
                     Add Question
                 </Button>   
               </div>

@@ -1,6 +1,7 @@
 import ChannelHeader from "@/components/channel/ChannelHeader";
 import VideoCard from "@/components/shared/VideoCard";
 import getInfoByUsername  from "@/actions/getInfoByUsername";
+import { notFound } from "next/navigation";
 
 interface ChannelPageParams {
   username?: string;
@@ -30,6 +31,6 @@ export default async function ChannelPage({
       </div>
     </div>
   ) : (
-    <h1>Channel not found</h1>
+    notFound()
   );
 }

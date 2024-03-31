@@ -6,6 +6,7 @@ interface GetCommentsByVideoIdParams {
   videoId?: string;
 }
 
+
 export default async function getCommentsByVideoId(
   params: GetCommentsByVideoIdParams
 ): Promise<(Comment & { channel: Channel })[] | null> {
