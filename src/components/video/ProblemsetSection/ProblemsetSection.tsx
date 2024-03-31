@@ -8,7 +8,7 @@ import {StatusBasedTag} from "./StatusBasedTag"
 import { CurrentChannelContext } from "@/context/CurrentChannelContext";
 import { useContext } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query"
-import { Button } from "@/components/ui/button"
+import { Button,  buttonVariants } from "@/components/ui/button"
 import {
   Form,
   FormControl,
@@ -34,11 +34,11 @@ import LikeSubscribeProblemsetSection from "../LikeSubscribeSection/LikeSubscrib
 import getChannelById from "@/actions/getChannelById";
 import { ToastAction } from "@/components/ui/toast"
 import AddNewProblemset from "@/components/shared/AddNewProblemset";
-
-
+import { toHHMMSS } from "@/lib/numUtils";
 interface ProblemsetSectionProps {
   problemsets: (Problemset & { channel: Channel, problems: Problem[] })[];
-  videoId: string,
+  videoId: string;
+  setProblemTime: (time: number) => void;
 }
 
 interface readyDataType{
@@ -52,6 +52,7 @@ interface readyDataType{
 const ProblemsetSection: React.FC<ProblemsetSectionProps> = ({
   problemsets,
   videoId,
+  setProblemTime
 }) => {
   const router = useRouter();
   const { toast } = useToast();
@@ -219,6 +220,15 @@ const ProblemsetSection: React.FC<ProblemsetSectionProps> = ({
               <FormItem>
                   <FormDescription className="text-lg">
                     {problem.question}
+                    <span
+                      className={buttonVariants({
+                        variant: 'link',
+                        className: 'relative text-blue-800 w-fit hover:underline cursor-pointer',
+                    })}
+                      onClick={()=>setProblemTime(problem.atTime)}
+                    >
+                      {toHHMMSS(problem.atTime)}
+                    </span>
                   </FormDescription>
                   <FormControl>
                     <Textarea
@@ -250,7 +260,6 @@ const ProblemsetSection: React.FC<ProblemsetSectionProps> = ({
             )}Submit</Button>
             <StatusBasedTag status={attemptStatus}/>
             <FileQuestion className='cursor-pointer w-10 h-10 hover:bg-slate-200 rounded-lg' onClick={() => setUploadProblemset(true)}/>
-
           </div>
 
     <div className="peer w-full mt-4 mb-4 px-4 pt-2 pb-2  rounded-md outline-none border-[1px] bg-slate-100 transition">

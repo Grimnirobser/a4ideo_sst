@@ -28,6 +28,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { SingleSentence } from "@/components/shared/SingleSentence"
 import { Label } from "@/components/ui/label"
 import { CirclePlus } from 'lucide-react';
+import { Input } from "@/components/ui/input";
 
 interface ProblemUploadFormProps {
   index: number;
@@ -35,7 +36,7 @@ interface ProblemUploadFormProps {
   control: Control<FieldValues, any, FieldValues>;
   register: UseFormRegister<FieldValues>;
   errors: FieldErrors<FieldValues>;
-  changeValue: (id: string, value: string)  => void;
+  changeValue: (id: string, value: string | number)  => void;
   isLoading: boolean;
   removeFunction: (index: number) => void;
   decrement: () => void;
@@ -77,6 +78,7 @@ const ProblemUploadForm: React.FC<ProblemUploadFormProps> = ({
 
     const [answerInput, setAnswerInput] = useState<string>('');
     const [dialogOpen, setDialogOpen] = useState(false);
+    const [questionTime, setQuestionTime] = useState("0:00");
 
     const { fields: answerFields, append, remove, insert, update } = useFieldArray({
       control, // control props comes from useForm (optional: if you are using FormContext)
@@ -138,34 +140,94 @@ const ProblemUploadForm: React.FC<ProblemUploadFormProps> = ({
       setDialogOpen(false);
     }
 
+  const onBlur = (event: any) => {
+      const value = event.target.value;
+      const seconds = Math.max(0, getSecondsFromHHMMSS(value));
+      changeValue?.(`problems.${index}.atTime`, seconds || 0)
+      const timeString = toHHMMSS(seconds);
+      setQuestionTime(timeString);
+  };
+
+const getSecondsFromHHMMSS = (value: string) => {
+  const [str1, str2, str3] = value.split(":");
+
+  const val1 = Number(str1);
+  const val2 = Number(str2);
+  const val3 = Number(str3);
+
+  if (!isNaN(val1) && isNaN(val2) && isNaN(val3)) {
+    return val1;
+  }
+
+  if (!isNaN(val1) && !isNaN(val2) && isNaN(val3)) {
+    return val1 * 60 + val2;
+  }
+
+  if (!isNaN(val1) && !isNaN(val2) && !isNaN(val3)) {
+    return val1 * 60 * 60 + val2 * 60 + val3;
+  }
+
+  return 0;
+};
+
+const toHHMMSS = (secs: number) => {
+  const secNum = parseInt(secs.toString(), 10);
+  const hours = Math.floor(secNum / 3600);
+  const minutes = Math.floor(secNum / 60) % 60;
+  const seconds = secNum % 60;
+
+  return [hours, minutes, seconds]
+    .map((val) => (val < 10 ? `0${val}` : val))
+    .filter((val, index) => val !== "00" || index > 0)
+    .join(":")
+    .replace(/^0/, "");
+};
+
 
   if (totalProblems <= 1) {
     return (
       <>
       <div className="w-full flex flex-col gap-2">
-  
-        <Label className="text-base">Question type {index+1}</Label>
-        <Controller 
-              control={control}
-              name={`problems.${index}.type`}
-              defaultValue={options[0].value}
-              render={({ field }) => (
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <SelectTrigger className="flex h-auto text-2xl font-sans subpixel-antialiased border-zinc-500">
-                        <SelectValue id={`problems.${index}.type`} />
-                      </SelectTrigger>
-                    <SelectContent >
-                      <SelectItem className="text-2xl font-sans subpixel-antialiased" value={options[0].value}>{options[0].label}</SelectItem>
-                      <SelectItem className="text-2xl font-sans subpixel-antialiased" value={options[1].value}>{options[1].label}</SelectItem>
-                      <SelectItem className="text-2xl font-sans subpixel-antialiased" value={options[2].value}>{options[2].label}</SelectItem>
-                    </SelectContent>
-                  </Select>
-              )}
-          />
+        <h1 className="text-xl font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Question {index+1}</h1>
+        <div className="grid grid-cols-2 gap-2">
+        <div className="col-span-1">
+          <Label className="text-base">Type</Label>
+          <Controller 
+                control={control}
+                name={`problems.${index}.type`}
+                defaultValue={options[0].value}
+                render={({ field }) => (
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <SelectTrigger className="flex text-2xl w-full font-sans subpixel-antialiased border-zinc-500 text-center justify-center">
+                          <SelectValue id={`problems.${index}.type`} />
+                        </SelectTrigger>
+                      <SelectContent >
+                        <SelectItem className="text-2xl font-sans subpixel-antialiased" value={options[0].value}>{options[0].label}</SelectItem>
+                        <SelectItem className="text-2xl font-sans subpixel-antialiased" value={options[1].value}>{options[1].label}</SelectItem>
+                        <SelectItem className="text-2xl font-sans subpixel-antialiased" value={options[2].value}>{options[2].label}</SelectItem>
+                      </SelectContent>
+                    </Select>
+                )}
+            />
+        </div>
+
+        <div className="col-span-1">
+          <Label htmlFor={`problems.${index}.atTime`} className="text-base">At Time</Label>
+          <Input 
+                id={`problems.${index}.atTime`}
+                className="w-full text-2xl font-sans subpixel-antialiased border-zinc-500 text-center justify-center"
+                type="text" 
+                value={questionTime} 
+                onChange={(event)=>setQuestionTime(event.target.value)} 
+                onBlur={onBlur} 
+                disabled={isLoading}                      
+          />        
+        </div>
+        </div>
 
         <div>
 
-        <Label htmlFor={`problems.${index}.question`} className="text-base">Question {index+1}</Label>
+        <Label htmlFor={`problems.${index}.question`} className="text-base">Question</Label>
         <Textarea 
           id={`problems.${index}.question`}
           className="text-slate-900 text-xl font-sans antialiased mt-2 border-zinc-500"
@@ -176,7 +238,7 @@ const ProblemUploadForm: React.FC<ProblemUploadFormProps> = ({
         />
         </div>
 
-        <Label className="text-base">Answer {index+1}</Label>
+        <Label className="text-base">Answer</Label>
           <div className="relative">
           <div className="flex w-full h-[300px] mb-2 rounded-md border-[1px] border-zinc-500 text-center">
                 <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
@@ -237,30 +299,47 @@ const ProblemUploadForm: React.FC<ProblemUploadFormProps> = ({
       <>
       <div className="flex gap-1">
       <div className="w-full flex flex-col gap-2">
-        <div>
-        <Label className="text-base">Question type {index+1}</Label>
-        <Controller 
-              control={control}
-              name={`problems.${index}.type`}
-              defaultValue={options[0].value}
-              render={({ field }) => (
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <SelectTrigger className="flex h-auto text-2xl font-sans subpixel-antialiased mt-2 border-zinc-500">
-                        <SelectValue />
-                      </SelectTrigger>
-                    <SelectContent >
-                      <SelectItem className="text-2xl font-sans subpixel-antialiased" value={options[0].value}>{options[0].label}</SelectItem>
-                      <SelectItem className="text-2xl font-sans subpixel-antialiased" value={options[1].value}>{options[1].label}</SelectItem>
-                      <SelectItem className="text-2xl font-sans subpixel-antialiased" value={options[2].value}>{options[2].label}</SelectItem>
-                    </SelectContent>
-                  </Select>
-              )}
-          />
+      <h1 className="text-xl font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Question {index+1}</h1>
+
+      <div className="grid grid-cols-2 gap-2">
+        <div className="col-span-1">
+          <Label className="text-base">Type</Label>
+          <Controller 
+                control={control}
+                name={`problems.${index}.type`}
+                defaultValue={options[0].value}
+                render={({ field }) => (
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <SelectTrigger className="flex text-2xl w-full font-sans subpixel-antialiased border-zinc-500 text-center justify-center">
+                          <SelectValue id={`problems.${index}.type`} />
+                        </SelectTrigger>
+                      <SelectContent >
+                        <SelectItem className="text-2xl font-sans subpixel-antialiased" value={options[0].value}>{options[0].label}</SelectItem>
+                        <SelectItem className="text-2xl font-sans subpixel-antialiased" value={options[1].value}>{options[1].label}</SelectItem>
+                        <SelectItem className="text-2xl font-sans subpixel-antialiased" value={options[2].value}>{options[2].label}</SelectItem>
+                      </SelectContent>
+                    </Select>
+                )}
+            />
+        </div>
+
+        <div className="col-span-1">
+          <Label htmlFor={`problems.${index}.atTime`} className="text-base">At Time</Label>
+          <Input 
+                id={`problems.${index}.atTime`}
+                type="text" 
+                value={questionTime} 
+                onChange={(event)=>setQuestionTime(event.target.value)} 
+                onBlur={onBlur} 
+                disabled={isLoading}                      
+                className="w-full text-2xl font-sans subpixel-antialiased border-zinc-500 text-center justify-center"/>        
+
+        </div>
         </div>
 
         <div>
 
-        <Label htmlFor={`problems.${index}.question`} className="text-base">Question {index+1}</Label>
+        <Label htmlFor={`problems.${index}.question`} className="text-base">Question</Label>
         <Textarea 
           id={`problems.${index}.question`}
           className="text-slate-900 text-xl font-sans antialiased mt-2 border-zinc-500"
@@ -271,7 +350,7 @@ const ProblemUploadForm: React.FC<ProblemUploadFormProps> = ({
         />
         </div>
 
-        <Label className="text-base">Answer {index+1}</Label>
+        <Label className="text-base">Answer</Label>
           <div className="relative">
           <div className="flex w-full h-[300px] mb-2 rounded-md border-[1px] border-zinc-500 text-center">
                 <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>

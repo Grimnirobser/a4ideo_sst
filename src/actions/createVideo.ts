@@ -8,6 +8,7 @@ import { Video } from "@prisma/client";
 interface ProblemDataType{
     question: string,
     type: string,
+    atTime: number,
     answer: AnswerType[],
   }
 

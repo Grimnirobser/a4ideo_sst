@@ -1,6 +1,6 @@
 'use server';
-import { prismaIgnoreNotFound } from "@/lib/prismaUpdateAndDeleteIgnoreNotFound";
 import { Video } from "@prisma/client";
+import prisma from "@/vendor/db";
 
 interface IncreaseVideoViewCountParams {
   videoId?: string;
@@ -18,7 +18,7 @@ export default async function increaseVideoViewCount(
       query.id = videoId;
     }
 
-    const video = await prismaIgnoreNotFound.video.updateIgnoreOnNotFound({
+    const video = await prisma.video.updateIgnoreOnNotFound({
       where: query,
       data: {
         viewCount: {

@@ -32,9 +32,11 @@ const CommunityUploadForm: React.FC<CommunityUploadFormProps> = ({
     removeImage,
 }) => {
   return (
-    <div className="bg-slate-100 h-full space-y-4">
+    <div className="flex flex-col space-y-4">
+        <h1 className="text-2xl">Community Badge details</h1>
+
         <Label htmlFor="name" className="text-base">Community Name</Label>
-        <Input id="name" className="text-slate-900 text-xl font-sans antialiased border-zinc-500"
+        <Input id="name" className="w-1/2 text-slate-900 text-xl font-sans antialiased border-zinc-500"
                     placeholder="Community Name"
                     {...register("name", { required: false })}
                     onChange={(ev) => changeValue?.("name", ev.target.value || "")}
@@ -54,13 +56,13 @@ const CommunityUploadForm: React.FC<CommunityUploadFormProps> = ({
             {imageSrcs.map((src, index) => (
                 <div key={src} className="col-span-1 aspect-w-2 aspect-h-3">
                     <CircleX color='red' 
-                        className="absolute top-1 right-2 h-6 cursor-pointer" 
+                        className="z-10 absolute top-1 right-2 h-6 cursor-pointer" 
                         onClick={() => removeImage(index)}/>
                     <Image
                         unoptimized
                         fill
                         sizes="100%"
-                        className='-z-10 object-cover object-center rounded-md'
+                        className='object-cover object-center rounded-md'
                         src={src}
                         alt='uploaded image'
                     />

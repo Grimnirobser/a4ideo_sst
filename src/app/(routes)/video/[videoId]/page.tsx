@@ -1,15 +1,9 @@
 import getChannelById from "@/actions/getChannelById";
 import getCommentsByVideoId from "@/actions/getCommentsByVideoId";
 import increaseVideoViewCount from "@/actions/increaseVideoViewCount";
-import CommentSection from "@/components/video/CommentSection/CommentSection";
-import Description from "@/components/video/Description";
-import LikeSubscribeSection from "@/components/video/LikeSubscribeSection/LikeSubscribeSection";
-import VideoPlayer from "@/components/video/VideoPlayer";
-import YoutubePlayer from "@/components/video/YoutubePlayer";
 import getProblemsetsByVideoId from "@/actions/getProblemsetsByVideoId";
-import ProblemsetSection from "@/components/video/ProblemsetSection/ProblemsetSection";
-import { DocView } from "@/components/video/DocView";
 import { notFound } from 'next/navigation';
+import { VideoComponentsWrapper } from "@/components/video/VideoComponentsWrapper";
 
 
 interface VideoPageParams {
@@ -25,24 +19,25 @@ export default async function VideoPage({
   const problemsets = await getProblemsetsByVideoId({ videoId });
   const video = await increaseVideoViewCount({ videoId });
   const channel = await getChannelById({ channelId: video?.channelId });
-  const comments = await getCommentsByVideoId({ videoId,});
+  const comments = await getCommentsByVideoId({ videoId });
 
   return video && channel && comments ? (
-    <div className="flex flex-col lg:flex-row mx-6 mt-2 gap-4">
-      <div className="w-full lg:w-4/6 flex flex-col gap-4 overflow-y-auto max-h-screen [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-        {/* <VideoPlayer videoSrc={video.videoSrc} /> */}
-        {video.youtubeId === "" ? <DocView imageSrc={video.imageSrc}/> : <YoutubePlayer youtubeId={video.youtubeId}/>}
-        <h1 className="text-2xl font-medium break-words hyphens-auto">{video.title}</h1>
-        <LikeSubscribeSection video={video} channel={channel} />
-        <Description video={video} />
-        <CommentSection comments={comments} videoId={video.id} />
-      </div>
+    // <div className="flex flex-col lg:flex-row mx-6 mt-2 gap-4">
+    //   <div className="w-full lg:w-4/6 flex flex-col gap-4 overflow-y-auto max-h-screen [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+    //     {/* <VideoPlayer videoSrc={video.videoSrc} /> */}
+    //     {video.youtubeId === "" ? <DocView imageSrc={video.imageSrc}/> : <YoutubePlayer youtubeId={video.youtubeId}/>}
+    //     <h1 className="text-2xl font-medium break-words hyphens-auto">{video.title}</h1>
+    //     <LikeSubscribeSection video={video} channel={channel} />
+    //     <Description video={video} />
+    //     <CommentSection comments={comments} videoId={video.id} />
+    //   </div>
 
-      <div className="w-full lg:w-2/6 max-h-screen overflow-y-auto no-scrollbar">
-        <ProblemsetSection problemsets={problemsets!} videoId={video.id} />
-      </div>
+    //   <div className="w-full lg:w-2/6 max-h-screen overflow-y-auto no-scrollbar">
+    //     <ProblemsetSection problemsets={problemsets!} videoId={video.id} />
+    //   </div>
       
-    </div>
+    // </div>
+    <VideoComponentsWrapper video={video} channel={channel} comments={comments} problemsets={problemsets!}/>
   ) : (
     notFound()
   );

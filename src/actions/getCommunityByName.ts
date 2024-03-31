@@ -4,12 +4,12 @@ import prisma from "@/vendor/db";
 import { Community } from "@prisma/client";
 
 interface GetCommunityByNameParams {
-  communityName: string;
+  communityName?: string;
 }
 
 export default async function getCommunityByName(
   params: GetCommunityByNameParams
-): Promise<Community> {
+): Promise<Community | null> {
   try {
     const { communityName } = params;
 
@@ -22,10 +22,6 @@ export default async function getCommunityByName(
     const community = await prisma.community.findUnique({
       where: query,
     });
-
-    if (!community) {
-      throw new Error("Community not found");
-    }
 
     return community;
   } catch (error: any) {
