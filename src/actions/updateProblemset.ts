@@ -67,6 +67,7 @@ export default async function updateProblemset( params: UpdateProblemsetParams
                     type: problems[index].type,
                     answer: problems[index].answer.map(obj => obj.sentence),
                     emphasis: problems[index].answer.map(obj => obj.emphasis),
+                    atTime: problems[index].atTime,
                   },
               })
         ));
