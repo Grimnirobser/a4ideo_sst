@@ -7,9 +7,6 @@ interface SignInButtonProps {
   encodedUrl: string;
 }
 
-
-
-
 const SignInButton: React.FC<SignInButtonProps> = ({encodedUrl}) => {
   
   return (
