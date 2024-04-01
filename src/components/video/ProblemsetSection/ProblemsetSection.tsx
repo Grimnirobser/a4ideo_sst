@@ -223,7 +223,7 @@ const ProblemsetSection: React.FC<ProblemsetSectionProps> = ({
                     <span
                       className={buttonVariants({
                         variant: 'link',
-                        className: 'relative text-blue-800 w-fit hover:underline cursor-pointer',
+                        className: 'relative text-blue-600 w-fit hover:underline cursor-pointer',
                     })}
                       onClick={()=>setProblemTime(problem.atTime)}
                     >
