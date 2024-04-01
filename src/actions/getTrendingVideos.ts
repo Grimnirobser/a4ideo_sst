@@ -21,7 +21,7 @@ export default async function getTrendingVideos(): Promise<TrendingReturnType[]>
         createdAt: {
           gte: startDate,
         },
-        approved: true,
+        // approved: true,
       },
       orderBy: [
         {

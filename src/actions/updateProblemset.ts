@@ -7,6 +7,7 @@ import { Problemset, Problem } from "@prisma/client";
 interface problemProps {
   question: string,
   type: string,
+  atTime: number,
   answer: AnswerType[],
 }
 
@@ -14,12 +15,8 @@ interface UpdateProblemsetParams{
     problemsetId: string,
     deleteProblemIds: string[],
     updateProblemIds: string[],
-    videoId: string | undefined,
-    channelId: string,
     problems: problemProps[]
 }
-
-
 interface problemWithProblemsetIdProps{
   question: string,
   type: string,
@@ -34,69 +31,64 @@ interface AnswerType{
 }
 
 
-export async function UpdateProblemset( params: UpdateProblemsetParams
+
+export default async function updateProblemset( params: UpdateProblemsetParams
     ): Promise<Problemset>{
   
     try {
-        const {videoId, channelId, problems } = params;
+        const {problemsetId, deleteProblemIds, updateProblemIds, problems } = params;
 
-        const video = await prisma.video.findUnique({
-            where: {
-              id: videoId!,
-            },
-            include: {
-                problemsets: true,
-                },
-          });
-      
-          if (!video) {
-            throw new Error("Invalid videoId");
-          }
-
-        const problemset = await prisma.problemset.create({
-            data: {
-              videoId: videoId!,
-              channelId: channelId,
-            },
-          });
-
-      
-        const problemsWithProblemsetId: problemWithProblemsetIdProps[] = problems.map((item: problemProps) => ({
-          problemsetId: problemset.id,
+        const createProblems = problems.slice(updateProblemIds.length);
+        const createProblemsWithProblemsetId: problemWithProblemsetIdProps[] = createProblems.map((item: problemProps) => ({
+          problemsetId: problemsetId,
           answer: item.answer.map(obj => obj.sentence),
           type: item.type,
+          atTime: item.atTime,
           question: item.question,
           emphasis: item.answer.map(obj => obj.emphasis),
-          }));
-    
+        }));
+
+        await prisma.problem.deleteMany({
+          where: {
+            id: {
+              in: deleteProblemIds,
+            },
+          },
+        });
+
+
+        await Promise.all(updateProblemIds.map(async(updateProblemId, index) => 
+              await prisma.problem.update({
+                where: {
+                  id: updateProblemId,
+                  },
+                  data: {
+                    question: problems[index].question,
+                    type: problems[index].type,
+                    answer: problems[index].answer.map(obj => obj.sentence),
+                    emphasis: problems[index].answer.map(obj => obj.emphasis),
+                  },
+              })
+        ));
+
         const createdProblems = await prisma.$transaction(
-          problemsWithProblemsetId.map((problemWithProblemsetId: problemWithProblemsetIdProps) => prisma.problem.create({ data: problemWithProblemsetId })),
+            createProblemsWithProblemsetId.map((createProblemWithProblemsetId: problemWithProblemsetIdProps) => prisma.problem.create({ data: createProblemWithProblemsetId })),
         );
 
+        const createProblemsIds = createdProblems.map((problem: Problem) => problem.id);
+        const resultProblemsIds = updateProblemIds.concat(createProblemsIds);
 
-        
         const resultProblemset = await prisma.problemset.update({
           where: {
-            id: problemset.id,
+            id: problemsetId,
           },
           data: {
             problems: {
-              connect: createdProblems.map((problem: Problem) => ({ id: problem.id })),
+              connect: resultProblemsIds.map((problemId: string) => ({ id: problemId })),
             },
           }
         });
-                
-        const updatedVideo = await prisma.video.update({  
-          where: {
-            id: videoId!,
-          },
-          data: {
-            problemsets: {
-              connect: [{ id: resultProblemset.id }],
-            },
-          },
-        });
-      
+
         return resultProblemset;
       
       } catch (error: any) {

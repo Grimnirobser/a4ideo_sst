@@ -2,10 +2,14 @@
 import prisma from "@/vendor/db";
 import { Problem } from "@prisma/client";
 
+interface returnDataType{
+    problems: Problem[],
+    channelId: string,
+}
 
 export default async function getProblemsByProblemsetId(
-  problemsetId: string
-  ): Promise<(Problem)[] | null> {
+    problemsetId: string
+  ): Promise<returnDataType | null> {
 
   try {
     const query: any = {};
@@ -22,10 +26,16 @@ export default async function getProblemsByProblemsetId(
     });
 
     if(!problemset || !problemset.problems){
-      throw new Error("Invalid Problemset Id.");
+        return null;
     }
 
-    return problemset.problems;
+    const returnData = {
+        problems: problemset.problems,
+        channelId: problemset.channelId,
+    }
+
+    return returnData;
+
   } catch (error: any) {
     throw new Error(error);
   }

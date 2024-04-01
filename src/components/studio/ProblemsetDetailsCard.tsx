@@ -53,7 +53,14 @@ const ProblemsetDetailsCard: React.FC<ProblemsetDetailsCardProps> = ({ problemse
     }
   }, [problemset.id, router, toast]);
 
+
   if (!video) return null;
+
+  const handleEditProblemset = () => {
+      const encodedProblemsetId = encodeURIComponent(problemset.id);
+      const encodedVideoId = encodeURIComponent(video.id);
+      router.push(`/studio/edit-problemset?v=${encodedVideoId}&p=${encodedProblemsetId}`);
+  };
 
   return (
     <div key={problemset.id}
@@ -91,14 +98,13 @@ const ProblemsetDetailsCard: React.FC<ProblemsetDetailsCardProps> = ({ problemse
         <p className="text-sm text-neutral-400">{problemset.likeCount} Likes</p>
       </div>
 
-      <MdEdit
-        className="h-6 w-6 cursor-pointer"
-        onClick={() => { }}
-      />
+        <button onClick={handleEditProblemset} disabled={isLoading}>
+            <MdEdit className={"h-6 w-6 cursor-pointer"}/>
+        </button>
 
         <button onClick={handleDeleteProblemset} disabled={video.problemsets.length <= 1 || isLoading} title={`${(video.problemsets.length <= 1 || isLoading) ? "cannot delete the only problemset" : ""}`}>
             <MdDelete className={`h-6 w-6 ${video.problemsets.length <= 1 ? "cursor-not-allowed" : "cursor-pointer"}`}/>
-      </button>
+        </button>
     </div>
   );
 };
