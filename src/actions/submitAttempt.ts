@@ -178,6 +178,16 @@ export async function submitAttempt( params: SubmitAttemptParams
                         },
                     },
                 });
+                const increaseReputation = await prisma.channel.update({
+                    where: {
+                        id: channelId,
+                        },
+                    data: {
+                      reputation: {
+                        increment: 1,
+                      },
+                    },
+                  });
             }
 
         }
