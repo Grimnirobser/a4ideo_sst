@@ -18,7 +18,8 @@ interface CreateVideoParams{
     description: string,
     youtubeId: string,
     imageSrc: string,
-    problems: ProblemDataType[]
+    problems: ProblemDataType[],
+    isVideo: boolean,
 }
 
 interface AnswerType{
@@ -32,7 +33,7 @@ export async function createVideo( params: CreateVideoParams
   
     try {
 
-        const { channelId, title, description, youtubeId, imageSrc, problems } = params;
+        const { channelId, title, description, youtubeId, imageSrc, problems, isVideo } = params;
 
         if (!channelId) {
             throw new Error("Invalid channelId");
@@ -45,6 +46,7 @@ export async function createVideo( params: CreateVideoParams
                 description:description,
                 youtubeId: youtubeId,
                 imageSrc: imageSrc,
+                isVideo: isVideo,
             },
         });
 
@@ -55,7 +57,6 @@ export async function createVideo( params: CreateVideoParams
         };
 
         const result = await createProblemset(problemsetData);
-
 
         return video;
         

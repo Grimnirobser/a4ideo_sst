@@ -220,7 +220,7 @@ const toHHMMSS = (secs: number) => {
                 value={questionTime} 
                 onChange={(event)=>setQuestionTime(event.target.value)} 
                 onBlur={onBlur} 
-                disabled={isLoading}                      
+                disabled={isLoading}               
           />        
         </div>
         </div>
@@ -234,7 +234,9 @@ const toHHMMSS = (secs: number) => {
           placeholder="Question"
           {...register(`problems.${index}.question`, { required: true })}
           onChange={(ev) => changeValue?.(`problems.${index}.question`, ev.target.value || "")}
-          disabled={isLoading}                      
+          disabled={isLoading}      
+          errors={errors}
+          mark={`problems.${index}.question`}                
         />
         </div>
 

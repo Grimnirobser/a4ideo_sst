@@ -8,14 +8,17 @@ declare global {
 
 interface MediaUploadProps {
   onChange: (value: string) => void;
+  setValue?: (value: string) => void;  
 }
 
 const MediaUpload: React.FC<React.PropsWithChildren<MediaUploadProps>> = ({
   onChange,
   children,
+  setValue = () => {},
 }) => {
   const handleUpload = (result: any) => {
     onChange(result.info.secure_url);
+    setValue(`${result.info.original_filename}.${result.info.format}`);
   };
 
   return (
