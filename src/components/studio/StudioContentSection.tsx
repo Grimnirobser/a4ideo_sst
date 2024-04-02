@@ -9,6 +9,7 @@ import { compactNumberFormat, safeRoundOneDecimalDivider } from "@/lib/numUtils"
 import VideoDetailsCard from "@/components/studio/VideoDetailsCard";
 import { useState } from "react";
 import ProblemsetDetailsCard from "@/components/studio/ProblemsetDetailsCard";
+import { useSearchParams } from "next/navigation";
 
 
 interface StudioContentSectionProps {
@@ -19,9 +20,13 @@ interface StudioContentSectionProps {
 
 
 const StudioContentSection: React.FC<StudioContentSectionProps> = ({ 
-    videos, problemsets, attempts 
+    videos,
+    problemsets, 
+    attempts,
 }) => {
-    const [chooseVideo, setChooseVideo] = useState(true);
+    const searchParams = useSearchParams();
+    const chooseProblemset = searchParams.get('p');
+    const [chooseVideo, setChooseVideo] = useState(chooseProblemset === '1' ? false : true);
 
     return (
         <div className="flex flex-col gap-4 mt-8">

@@ -102,12 +102,6 @@ export default function EditProblemsetPage({ searchParams }: PageProps) {
                   sentence: sentence,
                   emphasis: problem.emphasis[index],
                 }));
-                // prevProblemsRef.current.push({
-                //   question: problem.question,
-                //   type: problem.type,
-                //   atTime: problem.atTime,
-                //   answer: prevAnswers,
-                // });
                 return {
                   question: problem.question,
                   type: problem.type,
@@ -151,7 +145,7 @@ export default function EditProblemsetPage({ searchParams }: PageProps) {
           title: "Success",
           description: "Problemset successfully published.",
         });
-        router.push('/studio');
+        router.push('/studio?p=1');
     },
 
     onError: () => toast({
@@ -265,7 +259,7 @@ export default function EditProblemsetPage({ searchParams }: PageProps) {
                     <div className="flex justify-between">
                       <h1 className="text-2xl">Edit Problemset</h1>
                       <span className="flex gap-4">
-                        <Button type="secondary" onClick={() => router.push('/studio')}>
+                        <Button type="secondary" onClick={() => router.push('/studio?p=1')}>
                           Cancel
                         </Button>
                         <Button type="box" onClick={handleSubmit(onSubmit)}>
