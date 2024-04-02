@@ -29,6 +29,7 @@ interface VideoDataType{
   youtubeId: string,
   imageSrc: string,
   problems: ProblemDataType[]
+  isVideo: boolean,
 }
 
 interface ProblemDataType{
@@ -102,6 +103,8 @@ export default function UploadPage() {
   let incrementTotalProblems = () => setTotalProblems(totalProblems + 1);
   let decrementTotalProblems = () => (totalProblems === 1) ? {} : setTotalProblems(totalProblems - 1);
 
+  const [isVideo, setIsVideo] = useState(true);
+
   
   const { mutate, mutateAsync, isPending } = useMutation({
     mutationKey: ["uploadVideo"],
@@ -158,6 +161,7 @@ export default function UploadPage() {
         youtubeId: data.youtubeId,
         imageSrc: data.imageSrc,
         problems: data.problems,
+        isVideo: isVideo,
       };
 
     // console.log(videoData);
@@ -187,7 +191,7 @@ export default function UploadPage() {
         </div>
 
 
-        <div className="flex flex-col lg:flex-row mt-2 gap-4 max-h-full">
+        <div className="flex flex-col lg:flex-row mt-1 gap-4 max-h-full">
 
           <div className="w-full lg:w-4/6 flex flex-col">
             <VideoUploadForm
@@ -196,6 +200,8 @@ export default function UploadPage() {
               changeValue={changeValue}
               imageSrc={imageSrc}
               isLoading={isPending}
+              isVideo={isVideo}
+              setIsVideo={setIsVideo}
             />
           </div>
           

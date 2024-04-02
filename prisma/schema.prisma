@@ -80,6 +80,7 @@ model Video {
   updatedAt    DateTime @updatedAt
   imageSrc     String
   youtubeId    String
+  isVideo      Boolean  @default(true)
   approved     Boolean  @default(false)
   auditedBy    String?
   suspended    Boolean  @default(false)

@@ -340,7 +340,6 @@ const toHHMMSS = (secs: number) => {
                 onBlur={onBlur} 
                 disabled={isLoading}                      
                 className="w-full text-2xl font-sans subpixel-antialiased border-zinc-500 text-center justify-center"/>        
-
         </div>
         </div>
 
@@ -353,7 +352,9 @@ const toHHMMSS = (secs: number) => {
           placeholder="Question"
           {...register(`problems.${index}.question`, { required: true })}
           onChange={(ev) => changeValue?.(`problems.${index}.question`, ev.target.value || "")}
-          disabled={isLoading}                      
+          disabled={isLoading}                
+          errors={errors}
+          mark={`problems.${index}.question`}      
         />
         </div>
 

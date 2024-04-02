@@ -39,6 +39,7 @@ interface ProblemsetSectionProps {
   problemsets: (Problemset & { channel: Channel, problems: Problem[] })[];
   videoId: string;
   setProblemTime: (time: number) => void;
+  isVideo: boolean;
 }
 
 interface readyDataType{
@@ -52,7 +53,8 @@ interface readyDataType{
 const ProblemsetSection: React.FC<ProblemsetSectionProps> = ({
   problemsets,
   videoId,
-  setProblemTime
+  setProblemTime,
+  isVideo,
 }) => {
   const router = useRouter();
   const { toast } = useToast();
@@ -220,15 +222,14 @@ const ProblemsetSection: React.FC<ProblemsetSectionProps> = ({
               <FormItem>
                   <FormDescription className="text-lg">
                     {problem.question}
-                    <span
-                      className={buttonVariants({
-                        variant: 'link',
-                        className: 'relative text-rose-600 w-fit hover:underline cursor-pointer',
-                    })}
-                      onClick={()=>setProblemTime(problem.atTime)}
+                    {isVideo ? 
+                    <span className={buttonVariants({
+                          variant: 'link',
+                          className: 'relative text-rose-600 w-fit hover:underline cursor-pointer'})}
+                          onClick={()=>setProblemTime(problem.atTime)}
                     >
                       {toHHMMSS(problem.atTime)}
-                    </span>
+                    </span> : null}
                   </FormDescription>
                   <FormControl>
                     <Textarea

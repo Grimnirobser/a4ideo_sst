@@ -252,7 +252,7 @@ export default function EditProblemsetPage({ searchParams }: PageProps) {
         <div className="flex flex-col lg:flex-row mx-6 mt-2 gap-4">
             <div className="w-full lg:w-4/6 flex flex-col gap-4 overflow-y-auto max-h-screen [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
                 {/* <VideoPlayer videoSrc={video.videoSrc} /> */}
-                {video.youtubeId === "" ? <DocView imageSrc={video.imageSrc}/> : <YoutubePlayer youtubeId={video.youtubeId} problemTime={problemTime} setProblemTime={setProblemTime}/>}
+                {video.isVideo ? <YoutubePlayer youtubeId={video.youtubeId} problemTime={problemTime} setProblemTime={setProblemTime}/> : <DocView documentSrc={video.youtubeId}/>}
                 <h1 className="text-2xl font-medium break-words hyphens-auto">{video.title}</h1>
                 <Description video={video} />
 
