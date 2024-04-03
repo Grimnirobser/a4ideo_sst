@@ -1,7 +1,6 @@
 "use client";
 
 import { useContext } from "react";
-import SignInButton from "./SignInButton";
 import SignOutButton from "./SignOutButton";
 import { CurrentUserContext } from "@/context/CurrentUserContext";
 import IconButton from "@/components/shared/IconButton";
@@ -20,6 +19,20 @@ import { usePathname } from 'next/navigation'
 import { compactNumberFormat } from "@/lib/numUtils";
 import { ClipboardPlus } from 'lucide-react';
 import { Icons } from "@/components/shared/Icons";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogFooter,
+  DialogClose,
+} from "@/components/ui/dialog"
+import SignIn from "@/components/shared/SignIn";
+import { Button } from "@/components/ui/button";
+import { MdOutlineAccountCircle } from "react-icons/md";
+
 
 
 
@@ -113,7 +126,20 @@ const UserOptions = () => {
         <IconButton onClick={() => window.open("https://discord.gg/xQx5bueEUB", '_blank')} className="mr-4">
           <Icons.discord />
         </IconButton>
-      <SignInButton encodedUrl={encodedUrl}/>
+                <Dialog>
+                  <DialogTrigger asChild>
+                  <button
+                    className="flex mr-4 flex-row gap-1 items-center border-[1px] border-slate-700 rounded-full overflow-hidden px-3 py-1.5 text-black	cursor-pointer"
+                  >
+                    <MdOutlineAccountCircle className="h-6 w-6" />
+                    Sign In
+                  </button>
+                  </DialogTrigger>
+
+                  <DialogContent className="sm:max-w-[500px]">
+                      <SignIn encodedUrl={encodedUrl}/>
+                  </DialogContent>
+                </Dialog>
     </div>
     );
   }

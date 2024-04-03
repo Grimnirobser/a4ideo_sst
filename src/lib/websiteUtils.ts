@@ -1,5 +1,6 @@
 import { Metadata } from 'next'
 
+
 export function constructMetadata({
     title = 'A4ideo - Never frame your answer.',
     description = 'A4ideo - the gathering of next generation fragment learning.',
@@ -42,4 +43,3 @@ export function constructMetadata({
       }),
     }
   }
-  
