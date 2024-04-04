@@ -111,6 +111,7 @@ model Problemset {
   attemptCount Int       @default(0)
   passCount    Int       @default(0)
   createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt@default(now())
   approved     Boolean   @default(false)
   suspended    Boolean   @default(false)
   passedScore  Float     @default(0.50)

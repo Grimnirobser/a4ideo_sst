@@ -36,8 +36,8 @@ const StudioContentSection: React.FC<StudioContentSectionProps> = ({
             </div>
 
             {chooseVideo ? 
-            (videos.length ? videos.map((video) => {return <VideoDetailsCard key={video.id} video={video} />;}): "Upload some videos to get started") 
-            : (problemsets.length ? problemsets.map((problemset) => {return <ProblemsetDetailsCard key={problemset.id} problemset={problemset} />;}): "Create some problemsets to get started")}
+            (videos.length ? videos.map((video) => {return <VideoDetailsCard key={String(video.updatedAt)} video={video} />;}): "Upload some videos to get started") 
+            : (problemsets.length ? problemsets.map((problemset) => {return <ProblemsetDetailsCard key={String(problemset.updatedAt)} problemset={problemset} />;}): "Create some problemsets to get started")}
       </div>
     )
 
