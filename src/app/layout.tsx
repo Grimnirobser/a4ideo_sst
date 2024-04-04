@@ -44,7 +44,7 @@ export default async function RootLayout({
                    <ProgressBarProvider>
                       <SidebarProvider>
                         <Navigation />
-                        <div className="pt-16 bg-slate-100 h-full">
+                        <div className="pt-16 bg-slate-100 h-full -z-50">
                           {children}
                         </div>
                       </SidebarProvider>
