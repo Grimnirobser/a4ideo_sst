@@ -38,7 +38,7 @@ export const useLikeDislike = ({ videoId }: UseLikeDislikeProps) => {
   const toggleLikeDislike = useCallback(
     async (action: "like" | "dislike") => {
       if (!currentChannel) {
-        alert("Please sign in to like/dislike");
+        alert("Please sign in to like/dislike. It is all free!");
         return;
       } else if (!videoId) return;
 

@@ -173,7 +173,7 @@ const ProblemsetSection: React.FC<ProblemsetSectionProps> = ({
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     if (!currentChannel) {
-      alert("Please sign in to submit your perspective.");
+      alert("Please sign in to submit your perspective. It is all free!");
       return;
     }
 

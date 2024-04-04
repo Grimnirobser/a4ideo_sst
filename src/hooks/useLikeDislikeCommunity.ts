@@ -39,7 +39,7 @@ export const useLikeDislikeCommunity = ({ communityId }: UseLikeDislikeCommunity
   const toggleLikeDislikeCommunity = useCallback(
     async (action: "like" | "dislike") => {
       if (!currentChannel) {
-        alert("Please sign in to like/dislike");
+        alert("Please sign in to like/dislike. It is all free!");
         return;
       } else if (!communityId) return;
 

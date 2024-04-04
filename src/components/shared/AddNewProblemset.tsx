@@ -53,7 +53,7 @@ const AddNewProblemset: React.FC<AddNewProblemsetParams> = ({
         toast({
           variant: "error",
           title: "Error",
-          description: "You need to sign in to upload.",
+          description: "Please sign in to upload. It is all free!",
         });
       }
     }, [ currentChannel, toast, setUploadProblemset]); 
