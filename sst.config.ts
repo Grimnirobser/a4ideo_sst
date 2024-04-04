@@ -22,8 +22,8 @@ export default {
 
       const site = new NextjsSite(stack, "web", {
         bind: [NEXTAUTH_SECRET, GOOGLE_CLIENT_SECRET, CLOUDINARY_UPLOAD_PRESET, 
-              HUGGINGFACE_ACCESS_TOKEN, HUGGINGFACE_INFERENCE_ENDPOINT, AWS_SMTP_ENDPOINT,
-              AWS_SMTP_USERNAME, AWS_SMTP_PASSWORD],
+              HUGGINGFACE_ACCESS_TOKEN, HUGGINGFACE_INFERENCE_ENDPOINT, 
+              AWS_SMTP_ENDPOINT, AWS_SMTP_USERNAME, AWS_SMTP_PASSWORD],
         customDomain: {
           domainName: "a4ideo.com",
           domainAlias: "www.a4ideo.com",
