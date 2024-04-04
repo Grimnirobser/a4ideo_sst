@@ -8,6 +8,7 @@ import { z } from "zod"
 import { ArrowBigRight } from 'lucide-react';
 import { useState } from 'react';
 import { signIn } from "next-auth/react";
+import { useEffect } from 'react';
 
 interface SignInButtonProps {
     encodedUrl?: string;
@@ -20,6 +21,13 @@ const SignIn: FC<SignInButtonProps> = ({encodedUrl}) => {
         email: z.string().email(),
     }).safeParse({ email: emailAddress });
     const [isLoading, setIsLoading] = useState<boolean>(false);
+
+    const handleSubmit = () => {  
+      if (emailSchema.success) {
+          signIn("email", { email: emailAddress, callbackUrl: `/create-channel?e=${encodedUrl}`});
+          setIsLoading(true);
+      }
+  }
 
   return (
       <div className='h-full max-w-2xl mx-auto flex flex-col items-center justify-center gap-20 '>
@@ -51,6 +59,8 @@ const SignIn: FC<SignInButtonProps> = ({encodedUrl}) => {
            Enter your email address below and we will send a login link to your email inbox.
         </p>
 
+
+        <form onSubmit={handleSubmit}>
         <div className='flex flex-row items-center'>
         <Input
             id='email'
@@ -60,12 +70,14 @@ const SignIn: FC<SignInButtonProps> = ({encodedUrl}) => {
             onChange={(ev) => setEmailAddress(ev.target.value)}
         />
 
-            <button disabled={!emailSchema.success || isLoading} 
-                    onClick={() => {signIn("email", { email: emailAddress, callbackUrl: `/create-channel?e=${encodedUrl}`});setIsLoading(true);}}
+            <button type='submit'
+                    onClick={handleSubmit}
+                    disabled={!emailSchema.success || isLoading} 
                     className={`absolute right-24 w-fit rounded-md ${emailSchema.success ? "cursor-pointer bg-sky-300" : "cursor-not-allowed bg-slate-100"}`}>
                 <ArrowBigRight className="h-6 w-6"/>
             </button>
         </div>
+        </form>
         </div>
     </div>
   )
