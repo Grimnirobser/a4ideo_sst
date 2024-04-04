@@ -28,24 +28,24 @@ export const authOptions: AuthOptions = {
           }
         }
       }),
-      EmailProvider({
-        server: {
-          host: Config.AWS_SMTP_ENDPOINT as string,
-          port: 465,
-          auth: {
-            user: Config.AWS_SMTP_USERNAME as string,
-            pass: Config.AWS_SMTP_PASSWORD as string,
-          }
-        },
-        from: process.env.EMAIL_FROM as string,
-        sendVerificationRequest({
-          identifier: email,
-          url,
-          provider: { server, from },
-        }){
-          sendVerificationRequestSES({ identifier: email, url, provider: { server, from }})
-        }
-      }),
+      // EmailProvider({
+      //   server: {
+      //     host: Config.AWS_SMTP_ENDPOINT as string,
+      //     port: 465,
+      //     auth: {
+      //       user: Config.AWS_SMTP_USERNAME as string,
+      //       pass: Config.AWS_SMTP_PASSWORD as string,
+      //     }
+      //   },
+      //   from: process.env.EMAIL_FROM as string,
+      //   sendVerificationRequest({
+      //     identifier: email,
+      //     url,
+      //     provider: { server, from },
+      //   }){
+      //     sendVerificationRequestSES({ identifier: email, url, provider: { server, from }})
+      //   }
+      // }),
     ],
     callbacks: {
       async redirect({ url, baseUrl }) {
