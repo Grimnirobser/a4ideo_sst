@@ -42,7 +42,7 @@ const SignIn: FC<SignInButtonProps> = ({encodedUrl}) => {
         </Button>
         </div>
 
-          {/* <div className="flex items-center">
+          <div className="flex items-center">
             <div className="flex-grow bg bg-gray-300 h-0.5"></div>
             <div className="flex-grow-0 mx-5 text dark:text-white text-muted-foreground">OR</div>
             <div className="flex-grow bg bg-gray-300 h-0.5"></div>
@@ -65,7 +65,7 @@ const SignIn: FC<SignInButtonProps> = ({encodedUrl}) => {
                     className={`absolute right-24 w-fit rounded-md ${emailSchema.success ? "cursor-pointer bg-sky-300" : "cursor-not-allowed bg-slate-100"}`}>
                 <ArrowBigRight className="h-6 w-6"/>
             </button>
-        </div> */}
+        </div>
         </div>
     </div>
   )
