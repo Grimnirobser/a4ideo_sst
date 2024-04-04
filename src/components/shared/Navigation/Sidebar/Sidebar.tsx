@@ -4,11 +4,12 @@ import { SidebarContext } from "@/context/SidebarContext";
 import { Channel } from "@prisma/client";
 import { useContext } from "react";
 import MenuItem from "../Navbar/UserOptions/MenuItem";
-import { MdOutlineHome, MdOutlineSubscriptions, MdOutlineFolderShared, MdOutlineRocket, MdOutlineModeComment } from "react-icons/md";
+import { MdOutlineHome, MdOutlineSubscriptions, MdOutlineFolderShared, MdOutlineRocket } from "react-icons/md";
 import { useRouter } from "next/navigation";
 import { CurrentChannelContext } from "@/context/CurrentChannelContext";
 import Avatar, { AvatarSize } from "../../Avatar";
 import Link from 'next/link'
+import { LucideVideo } from "lucide-react";
 
 interface SidebarProps {
   subscribedChannels: Channel[];
@@ -40,12 +41,12 @@ const Sidebar: React.FC<SidebarProps> = ({ subscribedChannels }) => {
             onClick={() => handleItemClick(() => router.push("/"))}
           />
 
-          {/* <MenuItem
-            label="AIPs"
-            logo={<MdOutlineModeComment className="h-6 w-6 mr-4" />}
+          <MenuItem
+            label="Videos"
+            logo={<LucideVideo className="h-6 w-6 mr-4" />}
             round
-            onClick={() => handleItemClick(() => router.push("/aips"))}
-          /> */}
+            onClick={() => handleItemClick(() => router.push("/video"))}
+          />
 
           {/* <MenuItem
             label="Leaderboard"

@@ -62,11 +62,22 @@ const ProblemsetSection: React.FC<ProblemsetSectionProps> = ({
   const totalProblemset = problemsets.length;
   const searchParams = useSearchParams();
   const ps = searchParams.get('ps');
+  const psid = searchParams.get('psid');
   const pathname = usePathname();
   const [uploadProblemset, setUploadProblemset] = useState(false);
+  const problemsetIds = problemsets.map((problemset) => problemset.id);
 
-  const targetProblemset = ps ? parseInt(ps) : 1;
-  const target = 1 <= targetProblemset && targetProblemset <= totalProblemset ? targetProblemset : 1;
+  var target = 1;
+
+  if (psid && problemsetIds.includes(psid)){
+    target = problemsetIds.indexOf(psid) + 1;
+  }else if(ps){
+    const targetProblemset = ps ? parseInt(ps) : 1;
+    target = 1 <= targetProblemset && targetProblemset <= totalProblemset ? targetProblemset : 1;
+  }else{
+    target = 1;
+  }
+
 
   const incrementProblemNum = () => {
     if(target < totalProblemset){
