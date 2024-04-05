@@ -1,21 +1,5 @@
 "use client";
 
-import { Problemset, Problem, Video, Channel} from "@prisma/client";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
-import dayjs from "@/vendor/dayjs";
-import { compactNumberFormat } from "@/lib/numUtils";
-import { useQuery, useMutation } from "@tanstack/react-query"
-import getVideoById from "@/actions/getVideoById";
-import Avatar, { AvatarSize } from "./Avatar";
-import Link from "next/link";
-import { useState } from "react";
-import { ChevronLeft, ChevronRight } from 'lucide-react'
-import { cn } from '@/lib/utils'
-import { set } from "react-hook-form";
-
-
-
 interface FirstPageBannerProps {
     bgColor: string;
 }
@@ -34,13 +18,12 @@ const FirstPageBanner: React.FC<FirstPageBannerProps> = ({ bgColor }) => {
                     <div className="relative w-full h-full">
 
                         <p className="w-full h-full items-center indent-8 font-serif text-2xl italic">
-                        &quot;Ostensibly, these types of questions<span className="w-full h-full bg-rose-300">(free-response questions)</span> offer a different challenge, 
-                            as they do not offer any options of answers; rather, they <span className="w-full h-full bg-green-300">offer a prompt that inspires critical thinking.</span> 
-                            This is what leads to the perception that written responses <span className="w-full h-full bg-sky-300">are more effective in supporting higher level thinking</span>&quot;
+                        &quot;Ostensibly, these types of questions<span className="w-full h-full bg-rose-200">(free-response questions)</span> offer a different challenge, 
+                            as they do not offer any options of answers; rather, they <span className="w-full h-full bg-green-200">offer a prompt that inspires critical thinking.</span> 
+                            This is what leads to the perception that written responses <span className="w-full h-full bg-sky-200">are more effective in supporting higher level thinking</span>&quot;
                         </p>
                     </div>
                     
-        
                 </div>
 
 

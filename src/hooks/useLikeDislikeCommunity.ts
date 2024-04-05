@@ -2,6 +2,7 @@ import { useRouter } from "next/navigation";
 import { useCallback, useContext, useMemo } from "react";
 import { useToast } from "@/components/ui/use-toast"
 import { CurrentChannelContext } from "@/context/CurrentChannelContext";
+import { SignInOptionContext } from "@/context/SignInOptionContext";
 
 interface UseLikeDislikeCommunityProps {
   communityId: string;
@@ -16,6 +17,7 @@ export enum LikeDislikeCommunityStatus {
 export const useLikeDislikeCommunity = ({ communityId }: UseLikeDislikeCommunityProps) => {
 
   const currentChannel = useContext(CurrentChannelContext);
+  const SignInOption = useContext(SignInOptionContext);
   const router = useRouter();
   const { toast } = useToast();
 
@@ -39,7 +41,7 @@ export const useLikeDislikeCommunity = ({ communityId }: UseLikeDislikeCommunity
   const toggleLikeDislikeCommunity = useCallback(
     async (action: "like" | "dislike") => {
       if (!currentChannel) {
-        alert("Please sign in to like/dislike. It is all free!");
+        SignInOption?.onOpen();
         return;
       } else if (!communityId) return;
 
@@ -99,7 +101,7 @@ export const useLikeDislikeCommunity = ({ communityId }: UseLikeDislikeCommunity
          })
       }
     },
-    [currentChannel, communityId, likeDislikeCommunityStatus, router, toast]
+    [currentChannel, communityId, likeDislikeCommunityStatus, router, toast, SignInOption]
   );
 
   return {

@@ -9,6 +9,7 @@ import {
 	englishRecommendedTransformers,
   asteriskCensorStrategy
 } from 'obscenity';
+import { SignInOptionContext } from "@/context/SignInOptionContext";
 
 interface UseCommentProps {
   videoId?: string | null;
@@ -16,6 +17,7 @@ interface UseCommentProps {
 
 export const useComment = ({ videoId }: UseCommentProps) => {
   const currentChannel = useContext(CurrentChannelContext);
+  const SignInOption = useContext(SignInOptionContext);
   const router = useRouter();
   const { toast } = useToast();
 
@@ -23,7 +25,7 @@ export const useComment = ({ videoId }: UseCommentProps) => {
 
   const submitComment = useCallback(async () => {
     if (!currentChannel) {
-      alert("Please sign in to comment. It is all free!");
+      SignInOption?.onOpen();
       return;
     }
 
@@ -64,7 +66,7 @@ export const useComment = ({ videoId }: UseCommentProps) => {
         description: "Could not comment, please try again.", 
        })
     }
-  }, [currentChannel, videoId, text, setText, router, toast]);
+  }, [currentChannel, videoId, text, setText, router, toast, SignInOption]);
 
   return {
     text,

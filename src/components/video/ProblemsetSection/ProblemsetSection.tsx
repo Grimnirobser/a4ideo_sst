@@ -35,6 +35,8 @@ import getChannelById from "@/actions/getChannelById";
 import { ToastAction } from "@/components/ui/toast"
 import AddNewProblemset from "@/components/shared/AddNewProblemset";
 import { toHHMMSS } from "@/lib/numUtils";
+import { SignInOptionContext } from "@/context/SignInOptionContext";
+
 interface ProblemsetSectionProps {
   problemsets: (Problemset & { channel: Channel, problems: Problem[] })[];
   videoId: string;
@@ -92,6 +94,7 @@ const ProblemsetSection: React.FC<ProblemsetSectionProps> = ({
   }
 
   const currentChannel = useContext(CurrentChannelContext);
+  const SignInOption = useContext(SignInOptionContext);
 
 
   const {data: problemsetCreatorChannel, isLoading: LoadingCreator} = useQuery({
@@ -173,7 +176,7 @@ const ProblemsetSection: React.FC<ProblemsetSectionProps> = ({
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     if (!currentChannel) {
-      alert("Please sign in to submit your perspective. It is all free!");
+      SignInOption?.onOpen();
       return;
     }
 

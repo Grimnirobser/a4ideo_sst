@@ -13,6 +13,7 @@ import { submitAttemptInitAction } from "@/actions/submitAttempt";
 import { Toaster } from "@/components/ui/toaster"
 import { checkVideoDeletableInitAction } from "@/actions/checkVideoDeletable";
 import { checkProblemsetDeletableInitAction } from "@/actions/checkProblemsetDeletable";
+import SignInOptionProvider from "@/context/SignInOptionContext";
 
 const roboto = Roboto({
   subsets: ["latin"],
@@ -42,12 +43,14 @@ export default async function RootLayout({
               <CurrentChannelProvider channel={currentChannel}>
                 {/* <UploadVideoModalProvider> */}
                    <ProgressBarProvider>
-                      <SidebarProvider>
-                        <Navigation />
-                        <div className="pt-16 bg-slate-100 h-full -z-50">
-                          {children}
-                        </div>
-                      </SidebarProvider>
+                      <SignInOptionProvider>
+                        <SidebarProvider>
+                          <Navigation />
+                          <div className="pt-16 bg-slate-100 min-h-screen -z-50">
+                            {children}
+                          </div>
+                        </SidebarProvider>
+                      </SignInOptionProvider>
                   </ProgressBarProvider>
                 {/* </UploadVideoModalProvider> */}
               </CurrentChannelProvider>

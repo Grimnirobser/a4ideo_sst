@@ -7,12 +7,12 @@ export default async function NotFoundPage() {
 
   return (
 
-      <div className='flex flex-col items-center text-center mx-auto justify-center space-y-6 sm:w-[350px] lg:px-0'>  
+      <div className='flex bg-white w-full h-full flex-col items-center text-center justify-center sm:w-[350px]'>  
         <Image
             unoptimized
             fill
             sizes="100%"
-            className='-z-10 object-contain object-center rounded-lg h-20 w-20'
+            className='object-contain object-center rounded-lg w-full h-full'
             src="/rabbit-hole.jpeg"
             alt='rabbit hole'
         />
@@ -20,14 +20,13 @@ export default async function NotFoundPage() {
         <Link
           className={buttonVariants({
             variant: 'link',
-            className: 'absolute top-10 right-10 gap-1.5 text-lg',
+            className: 'absolute top-16 right-10 gap-1.5 text-lg decoration-rose-500 decoration-double',
           })}
           href='/'>
-          A rabbit hole! Go back to home
-          <ArrowRight className='h-4 w-4' />
+          <p className='text-rose-500 italic '>A rabbit hole! Go back to home</p>
+          <ArrowRight className='h-4 w-4' color='red'/>
         </Link>
       </div>
-
 
     )
 }   

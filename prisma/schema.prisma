@@ -111,7 +111,7 @@ model Problemset {
   attemptCount Int       @default(0)
   passCount    Int       @default(0)
   createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt@default(now())
+  updatedAt    DateTime  @default(now()) @updatedAt
   approved     Boolean   @default(false)
   suspended    Boolean   @default(false)
   passedScore  Float     @default(0.50)
@@ -131,6 +131,7 @@ model Problem {
   answer       String[]
   createdAt    DateTime  @default(now())
   atTime       Int       @default(0)
+  times        Int[]     @default([])
 
   problemset Problemset @relation(fields: [problemsetId], references: [id], onDelete: Cascade)
 }
