@@ -23,7 +23,7 @@ export const useComment = ({ videoId }: UseCommentProps) => {
 
   const submitComment = useCallback(async () => {
     if (!currentChannel) {
-      alert("Please sign in to comment");
+      alert("Please sign in to comment. It is all free!");
       return;
     }
 

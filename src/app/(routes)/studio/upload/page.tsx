@@ -59,7 +59,7 @@ export default function UploadPage() {
       toast({
         variant: "error",
         title: "Error",
-        description: "You need to sign in to upload.",
+        description: "Please sign in to upload. It is all free!",
       });
     }
   }, [ currentChannel, router, toast]); 
@@ -138,7 +138,7 @@ export default function UploadPage() {
       toast({
         variant: "error",
         title: "Error",
-        description: "Please sign in to upload video.",
+        description: "Please sign in to upload video. It is all free!",
       });
       return;
     }

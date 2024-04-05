@@ -16,10 +16,14 @@ export default {
       const CLOUDINARY_UPLOAD_PRESET = new Config.Secret(stack, "CLOUDINARY_UPLOAD_PRESET");
       const HUGGINGFACE_ACCESS_TOKEN = new Config.Secret(stack, "HUGGINGFACE_ACCESS_TOKEN");
       const HUGGINGFACE_INFERENCE_ENDPOINT = new Config.Secret(stack, "HUGGINGFACE_INFERENCE_ENDPOINT");
+      const AWS_SMTP_ENDPOINT = new Config.Secret(stack, "AWS_SMTP_ENDPOINT");
+      const AWS_SMTP_USERNAME = new Config.Secret(stack, "AWS_SMTP_USERNAME");
+      const AWS_SMTP_PASSWORD = new Config.Secret(stack, "AWS_SMTP_PASSWORD");
 
       const site = new NextjsSite(stack, "web", {
         bind: [NEXTAUTH_SECRET, GOOGLE_CLIENT_SECRET, CLOUDINARY_UPLOAD_PRESET, 
-              HUGGINGFACE_ACCESS_TOKEN, HUGGINGFACE_INFERENCE_ENDPOINT],
+              HUGGINGFACE_ACCESS_TOKEN, HUGGINGFACE_INFERENCE_ENDPOINT, 
+              AWS_SMTP_ENDPOINT, AWS_SMTP_USERNAME, AWS_SMTP_PASSWORD],
         customDomain: {
           domainName: "a4ideo.com",
           domainAlias: "www.a4ideo.com",
@@ -33,6 +37,7 @@ export default {
           NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME!,
           DATABASE_URL: process.env.DATABASE_URL!,
           NEXTAUTH_URL: process.env.NEXTAUTH_URL!,
+          EMAIL_FROM: process.env.EMAIL_FROM!,
         },
       });
       app.setDefaultFunctionProps({

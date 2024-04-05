@@ -53,7 +53,7 @@ const VideoUploadForm: React.FC<VideoUploadFormProps> = ({
                   <ArrowRight className='h-4 w-4'/>
                 </span>
                 </div>
-                <Input id="video" className="text-slate-900 text-xl font-sans antialiased border-zinc-500"
+                <Input id="video" className="text-slate-900 text-xl font-sans antialiased border-zinc-500 bg-white"
                       placeholder="Type Youtube video ID here"
                       {...register("youtubeId", { required: true })}
                       onChange={(ev) => changeValue?.("youtubeId", ev.target.value || "")}
@@ -77,14 +77,14 @@ const VideoUploadForm: React.FC<VideoUploadFormProps> = ({
                 </span>
                 </div>
                 <div className="flex items-center gap-1">
-                <MediaUpload onChange={(value) => !isLoading && changeValue("youtubeId", value)} setValue={setUploadedFilename}>
+                <MediaUpload key="upload doc" onChange={(value) => !isLoading && changeValue("youtubeId", value)} setValue={setUploadedFilename}>
                       <button className="border-zinc-500 text-center h-10 text-slate-900 border rounded-md text-sm bg-slate-100 hover:opacity-80"
                               disabled={isLoading}>
                         <p>Click to Upload</p>
                       </button>
                 </MediaUpload>
               
-                <Input id="document" className="text-slate-900 text-xl italic font-sans antialiased border-zinc-500"
+                <Input id="document" className="text-slate-900 text-xl italic font-sans antialiased border-zinc-500 bg-white"
                           {...register("youtubeId", { required: true })}
                           value={uploadedFilename}
                           disabled={true}
@@ -111,6 +111,7 @@ const VideoUploadForm: React.FC<VideoUploadFormProps> = ({
          {/* imageSrc input */}
          <div className="col-span-1 aspect-w-2 aspect-h-3"> 
           <MediaUpload
+            key="upload thumbnail"
             onChange={(value) => !isLoading && changeValue("imageSrc", value)}
           >
             <Label className="text-base">Image</Label>
@@ -124,13 +125,13 @@ const VideoUploadForm: React.FC<VideoUploadFormProps> = ({
                   alt="imageSrc"
                   fill
                   sizes="100%"
-                  className="-z-10 object-contain object-center rounded-md mt-3 w-full h-full cursor-pointer border-[1px] border-zinc-500"
+                  className="object-contain object-center rounded-md mt-3 w-full h-full cursor-pointer border-[1px] border-zinc-500"
                 />
               </div>
             ) : (
               <div
                 {...register("imageSrc", { required: true })}
-                className={`flex flex-col gap-2 mt-3 w-full h-full rounded-md items-center cursor-pointer border-[1px] justify-center object-contain ${
+                className={`flex bg-white flex-col gap-2 mt-3 w-full h-full rounded-md items-center cursor-pointer border-[1px] justify-center object-contain ${
                   errors["imageSrc"] ? "border-red-500" : "border-zinc-500"
                 }`}
               >

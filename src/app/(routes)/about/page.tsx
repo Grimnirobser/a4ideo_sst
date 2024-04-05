@@ -6,7 +6,7 @@ const AboutPage = () => {
 
 
     return (
-        <div className="flex flex-col items-center h-screen bg-slate-100 mx-60">
+        <div className="flex flex-col items-center h-screen bg-white mx-60">
             <title> About</title>
             <h1 className="text-4xl text-gray-700 font-bold mt-4">About A4ideo</h1>
 

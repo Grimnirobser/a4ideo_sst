@@ -23,7 +23,7 @@ export const useSubscribe = ({ channelId }: UseSubscribeProps) => {
 
   const toggleSubscribed = useCallback(async () => {
     if (!currentChannel) {
-      alert("Please sign in to subscribe");
+      alert("Please sign in to subscribe. It is all free!");
       return;
     }
 

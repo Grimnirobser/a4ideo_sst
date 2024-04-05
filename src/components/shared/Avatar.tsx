@@ -24,7 +24,7 @@ const Avatar: React.FC<AvatarProps> = ({
     <Image
       unoptimized
       alt="Avatar"
-      className={`rounded-full aspect-square object-contain ${
+      className={`rounded-lg aspect-square object-contain ${
         onClick && "cursor-pointer"
       } ${className}`}
       height={size}
