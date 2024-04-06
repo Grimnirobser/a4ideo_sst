@@ -48,7 +48,7 @@ interface readyDataType{
   channelId: string,
   problemsetId: string,
   problemsetAuthorId: string,
-  problems: Problem[],
+  problemIds: string[],
   attempts: {attempt: string}[]
 }
 
@@ -180,11 +180,13 @@ const ProblemsetSection: React.FC<ProblemsetSectionProps> = ({
       return;
     }
 
+    const problemIds = problemsets[target-1].problems.map((problem) => problem.id);
+
     const readyData = {
       channelId: currentChannel.id,
       problemsetId: problemsets[target-1].id,
       problemsetAuthorId: problemsets[target-1].channelId,
-      problems: problemsets[target-1].problems,
+      problemIds: problemIds,
       attempts: data.attempts,
     }
     mutateAsync(readyData);

@@ -35,6 +35,9 @@ const SignIn: FC<SignInButtonProps> = ({encodedUrl}) => {
       <div className='flex flex-col space-y-2 text-center'>
         <Icons.logo className='mx-auto h-20 w-20'/>
         <h1 className='text-2xl font-semibold tracking-tight'>Log in to A4ideo</h1>
+        <p className='px-8 text-center text-base text-muted-foreground'>
+           All services are free to use.
+        </p>
       </div>
       <div className='flex justify-center items-center'>
         <Button

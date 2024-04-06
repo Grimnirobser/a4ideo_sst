@@ -59,8 +59,8 @@ export const SingleSentence: React.FC<SingleSentenceProps> = ({
                     <DialogHeader>
                       <DialogTitle className="text-xl">Modify Answer</DialogTitle>
                       <DialogDescription className="text-base">
-                        Modify you answer below, feel free to add text with punctuation. 
-                        Please note that the modified answer will be not in the emphasis list by default.
+                        Modify you answer below. Answers will be separated by slashes(/).
+                        Please note that the modified answer will be removed from the emphasis list by default.
                       </DialogDescription>
                     </DialogHeader>
                       <Textarea id={`answerModify${emphasisIndex}`} className="text-slate-900 text-xl font-sans antialiased"

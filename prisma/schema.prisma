@@ -131,7 +131,6 @@ model Problem {
   answer       String[]
   createdAt    DateTime  @default(now())
   atTime       Int       @default(0)
-  times        Int[]     @default([])
 
   problemset Problemset @relation(fields: [problemsetId], references: [id], onDelete: Cascade)
 }

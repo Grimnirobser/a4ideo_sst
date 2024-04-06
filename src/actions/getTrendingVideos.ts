@@ -1,7 +1,6 @@
 'use server';
 import prisma from "@/vendor/db";
 import { Channel, Video } from "@prisma/client";
-import getProblemsetsByVideoId from "./getProblemsetsByVideoId";
 
 interface TrendingReturnType{
   video: Video & {channel: Channel}, 
@@ -46,6 +45,7 @@ export default async function getTrendingVideos(): Promise<TrendingReturnType[]>
         ],
         take: 5,
       });
+
 
       const questions = problemsets.map((problemset) => problemset.problems[0].question);
 

@@ -9,7 +9,7 @@ interface SubmitAttemptParams{
     channelId: string,
     problemsetId: string,
     problemsetAuthorId: string,
-    problems: Problem[],
+    problemIds: string[],
     attempts: {attempt: string}[]
   }
 
@@ -69,14 +69,22 @@ export async function submitAttempt( params: SubmitAttemptParams
 
   
     try {
-        const {channelId, problemsetId, problemsetAuthorId, problems, attempts } = params;
+        const {channelId, problemsetId, problemsetAuthorId, problemIds, attempts } = params;
 
         if (!channelId) {
             throw new Error("Channel ID is required");
         }
 
+        const problems = await Promise.all(problemIds.map(async(problemId) => await prisma.problem.findUnique({
+            where: {
+                id: problemId,
+            },
+            })
+        ));
+
+
         const queryBodies = problems.map((problem, index) => ({"inputs": "Hello A4ideo", 
-                "answer": problem.answer, "type": problem.type, "emphasis": problem.emphasis,
+                "answer": problem!.answer, "type": problem!.type, "emphasis": problem!.emphasis,
                 "perspective": attempts[index].attempt}));
 
         const result_lst = await Promise.all(queryBodies.map(async(queryBody) => await query(queryBody)));

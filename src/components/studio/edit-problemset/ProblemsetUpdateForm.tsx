@@ -79,9 +79,12 @@ const ProblemUpdateForm: React.FC<ProblemUpdateFormProps> = ({
       { value: 'exact', label: 'exact'},
     ];
     
-    // state will have punctuation but the content in form will not have punctuation
+    // state will have punctuation but the content in form will not have punctuation //outdated
+    // const [sentenceToShow, setSentenceToShow] = useState<string[]>([]);  //outdated
+
+    // for new version, punctuations will be stored and sentences are split by slashes instead
     const [sentenceEmphasis, setSentenceEmphasis] = useState<AnswerType[]>(prevProblem?.answer || []);
-    // const [sentenceToShow, setSentenceToShow] = useState<string[]>([]);
+
 
     const [answerInput, setAnswerInput] = useState<string>('');
     const [dialogOpen, setDialogOpen] = useState(false);
@@ -95,10 +98,9 @@ const ProblemUpdateForm: React.FC<ProblemUpdateFormProps> = ({
 
 
     const addSentence = (content: string) => {
-      const newSentences = content.split(/[,.;?!]+/).map((sentence) => sentence.trim()).filter(sentence => sentence.trim() !== '');
-      const newSentencesToShow = content.split(/(?<=[,.;?!])/).filter(sentence => sentence.trim().replace(/[,.;?!]/, '') !== '');
+      const newSentences = content.split('/').map((sentence) => sentence.trim()).filter(sentence => sentence.trim() !== '');
       
-      const newSentenceEmphasis = newSentencesToShow.map(sentence => ({sentence: sentence, emphasis: false}));
+      const newSentenceEmphasis = newSentences.map(sentence => ({sentence: sentence, emphasis: false}));
       
       setSentenceEmphasis(sentenceEmphasis => [...sentenceEmphasis, ...newSentenceEmphasis]);
 
@@ -116,10 +118,8 @@ const ProblemUpdateForm: React.FC<ProblemUpdateFormProps> = ({
     }
 
     const updateSentence = (emphasisIndex: number, content: string) => {
-      const newSentences = content.split(/[,.;?!]+/).map((sentence) => sentence.trim()).filter(sentence => sentence.trim() !== '');
-      const newSentencesToShow = content.split(/(?<=[,.;?!])/).filter(sentence => sentence.trim().replace(/[,.;?!]/, '') !== '');
-      const newSentenceEmphasis = newSentencesToShow.map(sentence => ({sentence: sentence, emphasis: false}));
-
+      const newSentences = content.split('/').map((sentence) => sentence.trim()).filter(sentence => sentence.trim() !== '');
+      const newSentenceEmphasis = newSentences.map(sentence => ({sentence: sentence, emphasis: false}));
       setSentenceEmphasis(sentenceEmphasis => [...sentenceEmphasis.slice(0, emphasisIndex), ...newSentenceEmphasis, ...sentenceEmphasis.slice(emphasisIndex + 1)]);
 
       remove(emphasisIndex);
@@ -127,14 +127,12 @@ const ProblemUpdateForm: React.FC<ProblemUpdateFormProps> = ({
       newSentences.map((sentence, ind) => {
         insert(emphasisIndex+ind, {sentence: sentence, emphasis: false});
       });
-
     }
 
 
     const updateEmphasis = (emphasisIndex: number) => {
 
-      // did not store sentence without punctuation and trimming so need to do it here
-      update(emphasisIndex, {sentence: sentenceEmphasis[emphasisIndex].sentence.replace(/[,.;?!]/, '').trim(), 
+      update(emphasisIndex, {sentence: sentenceEmphasis[emphasisIndex].sentence, 
                             emphasis: !sentenceEmphasis[emphasisIndex].emphasis});
       
       setSentenceEmphasis(sentenceEmphasis => sentenceEmphasis.map((item, ind) => ind === emphasisIndex ? {sentence: sentenceEmphasis[ind].sentence, emphasis: !sentenceEmphasis[ind].emphasis} : item));
@@ -259,8 +257,7 @@ const toHHMMSS = (secs: number) => {
                     <DialogHeader>
                       <DialogTitle className="text-xl">Answer</DialogTitle>
                       <DialogDescription className="text-base">
-                        Type your answer below, answer would be split into sentences 
-                        and you need to emphasize those necessary sentences that an acceptable solution must have.
+                          Type your answer below. Answers will be separated by slashes(/).
                       </DialogDescription>
                     </DialogHeader>
                       <Textarea id={`answerInput${index}`} className="text-slate-900 text-xl font-sans antialiased border-zinc-500"
@@ -372,8 +369,7 @@ const toHHMMSS = (secs: number) => {
                     <DialogHeader>
                       <DialogTitle className="text-xl">Answer</DialogTitle>
                       <DialogDescription className="text-base">
-                        Type your answer below, answer would be split into sentences 
-                        and you need to emphasize those necessary sentences that an acceptable solution must have.
+                      Type your answer below. Answers will be separated by slashes(/).
                       </DialogDescription>
                     </DialogHeader>
                       <Textarea id={`answerInput${index}`} className="text-slate-900 text-xl font-sans antialiased border-zinc-500"
