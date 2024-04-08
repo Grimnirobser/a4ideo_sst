@@ -19,7 +19,7 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Textarea } from "@/components/ui/textarea"
-import { FileQuestion } from 'lucide-react';
+import { FileUp } from 'lucide-react';
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { useForm, FieldValues, SubmitHandler } from "react-hook-form";
 import { Skeleton } from "@/components/ui/skeleton"
@@ -277,13 +277,14 @@ const ProblemsetSection: React.FC<ProblemsetSectionProps> = ({
                   <Loader2 className='mr-2 h-4 w-4 animate-spin' />
             )}Submit</Button>
             <StatusBasedTag status={attemptStatus}/>
-            <FileQuestion className='cursor-pointer w-10 h-10 hover:bg-slate-200 rounded-lg' onClick={() => setUploadProblemset(true)}/>
+            <FileUp className='cursor-pointer w-10 h-10 hover:bg-slate-200 rounded-lg' onClick={() => setUploadProblemset(true)}/>
           </div>
 
-    <div className="peer w-full mt-4 mb-4 px-4 pt-2 pb-2  rounded-md outline-none border-[1px] bg-slate-100 transition">
-        Note if all sentences are not red but the result is &quot;fail&quot;, it means the answer is missing an emphasis.
-        You can try click the question mark next to PASS/UNPASSED badge to upload your own questions.
-    </div>
+        <div className="peer w-full mt-4 mb-4 px-4 pt-2 pb-2  rounded-md outline-none border-[1px] bg-slate-100 transition">
+            <span>
+            You can try click the upload sign next to <span className="w-full h-full bg-green-300">PASS</span>/<span className="w-full h-full bg-rose-300">UNPASSED</span> to upload your own questions.
+            </span>
+        </div>
       </form> 
     </Form>
     </>
