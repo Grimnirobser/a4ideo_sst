@@ -280,7 +280,7 @@ const ProblemsetSection: React.FC<ProblemsetSectionProps> = ({
             <FileUp className='cursor-pointer w-10 h-10 hover:bg-slate-200 rounded-lg' onClick={() => setUploadProblemset(true)}/>
           </div>
 
-        <div className="peer w-full mt-4 mb-4 px-4 pt-2 pb-2  rounded-md outline-none border-[1px] bg-slate-100 transition">
+        <div className="peer w-full mt-4 mb-4 px-4 pt-2 pb-2  rounded-md outline-none border-[1px] bg-white transition">
             <span>
             You can try click the upload sign next to <span className="w-full h-full bg-green-300">PASS</span>/<span className="w-full h-full bg-rose-300">UNPASSED</span> to upload your own questions.
             </span>
