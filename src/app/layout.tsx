@@ -41,18 +41,18 @@ export default async function RootLayout({
             <Toaster />
             <CurrentUserProvider user={currentUser}>
               <CurrentChannelProvider channel={currentChannel}>
-                {/* <UploadVideoModalProvider> */}
-                   <ProgressBarProvider>
-                      <SignInOptionProvider>
-                        <SidebarProvider>
-                          <Navigation />
-                          <div className="pt-16 bg-slate-100 min-h-screen -z-50">
-                            {children}
-                          </div>
-                        </SidebarProvider>
-                      </SignInOptionProvider>
-                  </ProgressBarProvider>
-                {/* </UploadVideoModalProvider> */}
+                  {/* <UploadVideoModalProvider> */}
+                    <ProgressBarProvider>
+                        <SignInOptionProvider>
+                          <SidebarProvider>
+                            <Navigation />
+                            <div className="pt-16 bg-slate-100 min-h-screen -z-50">
+                              {children}
+                            </div>
+                          </SidebarProvider>
+                        </SignInOptionProvider>
+                    </ProgressBarProvider>
+                  {/* </UploadVideoModalProvider> */}
               </CurrentChannelProvider>
             </CurrentUserProvider>
         </Provider>

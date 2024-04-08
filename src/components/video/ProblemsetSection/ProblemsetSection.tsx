@@ -36,6 +36,7 @@ import { ToastAction } from "@/components/ui/toast"
 import AddNewProblemset from "@/components/shared/AddNewProblemset";
 import { toHHMMSS } from "@/lib/numUtils";
 import { SignInOptionContext } from "@/context/SignInOptionContext";
+import { GetChunkResults } from "@/components/shared/Chunks/GetChunkResults";
 
 interface ProblemsetSectionProps {
   problemsets: (Problemset & { channel: Channel, problems: Problem[] })[];
@@ -261,11 +262,11 @@ const ProblemsetSection: React.FC<ProblemsetSectionProps> = ({
             )}
           />
 
-          {attemptFeedback ? <SingleFeedback key={"SingleFeedback"+problem.id+index} 
-                          problemsetNum={target} 
-                          index={index}
-                          {...attemptFeedback[index]}/> : null
-          }
+          {attemptFeedback ? 
+              <div>
+              <SingleFeedback key={"SingleFeedback"+problem.id+index} prediction={attemptFeedback[index].prediction} hit_emphasis={attemptFeedback[index].hit_emphasis}/>
+              <GetChunkResults key={"GetChunkResults"+problem.id+index} refined={attemptFeedback[index].refined}/> 
+              </div>: null}
         </div>
         ))}
 

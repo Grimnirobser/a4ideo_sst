@@ -76,7 +76,6 @@ const ProblemUpdateForm: React.FC<ProblemUpdateFormProps> = ({
     const options: OptionType[] = [
       { value: 'reason', label: 'reason'},
       { value: 'step', label: 'step'},
-      { value: 'exact', label: 'exact'},
     ];
     
     // state will have punctuation but the content in form will not have punctuation //outdated
@@ -209,7 +208,6 @@ const toHHMMSS = (secs: number) => {
                       <SelectContent >
                         <SelectItem className="text-2xl font-sans subpixel-antialiased" value={options[0].value}>{options[0].label}</SelectItem>
                         <SelectItem className="text-2xl font-sans subpixel-antialiased" value={options[1].value}>{options[1].label}</SelectItem>
-                        <SelectItem className="text-2xl font-sans subpixel-antialiased" value={options[2].value}>{options[2].label}</SelectItem>
                       </SelectContent>
                     </Select>
                 )}
@@ -320,7 +318,6 @@ const toHHMMSS = (secs: number) => {
                       <SelectContent >
                         <SelectItem className="text-2xl font-sans subpixel-antialiased" value={options[0].value}>{options[0].label}</SelectItem>
                         <SelectItem className="text-2xl font-sans subpixel-antialiased" value={options[1].value}>{options[1].label}</SelectItem>
-                        <SelectItem className="text-2xl font-sans subpixel-antialiased" value={options[2].value}>{options[2].label}</SelectItem>
                       </SelectContent>
                     </Select>
                 )}

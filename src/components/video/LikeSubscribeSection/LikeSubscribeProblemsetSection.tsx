@@ -36,13 +36,15 @@ const LikeSubscribeProblemsetSection: React.FC<LikeSubscribeProblemsetSectionPro
             {compactNumberFormat(channel.subscriberCount)} subscribers
           </p>
         </div>
-        {channel.id === currentChannel?.id ? (
+        
+        {/* problemset section is too narrow to fit the button, remove for now */}
+        {/* {channel.id === currentChannel?.id ? (
           <Link href="/studio">
             <Button type="rounded-dark">Manage videos</Button>
           </Link>
         ) : (
           <SubscribeButton channelId={channel.id} />
-        )}
+        )} */}
       </div>
       <LikeDislikeProblemsetButton problemset={problemset} />
     </div>
