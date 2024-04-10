@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 import { CurrentChannelContext } from "@/context/CurrentChannelContext";
 import Avatar, { AvatarSize } from "../../Avatar";
 import Link from 'next/link'
-import { LucideVideo } from "lucide-react";
+import { LucideVideo, LibraryBig } from "lucide-react";
 
 interface SidebarProps {
   subscribedChannels: Channel[];
@@ -46,6 +46,13 @@ const Sidebar: React.FC<SidebarProps> = ({ subscribedChannels }) => {
             logo={<LucideVideo className="h-6 w-6 mr-4" />}
             round
             onClick={() => handleItemClick(() => router.push("/video"))}
+          />
+
+          <MenuItem
+            label="Community"
+            logo={<LibraryBig className="h-6 w-6 mr-4" />}
+            round
+            onClick={() => handleItemClick(() => router.push("/c"))}
           />
 
           {/* <MenuItem
