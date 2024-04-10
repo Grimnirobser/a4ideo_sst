@@ -9,7 +9,7 @@ interface SubmitAttemptParams{
     channelId: string,
     problemsetId: string,
     problemsetAuthorId: string,
-    problems: Problem[],
+    problemIds: string[],
     attempts: {attempt: string}[]
   }
 
@@ -22,32 +22,16 @@ interface QueryFormat{
 }
 
 interface compareReturnType{
-    prediction: string,
-    fail: number[],
-}
-
-interface AttemptFeedback{
-    prediction: string,
-    perspective: string,
-    fail: number[],
+    prediction: 'pass' | 'fail',
+    hit_emphasis: 'yes' | 'no',
+    refined: [string, 'pass' | 'fail'| 'equal'][],
 }
 
 
 export async function submitAttemptInitAction(){} // dirty work related to next.js issue https://github.com/vercel/next.js/issues/54282
 
 async function query(data:QueryFormat): Promise<compareReturnType> {
-
-    if (data.type === "exact"){
-        const perspective_paragraph = data.perspective.split(/[,.;?!]+/).map((sentence) => sentence.trim()).filter(sentence => sentence.trim() !== '');
-        const fail_lst: number[] = []
-        perspective_paragraph.map((sentence, index) => {
-            if (data.answer[index] !== sentence){
-                fail_lst.push(index);
-            }
-        });
-        return {prediction: fail_lst.length === 0 ? "pass" : "fail", fail: fail_lst};
-    }else{
-        const response = await fetch(
+    const response = await fetch(
         Config.HUGGINGFACE_INFERENCE_ENDPOINT!,
             {
                 headers: { 
@@ -58,32 +42,42 @@ async function query(data:QueryFormat): Promise<compareReturnType> {
                 method: "POST",
                 body: JSON.stringify(data),
             }
-        );
-        const result = await response.json();
-        return result[0];
-    }
+    );
+    const result = await response.json();
+    return result[0];
+    
 }
 
 export async function submitAttempt( params: SubmitAttemptParams
-    ): Promise<AttemptFeedback[]>{
+    ): Promise<compareReturnType[]>{
 
   
     try {
-        const {channelId, problemsetId, problemsetAuthorId, problems, attempts } = params;
+        const {channelId, problemsetId, problemsetAuthorId, problemIds, attempts } = params;
 
         if (!channelId) {
             throw new Error("Channel ID is required");
         }
 
+        const problems = await Promise.all(problemIds.map(async(problemId) => await prisma.problem.findUnique({
+            where: {
+                id: problemId,
+            },
+            })
+        ));
+
+
         const queryBodies = problems.map((problem, index) => ({"inputs": "Hello A4ideo", 
-                "answer": problem.answer, "type": problem.type, "emphasis": problem.emphasis,
+                "answer": problem!.answer, "type": problem!.type, "emphasis": problem!.emphasis,
                 "perspective": attempts[index].attempt}));
 
         const result_lst = await Promise.all(queryBodies.map(async(queryBody) => await query(queryBody)));
 
-        const feedback = result_lst.map((single_result, index) => 
-            ({prediction: single_result.prediction, perspective: attempts[index].attempt, fail: single_result.fail})
-        );
+        console.log(result_lst);
+        
+        // const feedback = result_lst.map((single_result) => 
+        //     ({prediction: single_result.prediction, hit_emphasis: single_result.hit_emphasis, refined: single_result.refined})
+        // );
 
         const result_prediction = result_lst.map((single_result, index) => single_result.prediction);
 
@@ -192,7 +186,7 @@ export async function submitAttempt( params: SubmitAttemptParams
 
         }
 
-        return feedback;
+        return result_lst;
         
     } catch (error: any) {
         throw new Error(error);

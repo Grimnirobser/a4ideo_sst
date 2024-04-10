@@ -2,6 +2,9 @@ import { useRouter } from "next/navigation";
 import { useCallback, useContext, useMemo } from "react";
 import { useToast } from "@/components/ui/use-toast"
 import { CurrentChannelContext } from "@/context/CurrentChannelContext";
+import { SignInOptionContext } from "@/context/SignInOptionContext";
+import { useQuery } from "@tanstack/react-query"
+import checkChannelMembership from "@/actions/checkChannelMembership";
 
 interface UseLikeDislikeCommunityProps {
   communityId: string;
@@ -16,8 +19,15 @@ export enum LikeDislikeCommunityStatus {
 export const useLikeDislikeCommunity = ({ communityId }: UseLikeDislikeCommunityProps) => {
 
   const currentChannel = useContext(CurrentChannelContext);
+  const SignInOption = useContext(SignInOptionContext);
   const router = useRouter();
   const { toast } = useToast();
+
+  const {data: isMember, isLoading} = useQuery({
+    queryKey: ['checkChannelMembership', currentChannel?.id, communityId],
+    queryFn: async() => await checkChannelMembership({communityId: communityId}),
+  });
+
 
   const likeDislikeCommunityStatus = useMemo(() => {
     if (!currentChannel || !communityId) return false;
@@ -35,13 +45,19 @@ export const useLikeDislikeCommunity = ({ communityId }: UseLikeDislikeCommunity
   }, [currentChannel, communityId]);
 
 
-
   const toggleLikeDislikeCommunity = useCallback(
     async (action: "like" | "dislike") => {
       if (!currentChannel) {
-        alert("Please sign in to like/dislike. It is all free!");
+        SignInOption?.onOpen();
         return;
-      } else if (!communityId) return;
+      } else if (!isMember) {
+        toast({
+          variant: "error",
+          title: "Error",
+          description: "You must be a member of this community to vote.",
+        });
+        return;
+      }else if (!communityId) return;
 
       try {
         if (action === "like") {
@@ -87,10 +103,6 @@ export const useLikeDislikeCommunity = ({ communityId }: UseLikeDislikeCommunity
         }
 
         router.refresh();
-        toast({
-          variant: "success",
-          title: "Success",
-        });
       } catch (error) {
         toast({
           variant: "error",
@@ -99,7 +111,7 @@ export const useLikeDislikeCommunity = ({ communityId }: UseLikeDislikeCommunity
          })
       }
     },
-    [currentChannel, communityId, likeDislikeCommunityStatus, router, toast]
+    [currentChannel, communityId, likeDislikeCommunityStatus, router, toast, SignInOption, isMember]
   );
 
   return {

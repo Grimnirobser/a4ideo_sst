@@ -99,7 +99,7 @@ const Sidebar: React.FC<SidebarProps> = ({ subscribedChannels }) => {
           <div className='mt-4 flex items-center justify-center md:mt-0'>
             <div className='flex space-x-8'>
               <Link
-                href="./about"
+                href="/about"
                 onClick={() =>
                   handleItemClick(()=>{})
                 }
@@ -115,7 +115,7 @@ const Sidebar: React.FC<SidebarProps> = ({ subscribedChannels }) => {
           <div className='mt-4 flex items-center justify-center md:mt-0'>
             <div className='flex space-x-8'>
               <Link
-                href="./terms"
+                href="/terms"
                 onClick={() =>
                   handleItemClick(()=>{})
                 }
@@ -130,7 +130,7 @@ const Sidebar: React.FC<SidebarProps> = ({ subscribedChannels }) => {
           <div className='mt-4 flex items-center justify-center md:mt-0'>
             <div className='flex space-x-8'>
             <Link
-                href='./privacy-policy'
+                href='/privacy-policy'
                 onClick={() =>
                   handleItemClick(()=>{})
                 }

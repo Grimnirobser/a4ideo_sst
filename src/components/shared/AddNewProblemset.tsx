@@ -14,6 +14,7 @@ import {
 	englishDataset,
 	englishRecommendedTransformers,
 } from 'obscenity';
+import { SignInOptionContext } from "@/context/SignInOptionContext";
 
 
 interface AddNewProblemsetParams {
@@ -45,18 +46,15 @@ const AddNewProblemset: React.FC<AddNewProblemsetParams> = ({
 }) => {
 
     const currentChannel = useContext(CurrentChannelContext);
+    const SignInOption = useContext(SignInOptionContext);
     const { toast } = useToast();
 
     useEffect(() => {
       if (!currentChannel) {
         setUploadProblemset(false);
-        toast({
-          variant: "error",
-          title: "Error",
-          description: "Please sign in to upload. It is all free!",
-        });
+        SignInOption?.onOpen();
       }
-    }, [ currentChannel, toast, setUploadProblemset]); 
+    }, [ currentChannel, setUploadProblemset, SignInOption]); 
 
     const {
         control,

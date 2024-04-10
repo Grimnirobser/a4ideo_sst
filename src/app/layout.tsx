@@ -13,6 +13,8 @@ import { submitAttemptInitAction } from "@/actions/submitAttempt";
 import { Toaster } from "@/components/ui/toaster"
 import { checkVideoDeletableInitAction } from "@/actions/checkVideoDeletable";
 import { checkProblemsetDeletableInitAction } from "@/actions/checkProblemsetDeletable";
+import SignInOptionProvider from "@/context/SignInOptionContext";
+import { checkChannelMembershipInitAction } from "@/actions/checkChannelMembership";
 
 const roboto = Roboto({
   subsets: ["latin"],
@@ -32,6 +34,7 @@ export default async function RootLayout({
   await submitAttemptInitAction();
   await checkVideoDeletableInitAction();
   await checkProblemsetDeletableInitAction();
+  await checkChannelMembershipInitAction();
 
   return (
     <html lang="en">
@@ -40,16 +43,18 @@ export default async function RootLayout({
             <Toaster />
             <CurrentUserProvider user={currentUser}>
               <CurrentChannelProvider channel={currentChannel}>
-                {/* <UploadVideoModalProvider> */}
-                   <ProgressBarProvider>
-                      <SidebarProvider>
-                        <Navigation />
-                        <div className="pt-16 bg-slate-100 h-full -z-50">
-                          {children}
-                        </div>
-                      </SidebarProvider>
-                  </ProgressBarProvider>
-                {/* </UploadVideoModalProvider> */}
+                  {/* <UploadVideoModalProvider> */}
+                    <ProgressBarProvider>
+                        <SignInOptionProvider>
+                          <SidebarProvider>
+                            <Navigation />
+                            <div className="pt-16 bg-slate-100 min-h-screen -z-50">
+                              {children}
+                            </div>
+                          </SidebarProvider>
+                        </SignInOptionProvider>
+                    </ProgressBarProvider>
+                  {/* </UploadVideoModalProvider> */}
               </CurrentChannelProvider>
             </CurrentUserProvider>
         </Provider>

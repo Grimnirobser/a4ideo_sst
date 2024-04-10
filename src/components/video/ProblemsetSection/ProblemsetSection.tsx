@@ -19,7 +19,7 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Textarea } from "@/components/ui/textarea"
-import { FileQuestion } from 'lucide-react';
+import { FileUp } from 'lucide-react';
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { useForm, FieldValues, SubmitHandler } from "react-hook-form";
 import { Skeleton } from "@/components/ui/skeleton"
@@ -35,6 +35,9 @@ import getChannelById from "@/actions/getChannelById";
 import { ToastAction } from "@/components/ui/toast"
 import AddNewProblemset from "@/components/shared/AddNewProblemset";
 import { toHHMMSS } from "@/lib/numUtils";
+import { SignInOptionContext } from "@/context/SignInOptionContext";
+import { GetChunkResults } from "@/components/shared/Chunks/GetChunkResults";
+
 interface ProblemsetSectionProps {
   problemsets: (Problemset & { channel: Channel, problems: Problem[] })[];
   videoId: string;
@@ -46,7 +49,7 @@ interface readyDataType{
   channelId: string,
   problemsetId: string,
   problemsetAuthorId: string,
-  problems: Problem[],
+  problemIds: string[],
   attempts: {attempt: string}[]
 }
 
@@ -92,6 +95,7 @@ const ProblemsetSection: React.FC<ProblemsetSectionProps> = ({
   }
 
   const currentChannel = useContext(CurrentChannelContext);
+  const SignInOption = useContext(SignInOptionContext);
 
 
   const {data: problemsetCreatorChannel, isLoading: LoadingCreator} = useQuery({
@@ -173,15 +177,17 @@ const ProblemsetSection: React.FC<ProblemsetSectionProps> = ({
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     if (!currentChannel) {
-      alert("Please sign in to submit your perspective. It is all free!");
+      SignInOption?.onOpen();
       return;
     }
+
+    const problemIds = problemsets[target-1].problems.map((problem) => problem.id);
 
     const readyData = {
       channelId: currentChannel.id,
       problemsetId: problemsets[target-1].id,
       problemsetAuthorId: problemsets[target-1].channelId,
-      problems: problemsets[target-1].problems,
+      problemIds: problemIds,
       attempts: data.attempts,
     }
     mutateAsync(readyData);
@@ -256,11 +262,11 @@ const ProblemsetSection: React.FC<ProblemsetSectionProps> = ({
             )}
           />
 
-          {attemptFeedback ? <SingleFeedback key={"SingleFeedback"+problem.id+index} 
-                          problemsetNum={target} 
-                          index={index}
-                          {...attemptFeedback[index]}/> : null
-          }
+          {attemptFeedback ? 
+              <div>
+              <SingleFeedback key={"SingleFeedback"+problem.id+index} prediction={attemptFeedback[index].prediction} hit_emphasis={attemptFeedback[index].hit_emphasis}/>
+              <GetChunkResults key={"GetChunkResults"+problem.id+index} refined={attemptFeedback[index].refined}/> 
+              </div>: null}
         </div>
         ))}
 
@@ -271,13 +277,14 @@ const ProblemsetSection: React.FC<ProblemsetSectionProps> = ({
                   <Loader2 className='mr-2 h-4 w-4 animate-spin' />
             )}Submit</Button>
             <StatusBasedTag status={attemptStatus}/>
-            <FileQuestion className='cursor-pointer w-10 h-10 hover:bg-slate-200 rounded-lg' onClick={() => setUploadProblemset(true)}/>
+            <FileUp className='cursor-pointer w-10 h-10 hover:bg-slate-200 rounded-lg' onClick={() => setUploadProblemset(true)}/>
           </div>
 
-    <div className="peer w-full mt-4 mb-4 px-4 pt-2 pb-2  rounded-md outline-none border-[1px] bg-slate-100 transition">
-        Note if all sentences are not red but the result is &quot;fail&quot;, it means the answer is missing an emphasis.
-        You can try click the question mark next to PASS/UNPASSED badge to upload your own questions.
-    </div>
+        <div className="peer w-full mt-4 mb-4 px-4 pt-2 pb-2  rounded-md outline-none border-[1px] bg-white transition">
+            <span>
+            You can try click the upload sign next to <span className="w-full h-full bg-green-300">PASS</span>/<span className="w-full h-full bg-rose-300">UNPASSED</span> to upload your own questions.
+            </span>
+        </div>
       </form> 
     </Form>
     </>

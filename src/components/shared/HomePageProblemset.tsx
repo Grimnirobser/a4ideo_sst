@@ -29,7 +29,6 @@ const HomePageProblemset: React.FC<HomePageProblemsetProps> = ({ problemset }) =
     staleTime: 0,
     refetchInterval: 0,
   });
-    const questions: string[] = problemset.problems.map((problem) => problem.question);
     const [questionIndex, setQuestionIndex] = useState(0);
 
     const activeStyles = 'active:scale-[0.97] grid opacity-100 hover:scale-105 absolute top-1/2 -translate-y-1/2 aspect-square h-8 w-8 z-50 place-items-center rounded-full border-2 bg-white border-zinc-300'
@@ -49,8 +48,8 @@ const HomePageProblemset: React.FC<HomePageProblemsetProps> = ({ problemset }) =
                     className="object-contain object-center rounded-md"
                     alt={`${video.title} thumbnail`}
                     src={video!.imageSrc}
-                    height={150}
                     width={100}
+                    height={150}
                     />
 
 

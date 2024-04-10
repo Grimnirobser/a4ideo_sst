@@ -32,13 +32,13 @@ import {
 import SignIn from "@/components/shared/SignIn";
 import { Button } from "@/components/ui/button";
 import { MdOutlineAccountCircle } from "react-icons/md";
-
-
+import { SignInOptionContext } from "@/context/SignInOptionContext";
 
 
 const UserOptions = () => {
   const currentUser = useContext(CurrentUserContext);
   const currentChannel = useContext(CurrentChannelContext);
+  const SignInOption = useContext(SignInOptionContext);
   const router = useRouter();
   const path = usePathname();
   const encodedUrl = encodeURIComponent(path);
@@ -126,7 +126,7 @@ const UserOptions = () => {
         <IconButton onClick={() => window.open("https://discord.gg/xQx5bueEUB", '_blank')} className="mr-4">
           <Icons.discord />
         </IconButton>
-                <Dialog>
+                <Dialog open={SignInOption?.isOpen} onOpenChange={SignInOption?.isOpen ? SignInOption.onClose : SignInOption?.onOpen}>
                   <DialogTrigger asChild>
                   <button
                     className="flex mr-4 flex-row gap-1 items-center border-[1px] border-slate-700 rounded-full overflow-hidden px-3 py-1.5 text-black	cursor-pointer"

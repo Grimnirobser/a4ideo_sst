@@ -1,6 +1,13 @@
 'use server';
 import prisma from "@/vendor/db";
-import { Channel, Problemset, Problem } from "@prisma/client";
+import { Channel, Problemset, Problem} from "@prisma/client";
+
+interface ReturnedProblemDataType{
+  question: string,
+  type: string,
+  atTime: number,
+  answer?: string[],
+}
 
 export default async function getTrendingProblemsets(): Promise<(Problemset & {channel: Channel} & {problems: Problem[]})[]> {
   try {
@@ -25,6 +32,15 @@ export default async function getTrendingProblemsets(): Promise<(Problemset & {c
       ],
       take: 50,
     });
+
+    trendingProblemsets.map((problemset) => {
+        problemset.problems.map((problem) => {
+          delete (problem as any).type;
+          delete (problem as any).answer;
+          delete (problem as any).emphasis;
+        });
+      }
+    );
 
     return trendingProblemsets;
     

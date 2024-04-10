@@ -3,6 +3,7 @@ import { useRouter } from "next/navigation";
 import { useCallback, useContext, useMemo } from "react";
 import { useToast } from "@/components/ui/use-toast"
 import axios from "axios";
+import { SignInOptionContext } from "@/context/SignInOptionContext";
 
 interface UseSubscribeProps {
   channelId: string;
@@ -10,6 +11,7 @@ interface UseSubscribeProps {
 
 export const useSubscribe = ({ channelId }: UseSubscribeProps) => {
   const currentChannel = useContext(CurrentChannelContext);
+  const SignInOption = useContext(SignInOptionContext);
   const router = useRouter();
   const { toast } = useToast();
 
@@ -23,7 +25,7 @@ export const useSubscribe = ({ channelId }: UseSubscribeProps) => {
 
   const toggleSubscribed = useCallback(async () => {
     if (!currentChannel) {
-      alert("Please sign in to subscribe. It is all free!");
+      SignInOption?.onOpen();
       return;
     }
 
@@ -54,7 +56,7 @@ export const useSubscribe = ({ channelId }: UseSubscribeProps) => {
         description: hasSubscribed ? "Could not unsubscribe" : "Could not subscribe",
        })
     }
-  }, [currentChannel, channelId, hasSubscribed, router, toast]);
+  }, [currentChannel, channelId, hasSubscribed, router, toast, SignInOption]);
 
   return {
     hasSubscribed,

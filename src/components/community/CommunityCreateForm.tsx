@@ -9,8 +9,11 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import MediaUploadMultiple from "../shared/MediaUploadMultiple";
 import { CirclePlus, CircleX } from 'lucide-react';
-import { Button } from "../ui/button";
-
+import { useQuery } from '@tanstack/react-query'
+import { useState } from "react";
+import { Loader2 } from 'lucide-react'
+import { RightWrongIcon } from "@/components/shared/RightWrongIcon";
+import checkCommunityNameValidated from "@/actions/checkCommunityNameValidated";
 
 interface CommunityUploadFormProps {
     register: UseFormRegister<FieldValues>;
@@ -20,6 +23,7 @@ interface CommunityUploadFormProps {
     isLoading: boolean;
     appendImage: (value: string) => void;
     removeImage: (index: number) => void;
+    setUniqueName: (value: boolean) => void;
 }
 
 const CommunityUploadForm: React.FC<CommunityUploadFormProps> = ({
@@ -30,18 +34,36 @@ const CommunityUploadForm: React.FC<CommunityUploadFormProps> = ({
     isLoading,
     appendImage,
     removeImage,
+    setUniqueName
 }) => {
+
+    const [tryUsername, setTryUsername] = useState<string>('');
+
+    const {data: isUnique, isLoading: LoadingUniqueness} = useQuery({
+        queryKey: ['isCommunityNameUnique', tryUsername],
+        queryFn: async() => await checkCommunityNameValidated({name: tryUsername}),
+    });
+
+    if(isUnique){
+        setUniqueName(true);
+    }else{
+        setUniqueName(false);
+    }
+
   return (
     <div className="flex flex-col space-y-4">
-        <h1 className="text-2xl">Community Badge details</h1>
 
-        <Label htmlFor="name" className="text-base">Community Name</Label>
-        <Input id="name" className="w-1/2 text-slate-900 text-xl font-sans antialiased border-zinc-500"
-                    placeholder="Community Name"
-                    {...register("name", { required: false })}
-                    onChange={(ev) => changeValue?.("name", ev.target.value || "")}
-                    disabled={isLoading}
-                />
+        <Label htmlFor="CommunityName" className="text-base">Community Name</Label>
+        <div className="flex flex-row items-center gap-2">
+            <Input id="CommunityName" className="w-1/2 text-slate-900 text-xl font-sans antialiased border-zinc-500"
+                        placeholder="Community Name"
+                        {...register("name", { required: false })}
+                        onChange={(ev) => {changeValue?.("name", ev.target.value || ""); setTryUsername(ev.target.value);}}
+                        disabled={isLoading}
+                    />
+            { tryUsername ? (LoadingUniqueness ? (<Loader2 className='h-6 w-6 animate-spin' />) : ( isUnique ? (<RightWrongIcon isCorrect={true} />) : <RightWrongIcon isCorrect={false} />)) : null}
+        </div>
+
 
          {/* imageSrc input */}
 

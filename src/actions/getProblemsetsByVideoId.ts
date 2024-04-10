@@ -32,6 +32,15 @@ export default async function getProblemsetsByVideoId(
       ],
     });
 
+    problemsets.map((problemset) => {
+      problemset.problems.map((problem) => {
+        delete (problem as any).type;
+        delete (problem as any).answer;
+        delete (problem as any).emphasis;
+      });
+    }
+  );
+
     
     return problemsets;
     

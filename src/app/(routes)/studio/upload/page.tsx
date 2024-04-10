@@ -8,7 +8,7 @@ import { UploadVideoModalContext } from "@/context/UploadVideoModalContext";
 import { useRouter } from "next/navigation";
 import { useContext, useState, useEffect } from "react";
 import ProblemsetUploadForm from "@/components/studio/upload/ProblemsetUploadForm";
-import { useForm, FieldValues, SubmitHandler, useFieldArray } from "react-hook-form";
+import { useForm, FieldValues, SubmitHandler, useFieldArray, set } from "react-hook-form";
 
 import { useToast } from "@/components/ui/use-toast"
 import { useMutation } from "@tanstack/react-query"
@@ -20,6 +20,7 @@ import {
 	englishDataset,
 	englishRecommendedTransformers,
 } from 'obscenity';
+import { SignInOptionContext } from "@/context/SignInOptionContext";
 
 
 interface VideoDataType{
@@ -50,19 +51,19 @@ export default function UploadPage() {
   // useEffect(() => uploadVideoModal?.onOpen(), []);
 
   const currentChannel = useContext(CurrentChannelContext);
+  const SignInOption = useContext(SignInOptionContext);
+  const [checked, setChecked] = useState(false);
   const router = useRouter();
   const { toast } = useToast();
 
   useEffect(() => {
     if (!currentChannel) {
       router.push("/");
-      toast({
-        variant: "error",
-        title: "Error",
-        description: "Please sign in to upload. It is all free!",
-      });
+      SignInOption?.onOpen();
+    }else{
+      setChecked(true);
     }
-  }, [ currentChannel, router, toast]); 
+  }, [ currentChannel, router, SignInOption]); 
 
 
   const {
@@ -135,11 +136,7 @@ export default function UploadPage() {
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     if (!currentChannel) {
-      toast({
-        variant: "error",
-        title: "Error",
-        description: "Please sign in to upload video. It is all free!",
-      });
+      SignInOption?.onOpen();
       return;
     }
 
@@ -168,6 +165,7 @@ export default function UploadPage() {
     mutateAsync(videoData);
   }
 
+  if (!checked) return null;
 
   return (
     <>
