@@ -14,6 +14,7 @@ import { Toaster } from "@/components/ui/toaster"
 import { checkVideoDeletableInitAction } from "@/actions/checkVideoDeletable";
 import { checkProblemsetDeletableInitAction } from "@/actions/checkProblemsetDeletable";
 import SignInOptionProvider from "@/context/SignInOptionContext";
+import { checkChannelMembershipInitAction } from "@/actions/checkChannelMembership";
 
 const roboto = Roboto({
   subsets: ["latin"],
@@ -33,6 +34,7 @@ export default async function RootLayout({
   await submitAttemptInitAction();
   await checkVideoDeletableInitAction();
   await checkProblemsetDeletableInitAction();
+  await checkChannelMembershipInitAction();
 
   return (
     <html lang="en">

@@ -10,6 +10,7 @@ import { useState } from "react";
 interface PosterProps {
   community: Community;
   questions: string[] | undefined | null;
+  foot?: boolean;
 }
 
 interface SlideItem {
@@ -20,7 +21,8 @@ interface SlideItem {
 
 const PosterForCommunity: React.FC<PosterProps> = ({
   community,
-  questions
+  questions,
+  foot = true,
 }) => {
 
     const [activeIndex, setActiveIndex] = useState(0)
@@ -33,13 +35,15 @@ const PosterForCommunity: React.FC<PosterProps> = ({
     }
 
   return (
-    <Link className="w-full" href={`/c/${community.id}`}>
+    <Link className="w-full" href={`/c/${community.name}`}>
       <div
         className="flex items-start flex-col gap-2 cursor-pointer overflow-hidden"
       >
         <div className="relative aspect-w-10 aspect-h-15 w-full">
             <ImageSlider slides={slides} activeIndex={activeIndex}  setActiveIndex={setActiveIndex}/>
         </div>
+
+        {foot && (
         <div className="flex gap-2 items-start w-full">
           <div className="flex flex-col">
             <h3 className="line-clamp-2 text-md leading-5">
@@ -55,7 +59,9 @@ const PosterForCommunity: React.FC<PosterProps> = ({
               {dayjs(community.createdAt).fromNow()}
             </p>
           </div>
-        </div>
+        </div>)}
+
+        
       </div>
     </Link>
   );

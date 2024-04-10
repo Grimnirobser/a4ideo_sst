@@ -111,7 +111,6 @@ export default function CreateChannelPage({ searchParams }: PageProps) {
   const {data: isUnique, isLoading} = useQuery({
       queryKey: ['isUsernameUnique', tryUsername],
       queryFn: async() => await getChannelByUsername({username: tryUsername}),
-
   });
 
   const { mutate, mutateAsync, isPending } = useMutation({

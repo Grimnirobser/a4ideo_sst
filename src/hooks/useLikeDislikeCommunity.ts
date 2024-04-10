@@ -3,6 +3,8 @@ import { useCallback, useContext, useMemo } from "react";
 import { useToast } from "@/components/ui/use-toast"
 import { CurrentChannelContext } from "@/context/CurrentChannelContext";
 import { SignInOptionContext } from "@/context/SignInOptionContext";
+import { useQuery } from "@tanstack/react-query"
+import checkChannelMembership from "@/actions/checkChannelMembership";
 
 interface UseLikeDislikeCommunityProps {
   communityId: string;
@@ -21,6 +23,12 @@ export const useLikeDislikeCommunity = ({ communityId }: UseLikeDislikeCommunity
   const router = useRouter();
   const { toast } = useToast();
 
+  const {data: isMember, isLoading} = useQuery({
+    queryKey: ['checkChannelMembership', currentChannel?.id, communityId],
+    queryFn: async() => await checkChannelMembership({communityId: communityId}),
+  });
+
+
   const likeDislikeCommunityStatus = useMemo(() => {
     if (!currentChannel || !communityId) return false;
 
@@ -37,13 +45,19 @@ export const useLikeDislikeCommunity = ({ communityId }: UseLikeDislikeCommunity
   }, [currentChannel, communityId]);
 
 
-
   const toggleLikeDislikeCommunity = useCallback(
     async (action: "like" | "dislike") => {
       if (!currentChannel) {
         SignInOption?.onOpen();
         return;
-      } else if (!communityId) return;
+      } else if (!isMember) {
+        toast({
+          variant: "error",
+          title: "Error",
+          description: "You must be a member of this community to vote.",
+        });
+        return;
+      }else if (!communityId) return;
 
       try {
         if (action === "like") {
@@ -89,10 +103,6 @@ export const useLikeDislikeCommunity = ({ communityId }: UseLikeDislikeCommunity
         }
 
         router.refresh();
-        toast({
-          variant: "success",
-          title: "Success",
-        });
       } catch (error) {
         toast({
           variant: "error",
@@ -101,7 +111,7 @@ export const useLikeDislikeCommunity = ({ communityId }: UseLikeDislikeCommunity
          })
       }
     },
-    [currentChannel, communityId, likeDislikeCommunityStatus, router, toast, SignInOption]
+    [currentChannel, communityId, likeDislikeCommunityStatus, router, toast, SignInOption, isMember]
   );
 
   return {

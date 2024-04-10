@@ -1,6 +1,7 @@
 import getCurrentChannel from "@/actions/getCurrentChannel";
 import prisma from "@/vendor/db";
 import { NextResponse } from "next/server";
+import checkChannelMembership from "@/actions/checkChannelMembership";
 
 interface IParams {
   communityId: string;
@@ -9,10 +10,11 @@ interface IParams {
 export async function POST(_: Request, { params }: { params: IParams }) {
   const currentChannel = await getCurrentChannel();
 
-
   const { communityId } = params;
 
-  if (!currentChannel || !communityId) {
+  const isMember = await checkChannelMembership({communityId: communityId});
+
+  if (!currentChannel || !communityId || !isMember) {
     return NextResponse.error();
   }
 

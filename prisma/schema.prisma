@@ -169,7 +169,6 @@ model Community {
   approved        Boolean   @default(false)
   auditedBy       String?
   suspended       Boolean   @default(false)
-  problemsetId    String    @unique
   CommunityMember Channel[]
 }
 

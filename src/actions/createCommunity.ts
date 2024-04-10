@@ -1,131 +1,63 @@
-// 'use server';
+'use server';
 
-// import prisma from "@/vendor/db";
-// import { Community, Problem } from "@prisma/client";
-// interface ProblemDataType{
-//     question: string,
-//     type: string,
-//     answer: AnswerType[],
-//   }
+import prisma from "@/vendor/db";
+import { Community } from "@prisma/client";
 
-// interface CreateCommunityParams{
-//     channelId: string,
-//     name: string,
-//     description: string,
-//     imageSrcs: string[],
-//     problems: ProblemDataType[]
-// }
+interface CreateCommunityParams{
+    channelId: string,
+    name: string,
+    description: string,
+    imageSrcs: string[],
+    textColor: string,
+    backgroundColor: string,
+}
 
 
-//   interface problemWithProblemsetIdProps{
-//     question: string,
-//     type: string,
-//     answer: string[],
-//     emphasis: boolean[],
-//     problemsetId: string,
-//   }
+export async function createCommunity( params: CreateCommunityParams
+    ): Promise<Community>{
   
-//   interface AnswerType{
-//     sentence: string,    
-//     emphasis: boolean    
-//   }
+    try {
 
-//   interface problemProps {
-//     question: string,
-//     type: string,
-//     answer: AnswerType[],
-//   }
+        const { channelId, name, description, imageSrcs, textColor, backgroundColor } = params;
 
-// export async function createCommunity( params: CreateCommunityParams
-//     ): Promise<Community>{
-  
-//     try {
+        const existingCommunity = await prisma.community.findFirst({
+            where: {
+                name: name,
+            },
+        });
 
-//         const { channelId, name, description, imageSrcs, problems } = params;
+        if (existingCommunity) {
+            throw new Error("Community already exists.");
+        }
 
+        const communityTag = await prisma.tag.create({
+            data: {
+                name: name.trim() + " Entrance Problemset",
+                textColor: textColor,
+                bgColor: backgroundColor,
+            },
+        });
 
-//         const existingCommunity = await prisma.community.findFirst({
-//             where: {
-//                 name: name,
-//             },
-//         });
+          const community = await prisma.community.create({
+            data: {
+                name: name,
+                description: description,
+                imageSrcs: imageSrcs,
+                memberCount: 1,
+                approved: true,
+                entranceTagId: communityTag.id,
+                CommunityMember: {
+                    connect: [{id: channelId}],
+                }
+            },
+        });
 
-//         if (existingCommunity) {
-//             throw new Error("Community already exists.");
-//         }
-
-//         const problemset = await prisma.problemset.create({
-//             data: {
-//               channelId: channelId,
-//             },
-//           });
-
-
-//           const community = await prisma.community.create({
-//             data: {
-//                 name: name,
-//                 description: description,
-//                 imageSrcs: imageSrcs,
-//                 problemsetId: problemset.id,
-//                 memberCount: 1,
-//                 approved: true,
-//             },
-//         });
-
-//         const tag = await prisma.tag.create({
-//             data: {
-//                 name: name + "Entrance Problemset",
-//             },
-//         });
-
-
-//         const problemsWithProblemsetId: problemWithProblemsetIdProps[] = problems.map((item: problemProps) => ({
-//             problemsetId: problemset.id,
-//             answer: item.answer.map(obj => obj.sentence),
-//             type: item.type,
-//             question: item.question,
-//             emphasis: item.answer.map(obj => obj.emphasis),
-//         }));
-    
-//         const createdProblems = await prisma.$transaction(
-//           problemsWithProblemsetId.map((problemWithProblemsetId: problemWithProblemsetIdProps) => prisma.problem.create({ data: problemWithProblemsetId })),
-//         );
-
-//         const resultProblemset = await prisma.problemset.update({
-//             where: {
-//               id: problemset.id,
-//             },
-//             data: {
-//                 communityId: community.id,
-//                 tags: {
-//                     connect: { id: tag.id },
-//                 },
-//                 problems: {
-//                     connect: createdProblems.map((problem: Problem) => ({ id: problem.id })),
-//                 },
-//             }
-//           });
-
-//           const updatedCommunity = await prisma.community.update({  
-//             where: {
-//               id: community.id,
-//             },
-//             data: {
-//               problemset: {
-//                 connect: { id: resultProblemset.id },
-//               },
-//               CommunityMember: {
-//                 connect: [{ id: channelId }],
-//               },
-//             },
-//           });
-
-//         return updatedCommunity;
+        return community;
         
-//         } catch (error: any) {
-//             throw new Error(error);
-//         }
-//     }
+        } catch (error: any) {
+            throw new Error(error);
+        }
+    }
 
 
 
